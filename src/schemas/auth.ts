@@ -54,7 +54,8 @@ export const emailConfirmFormSchema = z.object({
   confirmationLink: z
     .string()
     .transform(collapseWhitespaceTrim)
-    .pipe(z.string().min(1, "Вставьте ссылку из письма")),
+    .pipe(z.string().min(1, "Вставьте ссылку из письма"))
+    .pipe(z.string().url("Укажите корректную ссылку")),
 });
 
 export type EmailConfirmFormValues = z.infer<typeof emailConfirmFormSchema>;

@@ -53,10 +53,19 @@ export const BrandMark = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+`;
+
+export const BrandName = styled.span`
   font-weight: 700;
   font-size: 1.35rem;
   letter-spacing: -0.02em;
   color: var(--crm-color-text);
+`;
+
+export const BrandCopy = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 `;
 
 export const BrandText = styled.p`
@@ -128,4 +137,36 @@ export const LeftFooter = styled.div`
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-`
+`;
+
+export const FormStack = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+`;
+
+export const FormMutedCaption = styled.p`
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--crm-color-text-secondary);
+`;
+
+export const ForgotPasswordRow = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -8px;
+  margin-bottom: 16px;
+
+  a {
+    font-size: 14px;
+    color: var(--crm-color-accent-primary);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+`;

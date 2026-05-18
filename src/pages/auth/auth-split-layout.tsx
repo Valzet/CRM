@@ -3,15 +3,15 @@ import {
   AuthGrid,
   AuthRoot,
   BrandColumn,
+  BrandCopy,
   BrandFooter,
   BrandLogo,
   BrandMark,
+  BrandName,
   BrandText,
   FormColumn,
 } from "./styled";
 import logo from "../../assets/logo/Logo2.png";
-const BRAND_COPY =
-  "Платформа для управления клиентами, сделками и задачами. Эффективно управляйте бизнес-процессами, отслеживайте ключевые показатели и выстраивайте продуктивные отношения с клиентами.";
 
 type AuthSplitLayoutProps = {
   children: ReactNode;
@@ -28,7 +28,15 @@ export function AuthSplitLayout(props: AuthSplitLayoutProps) {
           <BrandMark>
             <BrandLogo src={logo} alt="" decoding="async" />
           </BrandMark>
-          <BrandText>{BRAND_COPY}</BrandText>
+          <BrandCopy>
+            <BrandText>
+              Платформа для управления клиентами, сделками и задачами.
+            </BrandText>
+            <BrandText>
+              Эффективно управляйте бизнес-процессами, отслеживайте ключевые
+              показатели и выстраивайте продуктивные отношения с клиентами.
+            </BrandText>
+          </BrandCopy>
           <BrandFooter>{leftFooter}</BrandFooter>
         </BrandColumn>
         <FormColumn>{children}</FormColumn>

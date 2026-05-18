@@ -64,7 +64,6 @@ export function RegisterPage() {
               render={({ field }) => (
                 <Form.Item
                   label="Имя"
-                  required
                   validateStatus={errors.firstName ? "error" : ""}
                   help={errors.firstName?.message}
                 >
@@ -82,7 +81,6 @@ export function RegisterPage() {
               render={({ field }) => (
                 <Form.Item
                   label="Фамилия"
-                  required
                   validateStatus={errors.lastName ? "error" : ""}
                   help={errors.lastName?.message}
                 >
@@ -100,7 +98,6 @@ export function RegisterPage() {
               render={({ field }) => (
                 <Form.Item
                   label="Email"
-                  required
                   validateStatus={errors.email ? "error" : ""}
                   help={errors.email?.message}
                 >
@@ -119,7 +116,6 @@ export function RegisterPage() {
               render={({ field }) => (
                 <Form.Item
                   label="Имя аккаунта"
-                  required
                   validateStatus={errors.username ? "error" : ""}
                   help={errors.username?.message}
                 >
@@ -137,7 +133,6 @@ export function RegisterPage() {
               render={({ field }) => (
                 <Form.Item
                   label="Придумайте пароль"
-                  required
                   validateStatus={errors.password ? "error" : ""}
                   help={errors.password?.message}
                 >
@@ -155,7 +150,6 @@ export function RegisterPage() {
               render={({ field }) => (
                 <Form.Item
                   label="Повторите пароль"
-                  required
                   validateStatus={errors.confirmPassword ? "error" : ""}
                   help={errors.confirmPassword?.message}
                 >

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Form, message } from "antd";
 import { Controller, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { path } from "../../lib/constants/navigation";
 import {
   passwordRecoveryFormSchema,
@@ -13,6 +13,7 @@ import { AuthSplitLayout } from "./auth-split-layout";
 import { CardSubtitle, CardTitle, FormCard, LeftFooter } from "./styled";
 
 export function PasswordRecoveryPage() {
+  const navigate = useNavigate();
   const [requestReset, { isLoading }] = useRequestPasswordResetMutation();
 
   const {
@@ -28,9 +29,10 @@ export function PasswordRecoveryPage() {
   const onSubmit = async (values: PasswordRecoveryFormValues) => {
     try {
       await requestReset(values).unwrap();
-      void message.success(
-        "Если такой email есть в системе, мы отправим инструкцию (демо).",
-      );
+      navigate(path.emailConfirmation, {
+        replace: true,
+        state: { flow: "password-recovery" as const },
+      });
     } catch {
       void message.error("Запрос не выполнен");
     }
@@ -58,7 +60,6 @@ export function PasswordRecoveryPage() {
               render={({ field }) => (
                 <Form.Item
                   label="Email"
-                  required
                   validateStatus={errors.email ? "error" : ""}
                   help={errors.email?.message}
                 >

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Form, message, Space } from "antd";
+import { Button, Form, message } from "antd";
 import { Controller, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { path } from "../../lib/constants/navigation";
 import {
   emailConfirmFormSchema,
@@ -13,9 +13,24 @@ import {
 } from "../../store/api";
 import { UiInput } from "../../components/ui/input";
 import { AuthSplitLayout } from "./auth-split-layout";
-import { CardSubtitle, CardTitle, FormCard, LeftFooter } from "./styled";
+import {
+  CardSubtitle,
+  CardTitle,
+  FormCard,
+  FormMutedCaption,
+  FormStack,
+  LeftFooter,
+} from "./styled";
+
+type EmailConfirmationLocationState = {
+  flow?: "password-recovery";
+};
 
 export function EmailConfirmationPage() {
+  const location = useLocation();
+  const locState = location.state as EmailConfirmationLocationState | null;
+  const fromPasswordRecovery = locState?.flow === "password-recovery";
+
   const [confirmEmail, { isLoading: isConfirming }] = useConfirmEmailMutation();
   const [resend, { isLoading: isResending }] =
     useResendConfirmationEmailMutation();
@@ -58,7 +73,11 @@ export function EmailConfirmationPage() {
     >
       <FormCard>
         <CardTitle>Подтверждение почты</CardTitle>
-        <CardSubtitle>Вставьте ссылку из полученного письма</CardSubtitle>
+        <CardSubtitle>
+          {fromPasswordRecovery
+            ? "Вставьте ссылку из письма для восстановления пароля."
+            : "Вставьте ссылку из полученного письма"}
+        </CardSubtitle>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Form layout="vertical" requiredMark component="div">
             <Controller
@@ -67,20 +86,15 @@ export function EmailConfirmationPage() {
               render={({ field }) => (
                 <Form.Item
                   label="Ссылка подтверждения"
-                  required
                   validateStatus={errors.confirmationLink ? "error" : ""}
                   help={errors.confirmationLink?.message}
                 >
-                  <UiInput {...field} placeholder="https://…" />
+                  <UiInput {...field} placeholder="" />
                 </Form.Item>
               )}
             />
             <Form.Item>
-              <Space
-                direction="vertical"
-                size="middle"
-                style={{ width: "100%" }}
-              >
+              <FormStack>
                 <Button
                   type="primary"
                   htmlType="submit"
@@ -90,26 +104,19 @@ export function EmailConfirmationPage() {
                 >
                   Подтвердить
                 </Button>
-                <div
-                  style={{
-                    textAlign: "center",
-                    fontSize: 14,
-                    color: "var(--crm-color-text-secondary)",
-                  }}
-                >
-                  Не пришло письмо?
-                </div>
+                <FormMutedCaption>Не пришло письмо?</FormMutedCaption>
                 <Button
                   block
                   size="large"
                   htmlType="button"
                   type="default"
+                  variant="outlined"
                   loading={isResending}
                   onClick={onResend}
                 >
                   Отправить повторно
                 </Button>
-              </Space>
+              </FormStack>
             </Form.Item>
           </Form>
         </form>

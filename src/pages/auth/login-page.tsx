@@ -10,7 +10,7 @@ import { useLoginMutation } from "../../store/api";
 import { setAuthUser } from "../../store/auth-slice";
 import { UiInput } from "../../components/ui/input";
 import { AuthSplitLayout } from "./auth-split-layout";
-import { CardTitle, FormCard, LeftFooter } from "./styled";
+import { CardTitle, ForgotPasswordRow, FormCard, LeftFooter } from "./styled";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -61,8 +61,7 @@ export function LoginPage() {
               control={control}
               render={({ field }) => (
                 <Form.Item
-                  label="Email"
-                  required
+                  label="email или логин"
                   validateStatus={errors.email ? "error" : ""}
                   help={errors.email?.message}
                 >
@@ -70,7 +69,7 @@ export function LoginPage() {
                     {...field}
                     type="email"
                     autoComplete="email"
-                    placeholder="manager1@crm.ru"
+                    placeholder="ivanov@yandex.ru"
                   />
                 </Form.Item>
               )}
@@ -81,7 +80,6 @@ export function LoginPage() {
               render={({ field }) => (
                 <Form.Item
                   label="Пароль"
-                  required
                   validateStatus={errors.password ? "error" : ""}
                   help={errors.password?.message}
                 >
@@ -93,18 +91,9 @@ export function LoginPage() {
                 </Form.Item>
               )}
             />
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginTop: -8,
-                marginBottom: 16,
-              }}
-            >
-              <Link to={path.passwordRecovery} style={{ fontSize: 14 }}>
-                Забыли пароль?
-              </Link>
-            </div>
+            <ForgotPasswordRow>
+              <Link to={path.passwordRecovery}>Забыли пароль?</Link>
+            </ForgotPasswordRow>
             <Form.Item>
               <Button
                 type="primary"
