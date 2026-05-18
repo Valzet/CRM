@@ -1,0 +1,20 @@
+import type { PropsWithChildren } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { path } from "../lib/constants/navigation";
+import { useAppSelector } from "../hooks";
+import { selectAuthUserId } from "../store/auth-slice";
+
+/** Ограничивает доступ к оболочке приложения: без сессии — на страницу входа. */
+export function RequireAuth(props: PropsWithChildren) {
+  const { children } = props;
+  const userId = useAppSelector(selectAuthUserId);
+  const location = useLocation();
+
+  if (!userId) {
+    return (
+      <Navigate to={path.login} replace state={{ from: location.pathname }} />
+    );
+  }
+
+  return children;
+}

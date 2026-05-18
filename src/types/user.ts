@@ -1,28 +1,10 @@
-export type User = {
+export type UserRecord = {
   id: string
   email: string
+  password: string
   name: string
   createdAt: string
-  password?: string
+  username?: string
 }
 
-export type UserProfile = User & {
-  password?: string
-}
-
-export type RegisterPayload = {
-  email: string
-  password: string
-  name: string
-}
-
-export type LoginPayload = {
-  email: string
-  password: string
-}
-
-export type UpdateProfilePayload = {
-  email?: string
-  name?: string
-  password?: string
-}
+export type User = Omit<UserRecord, 'password'>
