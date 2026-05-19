@@ -1,10 +1,4 @@
-import {
-  BarChartOutlined,
-  CheckSquareOutlined,
-  HomeOutlined,
-  ProjectOutlined,
-  TeamOutlined,
-} from "@ant-design/icons";
+
 import { Avatar } from "antd";
 import { useLocation } from "react-router-dom";
 import logoImg from "../../assets/logo/Logo4.png";
@@ -35,7 +29,11 @@ type MainSidebarProps = {
   /** В мобильном Drawer всегда показываем полное меню. */
   forceExpanded?: boolean;
 };
-
+import brief from '../../assets/icons/24x24/Briefcase.svg';
+import home from '../../assets/icons/24x24/Home.svg';
+import clients from '../../assets/icons/24x24/Team.svg';
+import projects from '../../assets/icons/24x24/Project.svg';
+import tasks from '../../assets/icons/24x24/Task.svg';
 /** Светлый сайдбар YaPlex: сворачивается по кнопке, на мобиле — в Drawer. */
 export function MainSidebar({ onNavigate, forceExpanded }: MainSidebarProps) {
   const { collapsed: collapsedState, toggleCollapsed } = useSidebar();
@@ -47,17 +45,17 @@ export function MainSidebar({ onNavigate, forceExpanded }: MainSidebarProps) {
   const reportsActive = pathname.startsWith("/reports");
 
   const navItems = [
-    { to: path.welcome, end: true, icon: <HomeOutlined aria-hidden />, label: "Главная" },
-    { to: path.clients, icon: <TeamOutlined aria-hidden />, label: "Клиенты" },
-    { to: path.deals, icon: <ProjectOutlined aria-hidden />, label: "Сделки" },
+    { to: path.welcome, end: true, icon: <img src={home} aria-hidden />, label: "Главная" },
+    { to: path.clients, icon: <img src={clients} aria-hidden />, label: "Клиенты" },
+    { to: path.deals, icon: <img src={brief} aria-hidden />, label: "Сделки" },
     {
       to: path.reports.sales,
       end: true,
-      icon: <BarChartOutlined aria-hidden />,
+      icon: <img src={tasks} aria-hidden />,
       label: "Отчёты",
       dataActive: reportsActive,
     },
-    { to: path.tasks, icon: <CheckSquareOutlined aria-hidden />, label: "Задачи" },
+    { to: path.tasks, icon: <img src={projects} aria-hidden />, label: "Задачи" },
   ] as const;
 
   return (
