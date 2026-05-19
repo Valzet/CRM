@@ -1,14 +1,4 @@
-import {
-  Button,
-  Card,
-  Col,
-  Row,
-  Space,
-  Spin,
-  Table,
-  Tag,
-  Typography,
-} from "antd";
+import { Button, Spin } from "antd";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
@@ -30,13 +20,62 @@ import {
   useGetTasksQuery,
   useGetUserByIdQuery,
 } from "../../store/api";
-import type { Deal, Task } from "../../types";
+import type { Client, Deal, Task } from "../../types";
+import {
+  CardsGrid,
+  ClientCard,
+  ClientCompany,
+  ClientDealCount,
+  ClientName,
+  DealAmount,
+  DealClient,
+  DealDate,
+  DealRow,
+  DealsList,
+  DealStatus,
+  DealTitle,
+  EmptyHint,
+  PageSubtitle,
+  PageTitle,
+  SectionAction,
+  SectionTitle,
+  StatsCard,
+  StatsHeaderCell,
+  StatsHeaderRow,
+  StatsLabelCell,
+  StatsRow,
+  StatsTable,
+  StatsValueCell,
+  TaskCard,
+  TaskDealLabel,
+  TaskDealName,
+  TaskDueDate,
+  TaskFooter,
+  TaskStatus,
+  TaskTitle,
+  WelcomeRoot,
+} from "./styled";
+
 function isDealActive(d: Deal) {
   return d.status === "new" || d.status === "in_progress";
 }
+
 function dealCompletionMoment(d: Deal) {
   return d.completedAt ?? d.createdAt;
 }
+
+function formatDelta(value: number) {
+  return value > 0 ? `+${value}` : String(value);
+}
+
+function findClientName(clients: Client[], clientId: string) {
+  return clients.find((c) => c.id === clientId)?.name ?? "—";
+}
+
+function findDealTitle(dealsList: Deal[], dealId: string) {
+  return dealsList.find((d) => d.id === dealId)?.title ?? "—";
+}
+
 export function WelcomePage() {
   const userId = useAppSelector(selectAuthUserId);
   const { data: user } = useGetUserByIdQuery(userId ?? "", { skip: !userId });
@@ -46,6 +85,7 @@ export function WelcomePage() {
   const { data: deals = [], isLoading: ld } = useGetDealsQuery();
   const { data: tasks = [], isLoading: lt } = useGetTasksQuery();
   const firstName = user?.name?.split(/\s+/)[0] ?? "коллега";
+
   const mineClients = useMemo(
     () =>
       clientsDeletedAware.filter((c) => c.createdBy === userId && !c.deleted),
@@ -59,6 +99,7 @@ export function WelcomePage() {
     () => tasks.filter((t) => t.createdBy === userId),
     [tasks, userId],
   );
+
   const statsRows = useMemo(() => {
     const today = new Date();
     const bdToday = boundsToday(today);
@@ -77,6 +118,7 @@ export function WelcomePage() {
     const completionInRange = (d: Deal, start: Date, end: Date) =>
       d.status === "completed" &&
       isoTimestampInRange(dealCompletionMoment(d), start, end);
+
     return [
       {
         key: "clients",
@@ -119,6 +161,7 @@ export function WelcomePage() {
       },
     ];
   }, [mineClients, mineDeals]);
+
   const topClients = useMemo(() => {
     const counts = new Map<string, number>();
     for (const d of mineDeals) {
@@ -130,180 +173,144 @@ export function WelcomePage() {
       .filter((row) => row.n > 0)
       .slice(0, 10);
   }, [clientsDeletedAware, mineDeals]);
+
   const recentActiveDeals = useMemo(() => {
     return [...mineDeals]
       .filter(isDealActive)
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
       .slice(0, 10);
   }, [mineDeals]);
+
   const recentTasks = useMemo(() => {
     return [...mineTasks]
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
       .slice(0, 10);
   }, [mineTasks]);
+
   if (!userId || lc || ld || lt) {
     return (
       <div style={{ padding: 48, textAlign: "center" }}>
-        {" "}
-        <Spin />{" "}
+        <Spin />
       </div>
     );
   }
+
   return (
-    <div>
-      {" "}
-      <Typography.Title level={2} style={{ marginTop: 0 }}>
-        {" "}
-        Добро пожаловать, {firstName}!{" "}
-      </Typography.Title>{" "}
-      <Typography.Paragraph type="secondary">
-        {" "}
-        Краткая сводка по вашим клиентам, сделкам и задачам.{" "}
-      </Typography.Paragraph>{" "}
-      <Card size="small" style={{ marginBottom: 24 }}>
-        {" "}
-        <Table
-          size="small"
-          pagination={false}
-          dataSource={statsRows}
-          columns={[
-            { title: "", dataIndex: "row", width: 200 },
-            { title: "на сегодня", dataIndex: "today" },
-            { title: "добавилось за сегодня", dataIndex: "addedToday" },
-            { title: "за неделю", dataIndex: "addedWeek" },
-            { title: "за месяц", dataIndex: "addedMonth" },
-            {
-              title: "за квартал",
-              dataIndex: "addedQuarter",
-              render: (v: number) => (
-                <Typography.Text type="success">{v}</Typography.Text>
-              ),
-            },
-          ]}
-        />{" "}
-      </Card>{" "}
-      <Typography.Title level={4}>Топ 10 активных клиентов</Typography.Title>{" "}
-      <Row gutter={[16, 16]}>
-        {" "}
-        {topClients.map(({ c, n }) => (
-          <Col xs={24} sm={12} md={8} lg={6} key={c.id}>
-            {" "}
-            <Card size="small" title={c.name}>
-              {" "}
-              <Typography.Text type="secondary">
-                «{c.company}»
-              </Typography.Text>{" "}
-              <div>
-                {" "}
-                <Typography.Text type="success">
-                  {" "}
-                  {n} сделок (ваши){" "}
-                </Typography.Text>{" "}
-              </div>{" "}
-              {c.deleted ? <Tag color="warning">клиент удалён</Tag> : null}{" "}
-            </Card>{" "}
-          </Col>
-        ))}{" "}
-      </Row>{" "}
-      {!topClients.length ? (
-        <Typography.Paragraph type="secondary">
-          {" "}
-          Нет сделок для отображения топа клиентов.{" "}
-        </Typography.Paragraph>
-      ) : null}{" "}
-      <Space style={{ marginTop: 16 }} wrap>
-        {" "}
+    <WelcomeRoot>
+      <PageTitle>Добро пожаловать, {firstName}!</PageTitle>
+      <PageSubtitle>
+        Посмотрите сводную информацию по вашим клиентам, сделкам и задачам
+      </PageSubtitle>
+
+      <StatsCard>
+        <StatsTable>
+          <StatsHeaderRow>
+            <StatsHeaderCell />
+            <StatsHeaderCell>на сегодня</StatsHeaderCell>
+            <StatsHeaderCell>за сегодня</StatsHeaderCell>
+            <StatsHeaderCell>за неделю</StatsHeaderCell>
+            <StatsHeaderCell>за месяц</StatsHeaderCell>
+            <StatsHeaderCell>за квартал</StatsHeaderCell>
+          </StatsHeaderRow>
+          {statsRows.map((row) => (
+            <StatsRow key={row.key}>
+              <StatsLabelCell>{row.row}</StatsLabelCell>
+              <StatsValueCell $variant="primary">{row.today}</StatsValueCell>
+              <StatsValueCell>{formatDelta(row.addedToday)}</StatsValueCell>
+              <StatsValueCell>{formatDelta(row.addedWeek)}</StatsValueCell>
+              <StatsValueCell>{formatDelta(row.addedMonth)}</StatsValueCell>
+              <StatsValueCell>{formatDelta(row.addedQuarter)}</StatsValueCell>
+            </StatsRow>
+          ))}
+        </StatsTable>
+      </StatsCard>
+
+      <SectionTitle>топ 10 активных клиентов</SectionTitle>
+      {topClients.length ? (
+        <CardsGrid>
+          {topClients.map(({ c, n }) => (
+            <ClientCard key={c.id}>
+              <ClientName>{c.name}</ClientName>
+              <ClientCompany>«{c.company}»</ClientCompany>
+              <ClientDealCount>
+                <span>{n}</span> сделок
+              </ClientDealCount>
+            </ClientCard>
+          ))}
+        </CardsGrid>
+      ) : (
+        <EmptyHint>Нет сделок для отображения топа клиентов.</EmptyHint>
+      )}
+      <SectionAction>
         <Link to={`${path.clients}/new`}>
-          {" "}
-          <Button type="primary">Добавить клиента</Button>{" "}
-        </Link>{" "}
-      </Space>{" "}
-      <Typography.Title level={4} style={{ marginTop: 32 }}>
-        {" "}
-        Последние 10 активных сделок{" "}
-      </Typography.Title>{" "}
-      <Table<Deal>
-        size="small"
-        rowKey="id"
-        pagination={false}
-        dataSource={recentActiveDeals}
-        columns={[
-          { title: "Название", dataIndex: "title" },
-          {
-            title: "Сумма",
-            dataIndex: "amount",
-            render: (v: number) => (
-              <Typography.Text strong>
-                {" "}
-                {v.toLocaleString("ru-RU")} ₽{" "}
-              </Typography.Text>
-            ),
-          },
-          {
-            title: "Статус",
-            dataIndex: "status",
-            render: (s: Deal["status"]) => DEAL_STATUS_META[s].label,
-          },
-          {
-            title: "Создана",
-            dataIndex: "createdAt",
-            render: (v: string) => formatDateRu(v),
-          },
-        ]}
-      />{" "}
-      <Link to={`${path.deals}/new`}>
-        {" "}
-        <Button type="primary" style={{ marginTop: 16 }}>
-          {" "}
-          Добавить сделку{" "}
-        </Button>{" "}
-      </Link>{" "}
-      <Typography.Title level={4} style={{ marginTop: 32 }}>
-        {" "}
-        Последние 10 ваших задач{" "}
-      </Typography.Title>{" "}
-      <Row gutter={[16, 16]}>
-        {" "}
-        {recentTasks.map((t) => (
-          <Col xs={24} sm={12} md={8} lg={6} key={t.id}>
-            {" "}
+          <Button type="primary">Новый клиент</Button>
+        </Link>
+      </SectionAction>
+
+      <SectionTitle>Топ 10 активных сделок</SectionTitle>
+      {recentActiveDeals.length ? (
+        <DealsList>
+          {recentActiveDeals.map((deal) => (
+            <DealRow key={deal.id}>
+              <DealTitle>{deal.title}</DealTitle>
+              <DealClient>
+                {findClientName(clientsDeletedAware, deal.clientId)}
+              </DealClient>
+              <DealAmount>
+                {deal.amount.toLocaleString("ru-RU")} ₽
+              </DealAmount>
+              <DealStatus $status={deal.status}>
+                {DEAL_STATUS_META[deal.status].label}
+              </DealStatus>
+              <DealDate>{formatDateRu(deal.createdAt)}</DealDate>
+            </DealRow>
+          ))}
+        </DealsList>
+      ) : (
+        <EmptyHint>Активных сделок пока нет.</EmptyHint>
+      )}
+      <SectionAction>
+        <Link to={`${path.deals}/new`}>
+          <Button type="primary">Новая сделка</Button>
+        </Link>
+      </SectionAction>
+
+      <SectionTitle>Последние 10 задач</SectionTitle>
+      {recentTasks.length ? (
+        <CardsGrid>
+          {recentTasks.map((task) => (
             <TaskMiniCard
-              task={t}
-              dealTitle={findDealTitle(deals, t.dealId)}
-            />{" "}
-          </Col>
-        ))}{" "}
-      </Row>{" "}
-      {!recentTasks.length ? (
-        <Typography.Paragraph type="secondary">
-          {" "}
-          Задач пока нет.{" "}
-        </Typography.Paragraph>
-      ) : null}{" "}
-      <Link to={`${path.tasks}/new`}>
-        {" "}
-        <Button type="primary" style={{ marginTop: 16 }}>
-          {" "}
-          Добавить задачу{" "}
-        </Button>{" "}
-      </Link>{" "}
-    </div>
+              key={task.id}
+              task={task}
+              dealTitle={findDealTitle(deals, task.dealId)}
+            />
+          ))}
+        </CardsGrid>
+      ) : (
+        <EmptyHint>Задач пока нет.</EmptyHint>
+      )}
+      <SectionAction>
+        <Link to={`${path.tasks}/new`}>
+          <Button type="primary">Новая задача</Button>
+        </Link>
+      </SectionAction>
+    </WelcomeRoot>
   );
 }
-function findDealTitle(dealsList: Deal[], dealId: string) {
-  return dealsList.find((d) => d.id === dealId)?.title ?? "—";
-}
+
 function TaskMiniCard({ task, dealTitle }: { task: Task; dealTitle: string }) {
   const meta = TASK_STATUS_META[task.status];
+  const completed = task.status === "completed";
+
   return (
-    <Card size="small" title={task.title}>
-      {" "}
-      <Space direction="vertical" size={4}>
-        {" "}
-        <Typography.Text type="secondary">{dealTitle}</Typography.Text>{" "}
-        <Typography.Text>до {formatDateRu(task.dueDate)}</Typography.Text>{" "}
-        <Tag color={meta.color}>{meta.label}</Tag>{" "}
-      </Space>{" "}
-    </Card>
+    <TaskCard $completed={completed}>
+      <TaskTitle>{task.title}</TaskTitle>
+      <TaskDealLabel>сделка</TaskDealLabel>
+      <TaskDealName>{dealTitle}</TaskDealName>
+      <TaskFooter>
+        <TaskDueDate>до {formatDateRu(task.dueDate)}</TaskDueDate>
+        <TaskStatus $status={task.status}>{meta.label}</TaskStatus>
+      </TaskFooter>
+    </TaskCard>
   );
 }
