@@ -1,22 +1,24 @@
-import { PlusOutlined } from "@ant-design/icons";
-import {
-  Alert,
-  Button,
-  Input,
-  Space,
-  Spin,
-  Table,
-  Tag,
-  Typography,
-} from "antd";
+import { Alert, Button, Space, Spin, Table } from "antd";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { UiButton } from "../../components/ui/button";
 import { DEAL_STATUS_META } from "../../lib/deal-status";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { path } from "../../lib/constants/navigation";
 import { useGetClientsQuery, useGetDealsQuery } from "../../store/api";
 import type { Deal } from "../../types";
 import { DealEditModal } from "./deal-edit-modal";
+import {
+  DealTitleCell,
+  PageHeading,
+  PageRoot,
+  SearchField,
+  SearchIcon,
+  StatusCell,
+  TableWrap,
+  Toolbar,
+  dealRowClassName,
+} from "./deals-list-page.styled";
 
 export function DealsListPage() {
   const {
@@ -62,127 +64,123 @@ export function DealsListPage() {
 
   if (isLoading) {
     return (
-      <div style={{ padding: 48, textAlign: "center" }}>
-        <Spin />
-      </div>
+      <PageRoot>
+        <div style={{ padding: 48, textAlign: "center" }}>
+          <Spin />
+        </div>
+      </PageRoot>
     );
   }
 
   if (isError) {
     return (
-      <Space direction="vertical" style={{ width: "100%" }}>
-        <Typography.Title level={3} style={{ marginTop: 0 }}>
-          Сделки
-        </Typography.Title>
-        <Alert
-          type="warning"
-          showIcon
-          message="Не удалось загрузить сделки"
-          description={
-            error && "status" in error
-              ? "Запустите json-server: npm run server"
-              : "Проверьте сеть."
-          }
-        />
-        <Button onClick={() => refetch()}>Повторить</Button>
-      </Space>
+      <PageRoot>
+        <Space direction="vertical" style={{ width: "100%" }}>
+          <PageHeading>Сделки</PageHeading>
+          <Alert
+            type="warning"
+            showIcon
+            message="Не удалось загрузить сделки"
+            description={
+              error && "status" in error
+                ? "Запустите json-server: npm run server"
+                : "Проверьте сеть."
+            }
+          />
+          <Button onClick={() => refetch()}>Повторить</Button>
+        </Space>
+      </PageRoot>
     );
   }
 
   return (
-    <div>
-      <Typography.Title level={3} style={{ marginTop: 0 }}>
-        Сделки
-      </Typography.Title>
-      <Space wrap style={{ marginBottom: 16, width: "100%" }} align="start">
+    <PageRoot>
+      <PageHeading>Сделки</PageHeading>
+
+      <Toolbar>
         <Link to={`${path.deals}/new`}>
-          <Button type="primary" icon={<PlusOutlined />}>
-            Новая сделка
-          </Button>
+          <UiButton type="primary">Новая сделка</UiButton>
         </Link>
-        <Input.Search
+        <SearchField
           allowClear
-          placeholder="Поиск по всем полям"
-          onSearch={setQ}
+          placeholder="Искать"
+          prefixIcon={<SearchIcon />}
+          value={q}
           onChange={(e) => setQ(e.target.value)}
-          style={{ maxWidth: 420, minWidth: 200 }}
-          enterButton
         />
-      </Space>
-      <Table<Deal>
-        rowKey="id"
-        size="middle"
-        pagination={{ pageSize: 12, showSizeChanger: true }}
-        dataSource={filtered}
-        onRow={(record) => ({
-          onClick: () => setEditId(record.id),
-          style: { cursor: "pointer" },
-        })}
-        columns={[
-          {
-            title: "Название",
-            dataIndex: "title",
-            sorter: (a, b) => a.title.localeCompare(b.title),
-            render: (t: string, row) => (
-              <Link
-                to={`${path.deals}/${row.id}/edit`}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {t}
-              </Link>
-            ),
-          },
-          {
-            title: "Клиент",
-            key: "client",
-            sorter: (a, b) =>
-              nameByClientId(a.clientId).localeCompare(
-                nameByClientId(b.clientId),
-              ),
-            render: (_, row) => nameByClientId(row.clientId),
-          },
-          {
-            title: "Описание",
-            dataIndex: "description",
-            ellipsis: true,
-            sorter: (a, b) => a.description.localeCompare(b.description),
-          },
-          {
-            title: "Этап (статус)",
-            dataIndex: "status",
-            sorter: (a, b) => a.status.localeCompare(b.status),
-            render: (s: Deal["status"]) => {
-              const m = DEAL_STATUS_META[s];
-              return <Tag color={m.color}>{m.label}</Tag>;
+      </Toolbar>
+
+      <TableWrap>
+        <Table<Deal>
+          rowKey="id"
+          size="middle"
+          pagination={false}
+          dataSource={filtered}
+          rowClassName={(record) => dealRowClassName(record.status)}
+          onRow={(record) => ({
+            onClick: () => setEditId(record.id),
+            style: { cursor: "pointer" },
+          })}
+          columns={[
+            {
+              title: "Название",
+              dataIndex: "title",
+              sorter: (a, b) => a.title.localeCompare(b.title),
+              render: (t: string) => <DealTitleCell>{t}</DealTitleCell>,
             },
-          },
-          {
-            title: "Сумма",
-            dataIndex: "amount",
-            sorter: (a, b) => a.amount - b.amount,
-            render: (v: number) => `${v.toLocaleString("ru-RU")} ₽`,
-          },
-          {
-            title: "Дата создания",
-            dataIndex: "createdAt",
-            sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
-            render: (v: string) => formatDateRu(v),
-          },
-          {
-            title: "Дата завершения",
-            dataIndex: "completedAt",
-            sorter: (a, b) =>
-              (a.completedAt ?? "").localeCompare(b.completedAt ?? ""),
-            render: (v: string | undefined) => (v ? formatDateRu(v) : "—"),
-          },
-        ]}
-      />
+            {
+              title: "Клиент",
+              key: "client",
+              sorter: (a, b) =>
+                nameByClientId(a.clientId).localeCompare(
+                  nameByClientId(b.clientId),
+                ),
+              render: (_, row) => nameByClientId(row.clientId),
+            },
+            {
+              title: "Описание",
+              dataIndex: "description",
+              ellipsis: true,
+              sorter: (a, b) => a.description.localeCompare(b.description),
+            },
+            {
+              title: "Этап (статус)",
+              dataIndex: "status",
+              sorter: (a, b) => a.status.localeCompare(b.status),
+              render: (s: Deal["status"]) => (
+                <StatusCell $status={s}>
+                  {DEAL_STATUS_META[s].label}
+                </StatusCell>
+              ),
+            },
+            {
+              title: "Сумма",
+              dataIndex: "amount",
+              sorter: (a, b) => a.amount - b.amount,
+              render: (v: number) => `${v.toLocaleString("ru-RU")} ₽`,
+            },
+            {
+              title: "Дата создания",
+              dataIndex: "createdAt",
+              sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+              render: (v: string) => formatDateRu(v),
+            },
+            {
+              title: "Дата завершения",
+              dataIndex: "completedAt",
+              sorter: (a, b) =>
+                (a.completedAt ?? "").localeCompare(b.completedAt ?? ""),
+              render: (v: string | undefined) => (v ? formatDateRu(v) : "—"),
+            },
+          ]}
+        />
+      </TableWrap>
 
       <DealEditModal
         dealId={editId}
         open={editId !== null}
         onClose={() => setEditId(null)}
       />
-    </div>
+    </PageRoot>
   );
 }

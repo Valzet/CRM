@@ -1,15 +1,7 @@
-import {
-  Alert,
-  Button,
-  Input,
-  Space,
-  Spin,
-  Table,
-  Tag,
-  Typography,
-} from "antd";
+import { Alert, Button, Space, Spin, Table } from "antd";
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { UiButton } from "../../components/ui/button";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { TASK_STATUS_META } from "../../lib/task-status";
 import { path } from "../../lib/constants/navigation";
@@ -19,8 +11,46 @@ import {
   useGetUsersQuery,
 } from "../../store/api";
 import type { Task } from "../../types";
+import {
+  PageHeading,
+  PageRoot,
+  SearchField,
+  SearchIcon,
+  StatusCell,
+  TableWrap,
+  TaskTitleCell,
+  Toolbar,
+  taskRowClassName,
+} from "./tasks-list-page.styled";
+
+function taskMatchesQuery(
+  t: Task,
+  needle: string,
+  dealTitle: string,
+  assigneeName: string,
+) {
+  const n = needle.trim().toLowerCase();
+  if (!n) return true;
+  const statusLabel = (TASK_STATUS_META[t.status]?.label ?? t.status).toLowerCase();
+  const hay = [
+    t.title,
+    t.description,
+    dealTitle,
+    assigneeName,
+    t.status,
+    statusLabel,
+    t.dueDate,
+    formatDateRu(t.dueDate),
+    t.createdAt,
+    formatDateRu(t.createdAt),
+  ]
+    .join(" ")
+    .toLowerCase();
+  return hay.includes(n);
+}
 
 export function TasksListPage() {
+  const navigate = useNavigate();
   const {
     data: tasks = [],
     isLoading,
@@ -32,127 +62,140 @@ export function TasksListPage() {
   const { data: users = [] } = useGetUsersQuery();
   const [q, setQ] = useState("");
 
-  const filtered = useMemo(() => {
-    const s = q.trim().toLowerCase();
-    if (!s) return tasks;
-    return tasks.filter((t) => {
-      const dt = (
-        deals.find((d) => d.id === t.dealId)?.title ?? ""
-      ).toLowerCase();
-      const an = (
-        users.find((u) => u.id === t.assigneeId)?.name ?? ""
-      ).toLowerCase();
-      return (
-        t.title.toLowerCase().includes(s) ||
-        t.description.toLowerCase().includes(s) ||
-        dt.includes(s) ||
-        an.includes(s)
-      );
-    });
-  }, [tasks, q, deals, users]);
+  const dealTitleById = useMemo(() => {
+    const map = new Map(deals.map((d) => [d.id, d.title]));
+    return (id: string) => map.get(id) ?? "—";
+  }, [deals]);
 
-  const dealTitle = (id: string) =>
-    deals.find((d) => d.id === id)?.title ?? "—";
-  const userName = (id: string) => users.find((u) => u.id === id)?.name ?? "—";
+  const userNameById = useMemo(() => {
+    const map = new Map(users.map((u) => [u.id, u.name]));
+    return (id: string) => map.get(id) ?? "—";
+  }, [users]);
+
+  const filtered = useMemo(
+    () =>
+      tasks.filter((t) =>
+        taskMatchesQuery(
+          t,
+          q,
+          dealTitleById(t.dealId),
+          userNameById(t.assigneeId),
+        ),
+      ),
+    [tasks, q, dealTitleById, userNameById],
+  );
 
   if (isLoading) {
     return (
-      <div style={{ padding: 48, textAlign: "center" }}>
-        <Spin />
-      </div>
+      <PageRoot>
+        <div style={{ padding: 48, textAlign: "center" }}>
+          <Spin />
+        </div>
+      </PageRoot>
     );
   }
 
   if (isError) {
     return (
-      <Space direction="vertical" style={{ width: "100%" }}>
-        <Typography.Title level={3} style={{ marginTop: 0 }}>
-          Задачи
-        </Typography.Title>
-        <Alert
-          type="warning"
-          showIcon
-          message="Не удалось загрузить задачи"
-          description={
-            error && "status" in error
-              ? "Запустите json-server: npm run server"
-              : "Проверьте сеть."
-          }
-        />
-        <Button onClick={() => refetch()}>Повторить</Button>
-      </Space>
+      <PageRoot>
+        <Space direction="vertical" style={{ width: "100%" }}>
+          <PageHeading>Задачи</PageHeading>
+          <Alert
+            type="warning"
+            showIcon
+            message="Не удалось загрузить задачи"
+            description={
+              error && "status" in error
+                ? "Запустите json-server: npm run server"
+                : "Проверьте сеть."
+            }
+          />
+          <Button onClick={() => refetch()}>Повторить</Button>
+        </Space>
+      </PageRoot>
     );
   }
 
   return (
-    <div>
-      <Typography.Title level={3} style={{ marginTop: 0 }}>
-        Задачи
-      </Typography.Title>
-      <Space wrap style={{ marginBottom: 16, width: "100%" }} align="start">
+    <PageRoot>
+      <PageHeading>Задачи</PageHeading>
+
+      <Toolbar>
         <Link to={`${path.tasks}/new`}>
-          <Button type="primary">Новая задача</Button>
+          <UiButton type="primary">Новая задача</UiButton>
         </Link>
-        <Input.Search
+        <SearchField
           allowClear
           placeholder="Искать"
-          onSearch={setQ}
+          prefixIcon={<SearchIcon />}
+          value={q}
           onChange={(e) => setQ(e.target.value)}
-          style={{ maxWidth: 420, minWidth: 200 }}
-          enterButton
         />
-      </Space>
-      <Table<Task>
-        rowKey="id"
-        size="middle"
-        pagination={{ pageSize: 12, showSizeChanger: true }}
-        dataSource={filtered}
-        columns={[
-          {
-            title: "Название",
-            dataIndex: "title",
-            sorter: (a, b) => a.title.localeCompare(b.title),
-            render: (t: string, row) => (
-              <Link to={`${path.tasks}/${row.id}/edit`}>{t}</Link>
-            ),
-          },
-          {
-            title: "Сделка",
-            key: "deal",
-            render: (_, row) => dealTitle(row.dealId),
-          },
-          {
-            title: "Описание",
-            dataIndex: "description",
-            ellipsis: true,
-          },
-          {
-            title: "Выполнить до",
-            dataIndex: "dueDate",
-            sorter: (a, b) => a.dueDate.localeCompare(b.dueDate),
-            render: (v: string) => formatDateRu(v),
-          },
-          {
-            title: "Исполнитель",
-            key: "assignee",
-            render: (_, row) => userName(row.assigneeId),
-          },
-          {
-            title: "Статус",
-            dataIndex: "status",
-            render: (s: Task["status"]) => {
-              const m = TASK_STATUS_META[s];
-              return <Tag color={m.color}>{m.label}</Tag>;
+      </Toolbar>
+
+      <TableWrap>
+        <Table<Task>
+          rowKey="id"
+          size="middle"
+          pagination={false}
+          dataSource={filtered}
+          rowClassName={(_, index) => taskRowClassName(index ?? 0)}
+          onRow={(record) => ({
+            onClick: () => navigate(`${path.tasks}/${record.id}/edit`),
+            style: { cursor: "pointer" },
+          })}
+          columns={[
+            {
+              title: "Название",
+              dataIndex: "title",
+              sorter: (a, b) => a.title.localeCompare(b.title),
+              render: (t: string) => <TaskTitleCell>{t}</TaskTitleCell>,
             },
-          },
-          {
-            title: "Дата создания",
-            dataIndex: "createdAt",
-            sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
-            render: (v: string) => formatDateRu(v),
-          },
-        ]}
-      />
-    </div>
+            {
+              title: "Сделка",
+              key: "deal",
+              sorter: (a, b) =>
+                dealTitleById(a.dealId).localeCompare(dealTitleById(b.dealId)),
+              render: (_, row) => dealTitleById(row.dealId),
+            },
+            {
+              title: "Описание",
+              dataIndex: "description",
+              ellipsis: true,
+              sorter: (a, b) => a.description.localeCompare(b.description),
+            },
+            {
+              title: "Выполнить до",
+              dataIndex: "dueDate",
+              sorter: (a, b) => a.dueDate.localeCompare(b.dueDate),
+              render: (v: string) => formatDateRu(v),
+            },
+            {
+              title: "Исполнитель",
+              key: "assignee",
+              sorter: (a, b) =>
+                userNameById(a.assigneeId).localeCompare(
+                  userNameById(b.assigneeId),
+                ),
+              render: (_, row) => userNameById(row.assigneeId),
+            },
+            {
+              title: "Статус",
+              dataIndex: "status",
+              sorter: (a, b) => a.status.localeCompare(b.status),
+              render: (s: Task["status"]) => (
+                <StatusCell $status={s}>{TASK_STATUS_META[s].label}</StatusCell>
+              ),
+            },
+            {
+              title: "Дата создания",
+              dataIndex: "createdAt",
+              sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+              render: (v: string) => formatDateRu(v),
+            },
+          ]}
+        />
+      </TableWrap>
+    </PageRoot>
   );
 }

@@ -1,5 +1,10 @@
-import { Tabs, Typography } from 'antd'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import {
+  PageHeading,
+  PageRoot,
+  ReportsTabs,
+  TabPanel,
+} from './reports-layout.styled'
 
 const TAB_KEYS = ['sales', 'clients', 'tasks'] as const
 
@@ -20,11 +25,9 @@ export function ReportsLayout() {
     : 'sales'
 
   return (
-    <div>
-      <Typography.Title level={3} style={{ marginTop: 0 }}>
-        Отчёты
-      </Typography.Title>
-      <Tabs
+    <PageRoot>
+      <PageHeading>Отчёты</PageHeading>
+      <ReportsTabs
         activeKey={activeKey}
         onChange={(k) => navigate(`/reports/${k}`)}
         items={TAB_KEYS.map((key) => ({
@@ -32,7 +35,9 @@ export function ReportsLayout() {
           label: tabLabel(key),
         }))}
       />
-      <Outlet />
-    </div>
+      <TabPanel>
+        <Outlet />
+      </TabPanel>
+    </PageRoot>
   )
 }
