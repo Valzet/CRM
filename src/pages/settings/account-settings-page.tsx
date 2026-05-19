@@ -23,7 +23,6 @@ import {
   BackLinkRow,
   DeleteAccountLink,
   FormFooter,
-  MetaLine,
   PageHeading,
   SectionHeading,
   SettingsInner,
@@ -31,6 +30,7 @@ import {
   SettingsSurface,
   StyledForm,
 } from "./settings.styled";
+import { color } from "../../theme";
 
 function splitName(full: string): { first: string; last: string } {
   const p = full.trim().split(/\s+/);
@@ -203,17 +203,18 @@ export function AccountSettingsPage(props?: { variant?: "settings" | "profile" }
             >
               {user.name.charAt(0).toUpperCase()}
             </Avatar>
+            {/* отличные набор иконок от яндекса. Пришлось иконку антд использовать */}
             <AvatarCameraBtn
               type="primary"
+              style={{ background: color.accent.primary, width: "40px", height: "40px" }}
               shape="circle"
               size="small"
-              icon={<CameraOutlined />}
+              icon={<CameraOutlined style={{ color: "white" }} />}
               aria-label="Сменить фото"
               title="Скоро"
               disabled
             />
           </AvatarBlock>
-
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <StyledForm layout="vertical" requiredMark component="div">
               <Row gutter={[20, 0]}>
