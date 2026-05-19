@@ -7,7 +7,6 @@ import {
   BrandFooter,
   BrandLogo,
   BrandMark,
-  BrandName,
   BrandText,
   FormColumn,
 } from "./styled";

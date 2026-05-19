@@ -214,12 +214,6 @@ export function AccountSettingsPage(props?: { variant?: "settings" | "profile" }
             />
           </AvatarBlock>
 
-          {variant === "profile" ? (
-            <MetaLine type="secondary">
-              Добавлен {new Date(user.createdAt).toLocaleDateString("ru-RU")}
-            </MetaLine>
-          ) : null}
-
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <StyledForm layout="vertical" requiredMark component="div">
               <Row gutter={[20, 0]}>
