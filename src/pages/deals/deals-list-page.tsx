@@ -1,23 +1,25 @@
-import { Alert, Button, Space, Spin, Table } from "antd";
+import { Table } from "antd";
 import { useMemo, useState } from "react";
-import { UiButton } from "../../components/ui/button";
-import { DEAL_STATUS_META } from "../../lib/deal-status";
-import { formatDateRu } from "../../lib/format/date-ru";
-import { useGetClientsQuery, useGetDealsQuery } from "../../store/api";
-import type { Deal } from "../../types";
-import { DealCardModal } from "./deal-card-modal";
-import { DealCreateModal } from "./deal-create-modal";
 import {
+  DealCardModal,
+  DealCreateModal,
+  DealStatusCell,
   DealTitleCell,
+  DealsTableWrap,
+  dealRowClassName,
+} from "../../components/deals";
+import {
+  ListPageError,
+  ListPageLoading,
+  ListPageToolbar,
   PageHeading,
   PageRoot,
-  SearchField,
-  SearchIcon,
-  StatusCell,
-  TableWrap,
-  Toolbar,
-  dealRowClassName,
-} from "./deals-list-page.styled";
+} from "../../components/list-page";
+import { DEAL_STATUS_META } from "../../lib/deal-status";
+import { formatDateRu } from "../../lib/format/date-ru";
+import { formatMoneyRu } from "../../lib/format/money-ru";
+import { useGetClientsQuery, useGetDealsQuery } from "../../store/api";
+import type { Deal } from "../../types";
 
 export function DealsListPage() {
   const {
@@ -62,34 +64,20 @@ export function DealsListPage() {
   const nameByClientId = (id: string) =>
     clients.find((c) => c.id === id)?.name ?? "—";
 
-  if (isLoading) {
-    return (
-      <PageRoot>
-        <div style={{ padding: 48, textAlign: "center" }}>
-          <Spin />
-        </div>
-      </PageRoot>
-    );
-  }
+  if (isLoading) return <ListPageLoading />;
 
   if (isError) {
     return (
-      <PageRoot>
-        <Space direction="vertical" style={{ width: "100%" }}>
-          <PageHeading>Сделки</PageHeading>
-          <Alert
-            type="warning"
-            showIcon
-            message="Не удалось загрузить сделки"
-            description={
-              error && "status" in error
-                ? "Запустите json-server: npm run server"
-                : "Проверьте сеть."
-            }
-          />
-          <Button onClick={() => refetch()}>Повторить</Button>
-        </Space>
-      </PageRoot>
+      <ListPageError
+        title="Сделки"
+        message="Не удалось загрузить сделки"
+        description={
+          error && "status" in error
+            ? "Запустите json-server: npm run server"
+            : "Проверьте сеть."
+        }
+        onRetry={() => refetch()}
+      />
     );
   }
 
@@ -97,20 +85,14 @@ export function DealsListPage() {
     <PageRoot>
       <PageHeading>Сделки</PageHeading>
 
-      <Toolbar>
-        <UiButton type="primary" onClick={() => setCreateOpen(true)}>
-          Новая сделка
-        </UiButton>
-        <SearchField
-          allowClear
-          placeholder="Искать"
-          prefixIcon={<SearchIcon />}
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
-      </Toolbar>
+      <ListPageToolbar
+        createLabel="Новая сделка"
+        onCreate={() => setCreateOpen(true)}
+        searchValue={q}
+        onSearchChange={setQ}
+      />
 
-      <TableWrap>
+      <DealsTableWrap>
         <Table<Deal>
           rowKey="id"
           size="middle"
@@ -148,16 +130,16 @@ export function DealsListPage() {
               dataIndex: "status",
               sorter: (a, b) => a.status.localeCompare(b.status),
               render: (s: Deal["status"]) => (
-                <StatusCell $status={s}>
+                <DealStatusCell $status={s}>
                   {DEAL_STATUS_META[s].label}
-                </StatusCell>
+                </DealStatusCell>
               ),
             },
             {
               title: "Сумма",
               dataIndex: "amount",
               sorter: (a, b) => a.amount - b.amount,
-              render: (v: number) => `${v.toLocaleString("ru-RU")} ₽`,
+              render: (v: number) => formatMoneyRu(v),
             },
             {
               title: "Дата создания",
@@ -174,7 +156,7 @@ export function DealsListPage() {
             },
           ]}
         />
-      </TableWrap>
+      </DealsTableWrap>
 
       <DealCardModal
         dealId={cardId}

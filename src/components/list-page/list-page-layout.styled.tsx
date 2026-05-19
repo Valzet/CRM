@@ -1,6 +1,6 @@
 import { SearchOutlined } from "@ant-design/icons";
 import styled from "styled-components";
-import { UiInput } from "../../components/ui/input";
+import { UiInput } from "../ui/input";
 import { color, fontFamilies, typography } from "../../theme/tokens";
 
 export const PageRoot = styled.div`
@@ -35,49 +35,6 @@ export const SearchField = styled(UiInput)`
 export const SearchIcon = styled(SearchOutlined)`
   color: ${color.neutral.textSecondary};
   font-size: 16px;
-`;
-
-export const TableWrap = styled.div`
-  .ant-table-wrapper {
-    .ant-table {
-      background: transparent;
-    }
-
-    .ant-table-container {
-      border-inline-start: none;
-      border-top: none;
-    }
-
-    .ant-table-thead > tr > th {
-      background: ${color.background.primary};
-      font-weight: 500;
-      font-size: ${typography.body.sm.fontSize};
-      color: ${color.neutral.textSecondary};
-      border-bottom: 1px solid ${color.background.shadowHint};
-
-      &::before {
-        display: none;
-      }
-    }
-
-    .ant-table-tbody > tr > td {
-      font-size: ${typography.body.sm.fontSize};
-      border-bottom: 1px solid ${color.background.shadowHint};
-    }
-
-    .ant-table-tbody > tr:not(.row-deleted):hover > td {
-      background: ${color.background.error} !important;
-    }
-
-    .ant-table-tbody > tr.row-deleted > td {
-      background: ${color.background.error};
-      color: ${color.neutral.disabled};
-    }
-
-    .ant-table-tbody > tr.row-deleted a {
-      color: ${color.neutral.disabled};
-    }
-  }
 `;
 
 export const CellLink = styled.a`

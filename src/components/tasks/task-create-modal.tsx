@@ -2,11 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { message } from "antd";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { CrmModal } from "../../components/crm-modal";
-import {
-  PrimaryFooterButton,
-  SecondaryFooterButton,
-} from "../../components/crm-modal/crm-modal.styled";
+import { CrmModal, PrimaryFooterButton, SecondaryFooterButton } from "../crm-modal";
 import { taskFormSchema, type TaskFormValues } from "../../schemas";
 import {
   useCreateTaskMutation,

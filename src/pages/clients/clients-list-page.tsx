@@ -1,22 +1,22 @@
-import { Alert, Button, Space, Spin, Table } from "antd";
-
+import { Table } from "antd";
 import { useMemo, useState } from "react";
-import { UiButton } from "../../components/ui/button";
+import {
+  ClientCardModal,
+  ClientCreateModal,
+  ClientsTableWrap,
+} from "../../components/clients";
+import {
+  CellLink,
+  ListPageError,
+  ListPageLoading,
+  ListPageToolbar,
+  PageHeading,
+  PageRoot,
+} from "../../components/list-page";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { formatPhoneRu } from "../../lib/format/phone-ru";
 import { useGetClientsQuery } from "../../store/api";
 import type { Client } from "../../types";
-import { ClientCardModal } from "./client-card-modal";
-import { ClientCreateModal } from "./client-create-modal";
-import {
-  CellLink,
-  PageHeading,
-  PageRoot,
-  SearchField,
-  SearchIcon,
-  TableWrap,
-  Toolbar,
-} from "./clients-list-page.styled";
 
 function clientMatchesQuery(c: Client, needle: string) {
   const n = needle.trim().toLowerCase();
@@ -57,34 +57,20 @@ export function ClientsListPage() {
     [clients, q],
   );
 
-  if (isLoading) {
-    return (
-      <PageRoot>
-        <div style={{ padding: 48, textAlign: "center" }}>
-          <Spin />
-        </div>
-      </PageRoot>
-    );
-  }
+  if (isLoading) return <ListPageLoading />;
 
   if (isError) {
     return (
-      <PageRoot>
-        <Space direction="vertical" style={{ width: "100%" }}>
-          <PageHeading>Клиенты</PageHeading>
-          <Alert
-            type="warning"
-            showIcon
-            message="Не удалось загрузить данные"
-            description={
-              error && "status" in error
-                ? "Убедитесь, что json-server запущен: npm run server"
-                : "Проверьте сеть и прокси Vite (/api → localhost:3001)."
-            }
-          />
-          <Button onClick={() => refetch()}>Повторить</Button>
-        </Space>
-      </PageRoot>
+      <ListPageError
+        title="Клиенты"
+        message="Не удалось загрузить данные"
+        description={
+          error && "status" in error
+            ? "Убедитесь, что json-server запущен: npm run server"
+            : "Проверьте сеть и прокси Vite (/api → localhost:3001)."
+        }
+        onRetry={() => refetch()}
+      />
     );
   }
 
@@ -92,20 +78,14 @@ export function ClientsListPage() {
     <PageRoot>
       <PageHeading>Клиенты</PageHeading>
 
-      <Toolbar>
-        <UiButton type="primary" onClick={() => setCreateOpen(true)}>
-          Новый клиент
-        </UiButton>
-        <SearchField
-          allowClear
-          placeholder="Искать"
-          prefixIcon={<SearchIcon />}
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
-      </Toolbar>
+      <ListPageToolbar
+        createLabel="Новый клиент"
+        onCreate={() => setCreateOpen(true)}
+        searchValue={q}
+        onSearchChange={setQ}
+      />
 
-      <TableWrap>
+      <ClientsTableWrap>
         <Table<Client>
           rowKey="id"
           size="middle"
@@ -182,7 +162,7 @@ export function ClientsListPage() {
             },
           ]}
         />
-      </TableWrap>
+      </ClientsTableWrap>
 
       <ClientCardModal
         clientId={cardId}

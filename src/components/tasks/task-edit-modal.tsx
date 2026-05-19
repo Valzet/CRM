@@ -1,12 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Spin, message } from "antd";
+import { message } from "antd";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { CrmModal } from "../../components/crm-modal";
 import {
+  CrmModal,
+  ModalBodyLoading,
   PrimaryFooterButton,
   SecondaryFooterButton,
-} from "../../components/crm-modal/crm-modal.styled";
+} from "../crm-modal";
 import { isoToDatetimeLocalValue } from "../../lib/date/datetime-local";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { taskFormSchema, type TaskFormValues } from "../../schemas";
@@ -106,9 +107,7 @@ export function TaskEditModal(props: Props) {
       }
     >
       {isFetching && !task ? (
-        <div style={{ textAlign: "center", padding: 24 }}>
-          <Spin />
-        </div>
+        <ModalBodyLoading />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <TaskModalEditFields

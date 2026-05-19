@@ -12,9 +12,9 @@ import { DEAL_STATUS_META } from "../../lib/deal-status";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { TASK_STATUS_META } from "../../lib/task-status";
 import { selectAuthUserId } from "../../store/auth-slice";
-import { ClientCreateModal } from "../clients/client-create-modal";
-import { DealCreateModal } from "../deals/deal-create-modal";
-import { TaskCreateModal } from "../tasks/task-create-modal";
+import { ClientCreateModal } from "../../components/clients";
+import { DealCreateModal } from "../../components/deals";
+import { TaskCreateModal } from "../../components/tasks";
 import {
   useGetClientsQuery,
   useGetDealsQuery,

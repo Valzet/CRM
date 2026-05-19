@@ -1,6 +1,20 @@
-import { Alert, Button, Space, Spin, Table } from "antd";
+import { Table } from "antd";
 import { useMemo, useState } from "react";
-import { UiButton } from "../../components/ui/button";
+import {
+  ListPageError,
+  ListPageLoading,
+  ListPageToolbar,
+  PageHeading,
+  PageRoot,
+} from "../../components/list-page";
+import {
+  TaskCreateModal,
+  TaskEditModal,
+  TaskStatusCell,
+  TaskTitleCell,
+  TasksTableWrap,
+  taskRowClassName,
+} from "../../components/tasks";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { TASK_STATUS_META } from "../../lib/task-status";
 import {
@@ -9,19 +23,6 @@ import {
   useGetUsersQuery,
 } from "../../store/api";
 import type { Task } from "../../types";
-import { TaskCreateModal } from "./task-create-modal";
-import { TaskEditModal } from "./task-edit-modal";
-import {
-  PageHeading,
-  PageRoot,
-  SearchField,
-  SearchIcon,
-  StatusCell,
-  TableWrap,
-  TaskTitleCell,
-  Toolbar,
-  taskRowClassName,
-} from "./tasks-list-page.styled";
 
 function taskMatchesQuery(
   t: Task,
@@ -86,34 +87,20 @@ export function TasksListPage() {
     [tasks, q, dealTitleById, userNameById],
   );
 
-  if (isLoading) {
-    return (
-      <PageRoot>
-        <div style={{ padding: 48, textAlign: "center" }}>
-          <Spin />
-        </div>
-      </PageRoot>
-    );
-  }
+  if (isLoading) return <ListPageLoading />;
 
   if (isError) {
     return (
-      <PageRoot>
-        <Space direction="vertical" style={{ width: "100%" }}>
-          <PageHeading>Задачи</PageHeading>
-          <Alert
-            type="warning"
-            showIcon
-            message="Не удалось загрузить задачи"
-            description={
-              error && "status" in error
-                ? "Запустите json-server: npm run server"
-                : "Проверьте сеть."
-            }
-          />
-          <Button onClick={() => refetch()}>Повторить</Button>
-        </Space>
-      </PageRoot>
+      <ListPageError
+        title="Задачи"
+        message="Не удалось загрузить задачи"
+        description={
+          error && "status" in error
+            ? "Запустите json-server: npm run server"
+            : "Проверьте сеть."
+        }
+        onRetry={() => refetch()}
+      />
     );
   }
 
@@ -121,20 +108,14 @@ export function TasksListPage() {
     <PageRoot>
       <PageHeading>Задачи</PageHeading>
 
-      <Toolbar>
-        <UiButton type="primary" onClick={() => setCreateOpen(true)}>
-          Новая задача
-        </UiButton>
-        <SearchField
-          allowClear
-          placeholder="Искать"
-          prefixIcon={<SearchIcon />}
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
-      </Toolbar>
+      <ListPageToolbar
+        createLabel="Новая задача"
+        onCreate={() => setCreateOpen(true)}
+        searchValue={q}
+        onSearchChange={setQ}
+      />
 
-      <TableWrap>
+      <TasksTableWrap>
         <Table<Task>
           rowKey="id"
           size="middle"
@@ -185,7 +166,9 @@ export function TasksListPage() {
               dataIndex: "status",
               sorter: (a, b) => a.status.localeCompare(b.status),
               render: (s: Task["status"]) => (
-                <StatusCell $status={s}>{TASK_STATUS_META[s].label}</StatusCell>
+                <TaskStatusCell $status={s}>
+                  {TASK_STATUS_META[s].label}
+                </TaskStatusCell>
               ),
             },
             {
@@ -196,7 +179,7 @@ export function TasksListPage() {
             },
           ]}
         />
-      </TableWrap>
+      </TasksTableWrap>
 
       <TaskCreateModal
         open={createOpen}

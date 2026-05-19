@@ -8,8 +8,8 @@ import {
   FieldLabel,
   ReadOnlyTextarea,
   ReadOnlyValue,
-} from "../../components/crm-modal";
-import { UiInput } from "../../components/ui/input";
+} from "../crm-modal";
+import { UiInput } from "../ui/input";
 import { formatPhoneRu } from "../../lib/format/phone-ru";
 import type { ClientFormValues } from "../../schemas";
 
@@ -156,9 +156,7 @@ export function ClientModalEditFields(props: EditProps) {
           <Controller
             name="comment"
             control={control}
-            render={({ field }) => (
-              <Input.TextArea {...field} rows={2} />
-            )}
+            render={({ field }) => <Input.TextArea {...field} rows={2} />}
           />
         </FieldControl>
       </Field>

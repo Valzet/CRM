@@ -1,6 +1,4 @@
 import { Input, InputNumber, Select } from "antd";
-import type { Client } from "../../types/client";
-import type { DealStatus } from "../../types/deal";
 import type { Control, FieldErrors } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import {
@@ -11,11 +9,13 @@ import {
   ReadOnlyTextarea,
   ReadOnlyValue,
   StatusReadOnly,
-} from "../../components/crm-modal";
+} from "../crm-modal";
+import { UiInput } from "../ui/input";
 import { DEAL_STATUS_META } from "../../lib/deal-status";
 import { formatMoneyRu } from "../../lib/format/money-ru";
 import type { DealFormValues } from "../../schemas";
-import { UiInput } from "../../components/ui/input";
+import type { Client } from "../../types/client";
+import type { DealStatus } from "../../types/deal";
 
 const statusOptions: { value: DealStatus; label: string }[] = [
   { value: "new", label: "Новая" },

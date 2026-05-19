@@ -7,7 +7,7 @@ type PlaceholderPageProps = {
   children?: ReactNode;
 };
 
-/** Заглушка для экранов в разработке. */
+/** В разработке. */
 export function PlaceholderPage(props: PlaceholderPageProps) {
   const { title, description, children } = props;
 

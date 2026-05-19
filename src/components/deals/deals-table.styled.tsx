@@ -1,42 +1,6 @@
-import { SearchOutlined } from "@ant-design/icons";
 import styled, { css } from "styled-components";
-import { UiInput } from "../../components/ui/input";
-import { color, fontFamilies, typography } from "../../theme/tokens";
+import { color, typography } from "../../theme/tokens";
 import type { DealStatus } from "../../types/deal";
-
-export const PageRoot = styled.div`
-  flex: 1;
-  min-height: 100%;
-  margin: 0 -20px;
-  padding: 28px 24px 48px;
-  background: ${color.background.secondary};
-`;
-
-export const PageHeading = styled.h1`
-  margin: 0 0 24px;
-  font-family: ${fontFamilies.body};
-  font-size: ${typography.heading.h2.fontSize};
-  line-height: ${typography.heading.h2.lineHeight};
-  font-weight: ${typography.heading.h2.fontWeight};
-  color: ${color.neutral.textPrimary};
-`;
-
-export const Toolbar = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-`;
-
-export const SearchField = styled(UiInput)`
-  flex: 1;
-  min-width: 0;
-`;
-
-export const SearchIcon = styled(SearchOutlined)`
-  color: ${color.neutral.textSecondary};
-  font-size: 16px;
-`;
 
 const statusRowBg: Record<DealStatus, string> = {
   new: color.background.primary,
@@ -49,7 +13,7 @@ export function dealRowClassName(status: DealStatus): string {
   return `row-deal row-deal--${status}`;
 }
 
-export const TableWrap = styled.div`
+export const DealsTableWrap = styled.div`
   .ant-table-wrapper {
     .ant-table {
       background: transparent;
@@ -114,7 +78,7 @@ export const DealTitleCell = styled.span`
   color: ${color.neutral.textPrimary};
 `;
 
-export const StatusCell = styled.span<{ $status: DealStatus }>`
+export const DealStatusCell = styled.span<{ $status: DealStatus }>`
   font-weight: 500;
   color: ${(p) => {
     if (p.$status === "in_progress") return color.accent.primary;

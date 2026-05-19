@@ -1,13 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Spin, message } from "antd";
+import { message } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { CrmModal } from "../../components/crm-modal";
 import {
+  CrmModal,
+  ModalBodyLoading,
   PrimaryFooterButton,
   SecondaryFooterButton,
   SuccessFooterButton,
-} from "../../components/crm-modal/crm-modal.styled";
+} from "../crm-modal";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { dealFormSchema, type DealFormValues } from "../../schemas";
 import {
@@ -175,9 +176,7 @@ export function DealCardModal(props: Props) {
       footer={footer}
     >
       {isFetching && !deal ? (
-        <div style={{ textAlign: "center", padding: 24 }}>
-          <Spin />
-        </div>
+        <ModalBodyLoading />
       ) : mode === "view" ? (
         <DealModalViewFields values={values} clientName={clientName} />
       ) : (

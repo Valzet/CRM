@@ -1,13 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal, Spin, message } from "antd";
+import { Modal, message } from "antd";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { CrmModal } from "../../components/crm-modal";
+import { CrmModal, ModalBodyLoading } from "../crm-modal";
 import {
   DangerFooterButton,
   PrimaryFooterButton,
   SecondaryFooterButton,
-} from "../../components/crm-modal/crm-modal.styled";
+} from "../crm-modal";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { clientFormSchema, type ClientFormValues } from "../../schemas";
 import {
@@ -151,9 +151,7 @@ export function ClientCardModal(props: Props) {
       footer={footer}
     >
       {isFetching && !client ? (
-        <div style={{ textAlign: "center", padding: 24 }}>
-          <Spin />
-        </div>
+        <ModalBodyLoading />
       ) : client?.deleted ? (
         <p style={{ margin: 0, color: "#EF4444" }}>Клиент удалён</p>
       ) : mode === "view" ? (

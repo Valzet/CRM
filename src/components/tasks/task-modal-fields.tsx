@@ -1,17 +1,12 @@
 import { Input, Select } from "antd";
+import type { Control, FieldErrors } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { Field, FieldControl, FieldGrid, FieldLabel } from "../crm-modal";
+import { UiInput } from "../ui/input";
+import type { TaskFormValues } from "../../schemas";
 import type { Deal } from "../../types/deal";
 import type { TaskStatus } from "../../types/task";
 import type { User } from "../../types/user";
-import type { Control, FieldErrors } from "react-hook-form";
-import { Controller } from "react-hook-form";
-import {
-  Field,
-  FieldControl,
-  FieldGrid,
-  FieldLabel,
-} from "../../components/crm-modal";
-import { UiInput } from "../../components/ui/input";
-import type { TaskFormValues } from "../../schemas";
 
 const workflowStatuses: { value: TaskStatus; label: string }[] = [
   { value: "new", label: "Новая" },
