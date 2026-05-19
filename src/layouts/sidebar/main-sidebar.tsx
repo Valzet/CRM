@@ -15,6 +15,7 @@ import {
   BrandLink,
   BrandLogo,
   CollapseBtn,
+  CollapseRow,
   NavBlock,
   Item,
   ItemLabel,
@@ -60,10 +61,12 @@ export function MainSidebar({ onNavigate, forceExpanded }: MainSidebarProps) {
 
   return (
     <Shell $collapsed={collapsed} aria-label="Навигация">
-      <BrandRow $collapsed={collapsed}>
+       {!collapsed ?<BrandRow $collapsed={collapsed}>
+     
         <BrandLink to={path.welcome} end onClick={onNavigate}>
-          {!collapsed ? <BrandLogo src={logoImg} alt="" decoding="async" /> : null}
+           <BrandLogo src={logoImg} alt="" decoding="async" /> 
         </BrandLink>
+       
         {!collapsed && !forceExpanded ? (
           <CollapseBtn
             type="button"
@@ -75,20 +78,19 @@ export function MainSidebar({ onNavigate, forceExpanded }: MainSidebarProps) {
           </CollapseBtn>
         ) : null}
       </BrandRow>
-
+ : null}
       {collapsed && !forceExpanded ? (
-        // <BrandRow $collapsed style={{ paddingTop: 0, minHeight: "auto" }}>
-        <CollapseBtn
-          type="button"
-          onClick={toggleCollapsed}
-          aria-label="Развернуть меню"
-          title="Развернуть меню"
-          style={{ margin: "0 auto" }}
-        >
-          <img src={expandIcon} alt="" />
-        </CollapseBtn>
-      ) : // </BrandRow>
-      null}
+        <CollapseRow>
+          <CollapseBtn
+            type="button"
+            onClick={toggleCollapsed}
+            aria-label="Развернуть меню"
+            title="Развернуть меню"
+          >
+            <img src={expandIcon} alt="" />
+          </CollapseBtn>
+        </CollapseRow>
+      ) : null}
 
       <NavBlock>
         {navItems.map((item) => (

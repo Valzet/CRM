@@ -63,8 +63,9 @@ const CollapseBtn = styled.button`
 
   img {
     display: block;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
   }
 `;
 
@@ -76,12 +77,21 @@ const NavBlock = styled.nav`
   padding: 4px 0;
 `;
 
+const CollapseRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: ${layout.sidebarItemHeightPx}px;
+  flex-shrink: 0;
+  border-bottom: 1px solid ${color.background.shadowHint};
+`;
+
 const itemStyles = css<{ $collapsed: boolean }>`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: ${(p) => (p.$collapsed ? "0" : "12px")};
   min-height: ${layout.sidebarItemHeightPx}px;
-  padding: ${(p) => (p.$collapsed ? "0 0 0 0" : "0 16px")};
+  padding: ${(p) => (p.$collapsed ? "0" : "0 16px")};
   justify-content: ${(p) => (p.$collapsed ? "center" : "flex-start")};
   color: ${color.neutral.textPrimary};
   text-decoration: none;
@@ -108,6 +118,14 @@ const itemStyles = css<{ $collapsed: boolean }>`
     font-size: 20px;
     flex-shrink: 0;
   }
+
+  img {
+    display: block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
 `;
 
 const Item = styled(NavLink)<{ $collapsed: boolean }>`
@@ -116,8 +134,7 @@ const Item = styled(NavLink)<{ $collapsed: boolean }>`
 
 const ItemLabel = styled.span<{ $hidden: boolean }>`
   white-space: nowrap;
-  opacity: ${(p) => (p.$hidden ? 0 : 1)};
-  width: ${(p) => (p.$hidden ? 0 : "auto")};
+  display: ${(p) => (p.$hidden ? "none" : "inline")};
   overflow: hidden;
   pointer-events: ${(p) => (p.$hidden ? "none" : "auto")};
 `;
@@ -161,4 +178,17 @@ const UserName = styled.span<{ $hidden: boolean }>`
 `;
 
 
-export {  BrandRow, BrandLink, BrandLogo,  CollapseBtn, NavBlock, Item, ItemLabel, Footer, UserRow, UserName, Shell };
+export {
+  BrandRow,
+  BrandLink,
+  BrandLogo,
+  CollapseBtn,
+  CollapseRow,
+  NavBlock,
+  Item,
+  ItemLabel,
+  Footer,
+  UserRow,
+  UserName,
+  Shell,
+};
