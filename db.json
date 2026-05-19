@@ -24,7 +24,7 @@
       "company": "ООО ТехСервис",
       "website": "https://techservice.ru",
       "comment": "Постоянный клиент",
-      "createdAt": "2026-02-10T09:00:00Z",
+      "createdAt": "2026-05-18T09:00:00Z",
       "deleted": false,
       "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001"
     },
@@ -36,7 +36,7 @@
       "company": "ИП Орлова",
       "website": "https://orlova-shop.ru",
       "comment": "Интересуется крупными закупками",
-      "createdAt": "2026-02-18T11:30:00Z",
+      "createdAt": "2026-05-19T11:30:00Z",
       "deleted": false,
       "createdBy": "5b7a3c2d-9e4f-4a1c-b2d3-7f6e5c4b1002"
     },
@@ -48,7 +48,7 @@
       "company": "ООО СтройПроект",
       "website": "https://stroyproekt.ru",
       "comment": "Потенциальный крупный клиент",
-      "createdAt": "2026-03-01T14:00:00Z",
+      "createdAt": "2026-05-05T14:00:00Z",
       "deleted": false,
       "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001"
     }
@@ -61,7 +61,7 @@
       "clientId": "a1b2c3d4-e5f6-4a7b-8c9d-000000000001",
       "amount": 450000,
       "status": "in_progress",
-      "createdAt": "2026-03-01T12:00:00Z",
+      "createdAt": "2026-05-18T12:00:00Z",
       "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001"
     },
     {
@@ -71,8 +71,8 @@
       "clientId": "a1b2c3d4-e5f6-4a7b-8c9d-000000000002",
       "amount": 120000,
       "status": "completed",
-      "createdAt": "2026-02-15T10:00:00Z",
-      "completedAt": "2026-03-05T16:00:00Z",
+      "createdAt": "2026-05-10T10:00:00Z",
+      "completedAt": "2026-05-19T16:00:00Z",
       "createdBy": "5b7a3c2d-9e4f-4a1c-b2d3-7f6e5c4b1002"
     },
     {
@@ -82,7 +82,7 @@
       "clientId": "a1b2c3d4-e5f6-4a7b-8c9d-000000000003",
       "amount": 80000,
       "status": "new",
-      "createdAt": "2026-03-10T09:30:00Z",
+      "createdAt": "2026-05-19T09:30:00Z",
       "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001"
     }
   ],
@@ -94,8 +94,8 @@
       "dealId": "d1000000-0000-4000-8000-000000000001",
       "assigneeId": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001",
       "status": "in_progress",
-      "dueDate": "2026-03-15T18:00:00Z",
-      "createdAt": "2026-03-10T10:00:00Z",
+      "dueDate": "2026-05-18T18:00:00Z",
+      "createdAt": "2026-05-18T10:00:00Z",
       "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001"
     },
     {
@@ -105,8 +105,8 @@
       "dealId": "d1000000-0000-4000-8000-000000000003",
       "assigneeId": "5b7a3c2d-9e4f-4a1c-b2d3-7f6e5c4b1002",
       "status": "new",
-      "dueDate": "2026-03-18T18:00:00Z",
-      "createdAt": "2026-03-11T09:00:00Z",
+      "dueDate": "2026-05-19T08:00:00Z",
+      "createdAt": "2026-05-19T09:00:00Z",
       "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001"
     },
     {
@@ -116,8 +116,8 @@
       "dealId": "d1000000-0000-4000-8000-000000000002",
       "assigneeId": "5b7a3c2d-9e4f-4a1c-b2d3-7f6e5c4b1002",
       "status": "completed",
-      "dueDate": "2026-03-05T15:00:00Z",
-      "createdAt": "2026-02-20T11:00:00Z",
+      "dueDate": "2026-05-19T15:00:00Z",
+      "createdAt": "2026-05-12T11:00:00Z",
       "createdBy": "5b7a3c2d-9e4f-4a1c-b2d3-7f6e5c4b1002"
     }
   ]
