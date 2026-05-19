@@ -18,8 +18,7 @@ export const grid = {
 } as const;
 
 export const gridDesktopInlineSizePx =
-  grid.desktop.columns * grid.desktop.columnWidthPx +
-  (grid.desktop.columns - 1) * grid.gutterPx;
+  grid.desktop.columns * grid.desktop.columnWidthPx + (grid.desktop.columns - 1) * grid.gutterPx;
 
 export const layout = {
   headerMinHeightPx: 56,

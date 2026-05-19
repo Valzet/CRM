@@ -2,10 +2,7 @@ import * as z from "zod";
 import { collapseWhitespaceTrim } from "./normalize";
 
 export const clientFormSchema = z.object({
-  name: z
-    .string()
-    .transform(collapseWhitespaceTrim)
-    .pipe(z.string().min(1, "Обязательное поле")),
+  name: z.string().transform(collapseWhitespaceTrim).pipe(z.string().min(1, "Обязательное поле")),
   phone: z.string().transform(collapseWhitespaceTrim),
   email: z
     .string()

@@ -8,15 +8,7 @@ export function startOfWeekMonday(date = new Date()): Date {
 }
 
 export function endOfDay(date = new Date()): Date {
-  return new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
-    23,
-    59,
-    59,
-    999,
-  );
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
 }
 
 export function startOfMonth(date = new Date()): Date {
@@ -41,23 +33,11 @@ export function boundsQuarterToToday(now = new Date()) {
 }
 
 export function boundsToday(now = new Date()) {
-  const s = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    0,
-    0,
-    0,
-    0,
-  );
+  const s = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
   return { start: s, end: endOfDay(now) };
 }
 
-export function isoTimestampInRange(
-  iso: string,
-  start: Date,
-  end: Date,
-): boolean {
+export function isoTimestampInRange(iso: string, start: Date, end: Date): boolean {
   const t = Date.parse(iso);
   return t >= start.getTime() && t <= end.getTime();
 }

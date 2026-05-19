@@ -91,18 +91,11 @@ export function WelcomePage() {
   const firstName = user?.name?.split(/\s+/)[0] ?? "коллега";
 
   const mineClients = useMemo(
-    () =>
-      clientsDeletedAware.filter((c) => c.createdBy === userId && !c.deleted),
+    () => clientsDeletedAware.filter((c) => c.createdBy === userId && !c.deleted),
     [clientsDeletedAware, userId],
   );
-  const mineDeals = useMemo(
-    () => deals.filter((d) => d.createdBy === userId),
-    [deals, userId],
-  );
-  const mineTasks = useMemo(
-    () => tasks.filter((t) => t.createdBy === userId),
-    [tasks, userId],
-  );
+  const mineDeals = useMemo(() => deals.filter((d) => d.createdBy === userId), [deals, userId]);
+  const mineTasks = useMemo(() => tasks.filter((t) => t.createdBy === userId), [tasks, userId]);
 
   const statsRows = useMemo(() => {
     const today = new Date();
@@ -110,18 +103,13 @@ export function WelcomePage() {
     const bdWeek = boundsWeekToToday(today);
     const bdMonth = boundsMonthToToday(today);
     const bdQuarter = boundsQuarterToToday(today);
-    const countAdded = (
-      items: { createdAt: string }[],
-      start: Date,
-      end: Date,
-    ) =>
+    const countAdded = (items: { createdAt: string }[], start: Date, end: Date) =>
       items.filter((x) => isoTimestampInRange(x.createdAt, start, end)).length;
     const activeDeals = mineDeals.filter(isDealActive);
     const completedDeals = mineDeals.filter((d) => d.status === "completed");
     const dealsAddedActive = activeDeals;
     const completionInRange = (d: Deal, start: Date, end: Date) =>
-      d.status === "completed" &&
-      isoTimestampInRange(dealCompletionMoment(d), start, end);
+      d.status === "completed" && isoTimestampInRange(dealCompletionMoment(d), start, end);
 
     return [
       {
@@ -140,25 +128,18 @@ export function WelcomePage() {
         addedToday: countAdded(dealsAddedActive, bdToday.start, bdToday.end),
         addedWeek: countAdded(dealsAddedActive, bdWeek.start, bdWeek.end),
         addedMonth: countAdded(dealsAddedActive, bdMonth.start, bdMonth.end),
-        addedQuarter: countAdded(
-          dealsAddedActive,
-          bdQuarter.start,
-          bdQuarter.end,
-        ),
+        addedQuarter: countAdded(dealsAddedActive, bdQuarter.start, bdQuarter.end),
       },
       {
         key: "done",
         row: "Завершённые сделки",
         today: completedDeals.length,
-        addedToday: completedDeals.filter((d) =>
-          completionInRange(d, bdToday.start, bdToday.end),
-        ).length,
-        addedWeek: completedDeals.filter((d) =>
-          completionInRange(d, bdWeek.start, bdWeek.end),
-        ).length,
-        addedMonth: completedDeals.filter((d) =>
-          completionInRange(d, bdMonth.start, bdMonth.end),
-        ).length,
+        addedToday: completedDeals.filter((d) => completionInRange(d, bdToday.start, bdToday.end))
+          .length,
+        addedWeek: completedDeals.filter((d) => completionInRange(d, bdWeek.start, bdWeek.end))
+          .length,
+        addedMonth: completedDeals.filter((d) => completionInRange(d, bdMonth.start, bdMonth.end))
+          .length,
         addedQuarter: completedDeals.filter((d) =>
           completionInRange(d, bdQuarter.start, bdQuarter.end),
         ).length,
@@ -186,9 +167,7 @@ export function WelcomePage() {
   }, [mineDeals]);
 
   const recentTasks = useMemo(() => {
-    return [...mineTasks]
-      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-      .slice(0, 10);
+    return [...mineTasks].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 10);
   }, [mineTasks]);
 
   if (!userId || lc || ld || lt) {
@@ -257,15 +236,9 @@ export function WelcomePage() {
           {recentActiveDeals.map((deal) => (
             <DealRow key={deal.id}>
               <DealTitle>{deal.title}</DealTitle>
-              <DealClient>
-                {findClientName(clientsDeletedAware, deal.clientId)}
-              </DealClient>
-              <DealAmount>
-                {deal.amount.toLocaleString("ru-RU")} ₽
-              </DealAmount>
-              <DealStatus $status={deal.status}>
-                {DEAL_STATUS_META[deal.status].label}
-              </DealStatus>
+              <DealClient>{findClientName(clientsDeletedAware, deal.clientId)}</DealClient>
+              <DealAmount>{deal.amount.toLocaleString("ru-RU")} ₽</DealAmount>
+              <DealStatus $status={deal.status}>{DEAL_STATUS_META[deal.status].label}</DealStatus>
               <DealDate>{formatDateRu(deal.createdAt)}</DealDate>
             </DealRow>
           ))}
@@ -283,11 +256,7 @@ export function WelcomePage() {
       {recentTasks.length ? (
         <CardsGrid>
           {recentTasks.map((task) => (
-            <TaskMiniCard
-              key={task.id}
-              task={task}
-              dealTitle={findDealTitle(deals, task.dealId)}
-            />
+            <TaskMiniCard key={task.id} task={task} dealTitle={findDealTitle(deals, task.dealId)} />
           ))}
         </CardsGrid>
       ) : (
@@ -299,18 +268,9 @@ export function WelcomePage() {
         </Button>
       </SectionAction>
 
-      <ClientCreateModal
-        open={clientCreateOpen}
-        onClose={() => setClientCreateOpen(false)}
-      />
-      <DealCreateModal
-        open={dealCreateOpen}
-        onClose={() => setDealCreateOpen(false)}
-      />
-      <TaskCreateModal
-        open={taskCreateOpen}
-        onClose={() => setTaskCreateOpen(false)}
-      />
+      <ClientCreateModal open={clientCreateOpen} onClose={() => setClientCreateOpen(false)} />
+      <DealCreateModal open={dealCreateOpen} onClose={() => setDealCreateOpen(false)} />
+      <TaskCreateModal open={taskCreateOpen} onClose={() => setTaskCreateOpen(false)} />
     </WelcomeRoot>
   );
 }

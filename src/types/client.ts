@@ -1,12 +1,12 @@
 export type Client = {
-  id: string
-  name: string
-  phone: string
-  email: string
-  company: string
-  website: string
-  comment: string
-  createdAt: string
-  deleted: boolean
-  createdBy: string
-}
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  company: string;
+  website: string;
+  comment: string;
+  createdAt: string;
+  deleted: boolean;
+  createdBy: string;
+};

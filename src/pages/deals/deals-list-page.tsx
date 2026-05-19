@@ -22,13 +22,7 @@ import { useGetClientsQuery, useGetDealsQuery } from "../../store/api";
 import type { Deal } from "../../types";
 
 export function DealsListPage() {
-  const {
-    data: deals = [],
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useGetDealsQuery();
+  const { data: deals = [], isLoading, isError, error, refetch } = useGetDealsQuery();
   const { data: clients = [] } = useGetClientsQuery({ includeDeleted: true });
   const [q, setQ] = useState("");
   const [cardId, setCardId] = useState<string | null>(null);
@@ -38,12 +32,8 @@ export function DealsListPage() {
     const s = q.trim().toLowerCase();
     if (!s) return deals;
     return deals.filter((d) => {
-      const cn = (
-        clients.find((c) => c.id === d.clientId)?.name ?? "—"
-      ).toLowerCase();
-      const statusLabel = (
-        DEAL_STATUS_META[d.status]?.label ?? d.status
-      ).toLowerCase();
+      const cn = (clients.find((c) => c.id === d.clientId)?.name ?? "—").toLowerCase();
+      const statusLabel = (DEAL_STATUS_META[d.status]?.label ?? d.status).toLowerCase();
       const hay = [
         d.title,
         d.description,
@@ -61,8 +51,7 @@ export function DealsListPage() {
     });
   }, [deals, q, clients]);
 
-  const nameByClientId = (id: string) =>
-    clients.find((c) => c.id === id)?.name ?? "—";
+  const nameByClientId = (id: string) => clients.find((c) => c.id === id)?.name ?? "—";
 
   if (isLoading) return <ListPageLoading />;
 
@@ -72,9 +61,7 @@ export function DealsListPage() {
         title="Сделки"
         message="Не удалось загрузить сделки"
         description={
-          error && "status" in error
-            ? "Запустите json-server: npm run server"
-            : "Проверьте сеть."
+          error && "status" in error ? "Запустите json-server: npm run server" : "Проверьте сеть."
         }
         onRetry={() => refetch()}
       />
@@ -114,9 +101,7 @@ export function DealsListPage() {
               title: "Клиент",
               key: "client",
               sorter: (a, b) =>
-                nameByClientId(a.clientId).localeCompare(
-                  nameByClientId(b.clientId),
-                ),
+                nameByClientId(a.clientId).localeCompare(nameByClientId(b.clientId)),
               render: (_, row) => nameByClientId(row.clientId),
             },
             {
@@ -130,9 +115,7 @@ export function DealsListPage() {
               dataIndex: "status",
               sorter: (a, b) => a.status.localeCompare(b.status),
               render: (s: Deal["status"]) => (
-                <DealStatusCell $status={s}>
-                  {DEAL_STATUS_META[s].label}
-                </DealStatusCell>
+                <DealStatusCell $status={s}>{DEAL_STATUS_META[s].label}</DealStatusCell>
               ),
             },
             {
@@ -150,23 +133,15 @@ export function DealsListPage() {
             {
               title: "Дата завершения",
               dataIndex: "completedAt",
-              sorter: (a, b) =>
-                (a.completedAt ?? "").localeCompare(b.completedAt ?? ""),
+              sorter: (a, b) => (a.completedAt ?? "").localeCompare(b.completedAt ?? ""),
               render: (v: string | undefined) => (v ? formatDateRu(v) : "—"),
             },
           ]}
         />
       </DealsTableWrap>
 
-      <DealCardModal
-        dealId={cardId}
-        open={cardId !== null}
-        onClose={() => setCardId(null)}
-      />
-      <DealCreateModal
-        open={createOpen}
-        onClose={() => setCreateOpen(false)}
-      />
+      <DealCardModal dealId={cardId} open={cardId !== null} onClose={() => setCardId(null)} />
+      <DealCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />
     </PageRoot>
   );
 }

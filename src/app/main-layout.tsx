@@ -4,10 +4,7 @@ import styled from "styled-components";
 import { useMediaQuery } from "../hooks/use-media-query";
 import { MainContent, ViewContainer } from "../layouts";
 import { MainSidebar } from "../layouts/sidebar/main-sidebar";
-import {
-  SidebarProvider,
-  useSidebar,
-} from "../layouts/sidebar/sidebar-context";
+import { SidebarProvider, useSidebar } from "../layouts/sidebar/sidebar-context";
 import { color, grid, layout } from "../theme/tokens";
 
 const Shell = styled.div`

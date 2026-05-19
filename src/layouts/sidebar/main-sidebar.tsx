@@ -198,8 +198,7 @@ export function MainSidebar({ onNavigate, forceExpanded }: MainSidebarProps) {
   const collapsed = forceExpanded ? false : collapsedState;
   const userId = useAppSelector(selectAuthUserId);
   const { data: me } = useGetUserByIdQuery(userId ?? "", { skip: !userId });
-  const displayName =
-    me?.username?.trim() || me?.name?.split(/\s+/)[0] || "Пользователь";
+  const displayName = me?.username?.trim() || me?.name?.split(/\s+/)[0] || "Пользователь";
   const { pathname } = useLocation();
   const reportsActive = pathname.startsWith("/reports");
 
@@ -268,10 +267,7 @@ export function MainSidebar({ onNavigate, forceExpanded }: MainSidebarProps) {
 
       <Footer $collapsed={collapsed}>
         <UserRow to={path.settings} $collapsed={collapsed} onClick={onNavigate}>
-          <Avatar
-            size={36}
-            style={{ backgroundColor: color.accent.primary, flexShrink: 0 }}
-          >
+          <Avatar size={36} style={{ backgroundColor: color.accent.primary, flexShrink: 0 }}>
             {displayName.charAt(0).toUpperCase()}
           </Avatar>
           <UserName $hidden={collapsed}>{displayName}</UserName>

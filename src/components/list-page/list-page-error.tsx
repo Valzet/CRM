@@ -10,8 +10,7 @@ type Props = {
 };
 
 export function ListPageError(props: Props) {
-  const { title, message = "Не удалось загрузить данные", description, onRetry } =
-    props;
+  const { title, message = "Не удалось загрузить данные", description, onRetry } = props;
 
   return (
     <PageRoot>

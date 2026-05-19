@@ -82,9 +82,7 @@ export function TaskEditModal(props: Props) {
     }
   };
 
-  const meta = task?.createdAt
-    ? `Создана ${formatDateRu(task.createdAt)}`
-    : undefined;
+  const meta = task?.createdAt ? `Создана ${formatDateRu(task.createdAt)}` : undefined;
 
   return (
     <CrmModal

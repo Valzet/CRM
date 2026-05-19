@@ -25,10 +25,9 @@ export function ClientFormPage() {
   const { clientId } = useParams<{ clientId: string }>();
   const navigate = useNavigate();
   const isEdit = Boolean(clientId);
-  const { data: client, isLoading: isLoadingClient } = useGetClientByIdQuery(
-    clientId!,
-    { skip: !isEdit },
-  );
+  const { data: client, isLoading: isLoadingClient } = useGetClientByIdQuery(clientId!, {
+    skip: !isEdit,
+  });
   const [createClient, { isLoading: isCreating }] = useCreateClientMutation();
   const [updateClient, { isLoading: isUpdating }] = useUpdateClientMutation();
   const {
@@ -81,11 +80,7 @@ export function ClientFormPage() {
         {title}
       </Typography.Title>
       <Link to={path.clients}>← К списку</Link>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        noValidate
-        style={{ marginTop: 24 }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ marginTop: 24 }}>
         <Form layout="vertical" requiredMark component="div">
           <ClientFormFields control={control} errors={errors} />
           <Form.Item>

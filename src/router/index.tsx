@@ -28,10 +28,7 @@ function AppRoutes() {
       <Route path={Page.LOGIN} element={<LoginPage />} />
       <Route path={path.register} element={<RegisterPage />} />
       <Route path={path.passwordRecovery} element={<PasswordRecoveryPage />} />
-      <Route
-        path={path.emailConfirmation}
-        element={<EmailConfirmationPage />}
-      />
+      <Route path={path.emailConfirmation} element={<EmailConfirmationPage />} />
       <Route path={Page.UNAVAILABLE} element={<UnavailablePage />} />
 
       <Route

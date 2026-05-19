@@ -26,10 +26,7 @@ export function DealCreateModal(props: Props) {
   const { data: clientsAll, isLoading: isLoadingClients } = useGetClientsQuery({
     includeDeleted: false,
   });
-  const clientsForSelect = useMemo(
-    () => clientsAll?.filter((c) => !c.deleted) ?? [],
-    [clientsAll],
-  );
+  const clientsForSelect = useMemo(() => clientsAll?.filter((c) => !c.deleted) ?? [], [clientsAll]);
 
   const {
     control,

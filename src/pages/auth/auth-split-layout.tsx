@@ -29,12 +29,10 @@ export function AuthSplitLayout(props: AuthSplitLayoutProps) {
             <BrandLogo src={logo} alt="" decoding="async" />
           </BrandMark>
           <BrandCopy>
+            <BrandText>Платформа для управления клиентами, сделками и задачами.</BrandText>
             <BrandText>
-              Платформа для управления клиентами, сделками и задачами.
-            </BrandText>
-            <BrandText>
-              Эффективно управляйте бизнес-процессами, отслеживайте ключевые
-              показатели и выстраивайте продуктивные отношения с клиентами.
+              Эффективно управляйте бизнес-процессами, отслеживайте ключевые показатели и
+              выстраивайте продуктивные отношения с клиентами.
             </BrandText>
           </BrandCopy>
           <BrandFooter>{leftFooter}</BrandFooter>

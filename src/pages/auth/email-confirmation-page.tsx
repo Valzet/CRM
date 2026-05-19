@@ -3,14 +3,8 @@ import { Button, Form, message } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useLocation } from "react-router-dom";
 import { path } from "../../lib/constants/navigation";
-import {
-  emailConfirmFormSchema,
-  type EmailConfirmFormValues,
-} from "../../schemas";
-import {
-  useConfirmEmailMutation,
-  useResendConfirmationEmailMutation,
-} from "../../store/api";
+import { emailConfirmFormSchema, type EmailConfirmFormValues } from "../../schemas";
+import { useConfirmEmailMutation, useResendConfirmationEmailMutation } from "../../store/api";
 import { UiInput } from "../../components/ui/input";
 import { AuthSplitLayout } from "./auth-split-layout";
 import {
@@ -32,8 +26,7 @@ export function EmailConfirmationPage() {
   const fromPasswordRecovery = locState?.flow === "password-recovery";
 
   const [confirmEmail, { isLoading: isConfirming }] = useConfirmEmailMutation();
-  const [resend, { isLoading: isResending }] =
-    useResendConfirmationEmailMutation();
+  const [resend, { isLoading: isResending }] = useResendConfirmationEmailMutation();
 
   const {
     control,
@@ -95,13 +88,7 @@ export function EmailConfirmationPage() {
             />
             <Form.Item>
               <FormStack>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  block
-                  loading={isConfirming}
-                  size="large"
-                >
+                <Button type="primary" htmlType="submit" block loading={isConfirming} size="large">
                   Подтвердить
                 </Button>
                 <FormMutedCaption>Не пришло письмо?</FormMutedCaption>

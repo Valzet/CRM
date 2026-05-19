@@ -1,10 +1,6 @@
 import { Table } from "antd";
 import { useMemo, useState } from "react";
-import {
-  ClientCardModal,
-  ClientCreateModal,
-  ClientsTableWrap,
-} from "../../components/clients";
+import { ClientCardModal, ClientCreateModal, ClientsTableWrap } from "../../components/clients";
 import {
   CellLink,
   ListPageError,
@@ -52,10 +48,7 @@ export function ClientsListPage() {
   const [q, setQ] = useState("");
   const [cardId, setCardId] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
-  const filtered = useMemo(
-    () => clients.filter((c) => clientMatchesQuery(c, q)),
-    [clients, q],
-  );
+  const filtered = useMemo(() => clients.filter((c) => clientMatchesQuery(c, q)), [clients, q]);
 
   if (isLoading) return <ListPageLoading />;
 
@@ -114,10 +107,7 @@ export function ClientsListPage() {
               sorter: (a, b) => (a.email ?? "").localeCompare(b.email ?? ""),
               render: (v: string) =>
                 v ? (
-                  <CellLink
-                    href={`mailto:${v}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
+                  <CellLink href={`mailto:${v}`} onClick={(e) => e.stopPropagation()}>
                     {v}
                   </CellLink>
                 ) : (
@@ -164,15 +154,8 @@ export function ClientsListPage() {
         />
       </ClientsTableWrap>
 
-      <ClientCardModal
-        clientId={cardId}
-        open={cardId !== null}
-        onClose={() => setCardId(null)}
-      />
-      <ClientCreateModal
-        open={createOpen}
-        onClose={() => setCreateOpen(false)}
-      />
+      <ClientCardModal clientId={cardId} open={cardId !== null} onClose={() => setCardId(null)} />
+      <ClientCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />
     </PageRoot>
   );
 }

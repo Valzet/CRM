@@ -26,12 +26,9 @@ export function DealFormPage() {
   const navigate = useNavigate();
   const isEdit = Boolean(dealId);
 
-  const { data: deal, isLoading: isLoadingDeal } = useGetDealByIdQuery(
-    dealId!,
-    {
-      skip: !isEdit,
-    },
-  );
+  const { data: deal, isLoading: isLoadingDeal } = useGetDealByIdQuery(dealId!, {
+    skip: !isEdit,
+  });
 
   const { data: clientsAll, isLoading: isLoadingClients } = useGetClientsQuery({
     includeDeleted: true,
@@ -76,9 +73,7 @@ export function DealFormPage() {
       clientsForFields.some((c) => c.id === values.clientId && !c.deleted) ||
       deal?.clientId === values.clientId;
     if (!validClient) {
-      void message.warning(
-        "Нельзя сохранить сделку: выберите активного клиента.",
-      );
+      void message.warning("Нельзя сохранить сделку: выберите активного клиента.");
       return;
     }
     if (isEdit && dealId) {
@@ -100,8 +95,7 @@ export function DealFormPage() {
   const busy = isCreating || isUpdating || isLoadingClients;
   const title = isEdit ? "Редактирование сделки" : "Новая сделка";
 
-  const clientLabel =
-    deal && clientsAll?.find((c) => c.id === deal.clientId)?.name;
+  const clientLabel = deal && clientsAll?.find((c) => c.id === deal.clientId)?.name;
 
   return (
     <div>
@@ -115,11 +109,7 @@ export function DealFormPage() {
         </Typography.Paragraph>
       ) : null}
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        noValidate
-        style={{ marginTop: 24 }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ marginTop: 24 }}>
         <Form layout="vertical" requiredMark component="div">
           <DealFormFields
             control={control}

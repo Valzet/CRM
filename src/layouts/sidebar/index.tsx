@@ -1,1 +1,1 @@
-export { MainSidebar as Sidebar } from './main-sidebar'
+export { MainSidebar as Sidebar } from "./main-sidebar";

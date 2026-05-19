@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 
 type SidebarContextValue = {
   collapsed: boolean;
@@ -39,9 +32,7 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
     [collapsed, toggleCollapsed, mobileOpen, openMobile, closeMobile],
   );
 
-  return (
-    <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>
-  );
+  return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>;
 }
 
 export function useSidebar() {

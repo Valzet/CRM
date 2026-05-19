@@ -3,11 +3,7 @@ import { Modal, message } from "antd";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CrmModal, ModalBodyLoading } from "../crm-modal";
-import {
-  DangerFooterButton,
-  PrimaryFooterButton,
-  SecondaryFooterButton,
-} from "../crm-modal";
+import { DangerFooterButton, PrimaryFooterButton, SecondaryFooterButton } from "../crm-modal";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { clientFormSchema, type ClientFormValues } from "../../schemas";
 import {
@@ -15,10 +11,7 @@ import {
   useSoftDeleteClientMutation,
   useUpdateClientMutation,
 } from "../../store/api";
-import {
-  ClientModalEditFields,
-  ClientModalViewFields,
-} from "./client-modal-fields";
+import { ClientModalEditFields, ClientModalViewFields } from "./client-modal-fields";
 
 const defaultValues: ClientFormValues = {
   name: "",
@@ -90,8 +83,7 @@ export function ClientCardModal(props: Props) {
     if (!clientId) return;
     Modal.confirm({
       title: "Удалить клиента?",
-      content:
-        "Клиент будет помечен как удалённый. Новые сделки с ним создать нельзя.",
+      content: "Клиент будет помечен как удалённый. Новые сделки с ним создать нельзя.",
       okText: "Удалить",
       okButtonProps: { danger: true, loading: deleting },
       cancelText: "Отмена",
@@ -108,9 +100,7 @@ export function ClientCardModal(props: Props) {
     });
   };
 
-  const meta = client?.createdAt
-    ? `добавлен ${formatDateRu(client.createdAt)}`
-    : undefined;
+  const meta = client?.createdAt ? `добавлен ${formatDateRu(client.createdAt)}` : undefined;
 
   const footer =
     mode === "view" ? (
@@ -135,9 +125,7 @@ export function ClientCardModal(props: Props) {
         >
           Сохранить
         </PrimaryFooterButton>
-        <SecondaryFooterButton onClick={() => setMode("view")}>
-          Отменить
-        </SecondaryFooterButton>
+        <SecondaryFooterButton onClick={() => setMode("view")}>Отменить</SecondaryFooterButton>
       </>
     );
 

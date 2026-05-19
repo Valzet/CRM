@@ -1,6 +1,6 @@
-import { Checkbox, type CheckboxProps } from 'antd'
+import { Checkbox, type CheckboxProps } from "antd";
 
-export type UiCheckboxProps = CheckboxProps
+export type UiCheckboxProps = CheckboxProps;
 
 /**
  * Обертка над Ant Design `Checkbox` под дизайн-систему.
@@ -10,7 +10,7 @@ export type UiCheckboxProps = CheckboxProps
  * — состояние квадратика галочки задаёт тема Ant (`antdTheme` в `src/theme/antd-theme.ts`).
  */
 export function UiCheckbox(props: UiCheckboxProps) {
-  return <Checkbox {...props} />
+  return <Checkbox {...props} />;
 }
 
-UiCheckbox.displayName = 'UiCheckbox'
+UiCheckbox.displayName = "UiCheckbox";

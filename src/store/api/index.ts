@@ -30,12 +30,4 @@ export {
   useUpdateUserProfileMutation,
 } from "./crmApi";
 
-export type {
-  Client,
-  Deal,
-  DealStatus,
-  Task,
-  TaskStatus,
-  User,
-  UserRecord,
-} from "../../types";
+export type { Client, Deal, DealStatus, Task, TaskStatus, User, UserRecord } from "../../types";

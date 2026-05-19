@@ -78,8 +78,7 @@ export const ModalFooter = styled.div`
 
 export const FieldGrid = styled.div<{ $columns?: 1 | 2 }>`
   display: grid;
-  grid-template-columns: ${(p) =>
-    p.$columns === 1 ? "1fr" : "1fr 1fr"};
+  grid-template-columns: ${(p) => (p.$columns === 1 ? "1fr" : "1fr 1fr")};
   gap: 10px 12px;
 `;
 

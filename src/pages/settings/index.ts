@@ -1,1 +1,1 @@
-export { AccountSettingsPage } from './account-settings-page'
+export { AccountSettingsPage } from "./account-settings-page";

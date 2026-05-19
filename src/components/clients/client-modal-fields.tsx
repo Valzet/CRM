@@ -79,9 +79,7 @@ export function ClientModalEditFields(props: EditProps) {
               <>
                 <UiInput {...field} status={errors.name ? "error" : undefined} />
                 {errors.name?.message ? (
-                  <span className="ant-form-item-explain-error">
-                    {errors.name.message}
-                  </span>
+                  <span className="ant-form-item-explain-error">{errors.name.message}</span>
                 ) : null}
               </>
             )}
@@ -108,10 +106,7 @@ export function ClientModalEditFields(props: EditProps) {
               name="company"
               control={control}
               render={({ field }) => (
-                <UiInput
-                  {...field}
-                  status={errors.company ? "error" : undefined}
-                />
+                <UiInput {...field} status={errors.company ? "error" : undefined} />
               )}
             />
           </FieldControl>
@@ -125,10 +120,7 @@ export function ClientModalEditFields(props: EditProps) {
               name="website"
               control={control}
               render={({ field }) => (
-                <UiInput
-                  {...field}
-                  status={errors.website ? "error" : undefined}
-                />
+                <UiInput {...field} status={errors.website ? "error" : undefined} />
               )}
             />
           </FieldControl>
@@ -140,11 +132,7 @@ export function ClientModalEditFields(props: EditProps) {
               name="email"
               control={control}
               render={({ field }) => (
-                <UiInput
-                  {...field}
-                  type="email"
-                  status={errors.email ? "error" : undefined}
-                />
+                <UiInput {...field} type="email" status={errors.email ? "error" : undefined} />
               )}
             />
           </FieldControl>

@@ -10,10 +10,7 @@ export type AccountProfilePatch = {
 
 export const accountSettingsSchema = z
   .object({
-    firstName: z
-      .string()
-      .transform(collapseWhitespaceTrim)
-      .pipe(z.string().min(1, "Введите имя")),
+    firstName: z.string().transform(collapseWhitespaceTrim).pipe(z.string().min(1, "Введите имя")),
     lastName: z
       .string()
       .transform(collapseWhitespaceTrim)
@@ -32,9 +29,7 @@ export const accountSettingsSchema = z
   })
   .superRefine((data, ctx) => {
     const wantsChange =
-      Boolean(data.newPassword) ||
-      Boolean(data.confirmPassword) ||
-      Boolean(data.existingPassword);
+      Boolean(data.newPassword) || Boolean(data.confirmPassword) || Boolean(data.existingPassword);
     if (!wantsChange) return;
     if (!data.existingPassword) {
       ctx.addIssue({

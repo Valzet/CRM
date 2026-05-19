@@ -2,10 +2,7 @@ import * as z from "zod";
 import { collapseWhitespaceTrim } from "./normalize";
 
 export const dealFormSchema = z.object({
-  title: z
-    .string()
-    .transform(collapseWhitespaceTrim)
-    .pipe(z.string().min(1, "Обязательное поле")),
+  title: z.string().transform(collapseWhitespaceTrim).pipe(z.string().min(1, "Обязательное поле")),
   description: z.string().transform(collapseWhitespaceTrim),
   clientId: z
     .string()

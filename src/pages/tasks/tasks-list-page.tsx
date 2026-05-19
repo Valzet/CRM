@@ -17,19 +17,10 @@ import {
 } from "../../components/tasks";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { TASK_STATUS_META } from "../../lib/task-status";
-import {
-  useGetDealsQuery,
-  useGetTasksQuery,
-  useGetUsersQuery,
-} from "../../store/api";
+import { useGetDealsQuery, useGetTasksQuery, useGetUsersQuery } from "../../store/api";
 import type { Task } from "../../types";
 
-function taskMatchesQuery(
-  t: Task,
-  needle: string,
-  dealTitle: string,
-  assigneeName: string,
-) {
+function taskMatchesQuery(t: Task, needle: string, dealTitle: string, assigneeName: string) {
   const n = needle.trim().toLowerCase();
   if (!n) return true;
   const statusLabel = (TASK_STATUS_META[t.status]?.label ?? t.status).toLowerCase();
@@ -51,13 +42,7 @@ function taskMatchesQuery(
 }
 
 export function TasksListPage() {
-  const {
-    data: tasks = [],
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useGetTasksQuery();
+  const { data: tasks = [], isLoading, isError, error, refetch } = useGetTasksQuery();
   const { data: deals = [] } = useGetDealsQuery();
   const { data: users = [] } = useGetUsersQuery();
   const [q, setQ] = useState("");
@@ -77,12 +62,7 @@ export function TasksListPage() {
   const filtered = useMemo(
     () =>
       tasks.filter((t) =>
-        taskMatchesQuery(
-          t,
-          q,
-          dealTitleById(t.dealId),
-          userNameById(t.assigneeId),
-        ),
+        taskMatchesQuery(t, q, dealTitleById(t.dealId), userNameById(t.assigneeId)),
       ),
     [tasks, q, dealTitleById, userNameById],
   );
@@ -95,9 +75,7 @@ export function TasksListPage() {
         title="Задачи"
         message="Не удалось загрузить задачи"
         description={
-          error && "status" in error
-            ? "Запустите json-server: npm run server"
-            : "Проверьте сеть."
+          error && "status" in error ? "Запустите json-server: npm run server" : "Проверьте сеть."
         }
         onRetry={() => refetch()}
       />
@@ -136,8 +114,7 @@ export function TasksListPage() {
             {
               title: "Сделка",
               key: "deal",
-              sorter: (a, b) =>
-                dealTitleById(a.dealId).localeCompare(dealTitleById(b.dealId)),
+              sorter: (a, b) => dealTitleById(a.dealId).localeCompare(dealTitleById(b.dealId)),
               render: (_, row) => dealTitleById(row.dealId),
             },
             {
@@ -156,9 +133,7 @@ export function TasksListPage() {
               title: "Исполнитель",
               key: "assignee",
               sorter: (a, b) =>
-                userNameById(a.assigneeId).localeCompare(
-                  userNameById(b.assigneeId),
-                ),
+                userNameById(a.assigneeId).localeCompare(userNameById(b.assigneeId)),
               render: (_, row) => userNameById(row.assigneeId),
             },
             {
@@ -166,9 +141,7 @@ export function TasksListPage() {
               dataIndex: "status",
               sorter: (a, b) => a.status.localeCompare(b.status),
               render: (s: Task["status"]) => (
-                <TaskStatusCell $status={s}>
-                  {TASK_STATUS_META[s].label}
-                </TaskStatusCell>
+                <TaskStatusCell $status={s}>{TASK_STATUS_META[s].label}</TaskStatusCell>
               ),
             },
             {
@@ -181,10 +154,7 @@ export function TasksListPage() {
         />
       </TasksTableWrap>
 
-      <TaskCreateModal
-        open={createOpen}
-        onClose={() => setCreateOpen(false)}
-      />
+      <TaskCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />
       <TaskEditModal
         taskId={editTaskId}
         open={editTaskId !== null}

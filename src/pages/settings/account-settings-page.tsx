@@ -20,10 +20,7 @@ import styled from "styled-components";
 import { path } from "../../lib/constants/navigation";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { clearAuth, selectAuthUserId } from "../../store/auth-slice";
-import {
-  accountSettingsSchema,
-  type AccountSettingsFormValues,
-} from "../../schemas";
+import { accountSettingsSchema, type AccountSettingsFormValues } from "../../schemas";
 import {
   useDeleteAccountMutation,
   useGetUserByIdQuery,
@@ -141,12 +138,9 @@ function splitName(full: string): { first: string; last: string } {
   return { first: p[0]!, last: p.slice(1).join(" ") };
 }
 
-export function AccountSettingsPage(props?: {
-  variant?: "settings" | "profile";
-}) {
+export function AccountSettingsPage(props?: { variant?: "settings" | "profile" }) {
   const variant = props?.variant ?? "settings";
-  const pageTitle =
-    variant === "profile" ? "Профиль пользователя" : "Настройка аккаунта";
+  const pageTitle = variant === "profile" ? "Профиль пользователя" : "Настройка аккаунта";
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const userId = useAppSelector(selectAuthUserId);
@@ -158,8 +152,7 @@ export function AccountSettingsPage(props?: {
     refetch,
   } = useGetUserByIdQuery(userId ?? "", { skip: !userId });
   const [saveProfile, { isLoading: saving }] = useUpdateUserProfileMutation();
-  const [savePassword, { isLoading: savingPw }] =
-    useUpdateUserPasswordMutation();
+  const [savePassword, { isLoading: savingPw }] = useUpdateUserPasswordMutation();
   const [requestVerify] = useRequestVerifyEmailMutation();
   const [deleteAccount, { isLoading: deleting }] = useDeleteAccountMutation();
 
@@ -199,8 +192,7 @@ export function AccountSettingsPage(props?: {
     }
   }, [user, reset]);
 
-  const showVerify =
-    user && emailVal !== undefined && emailVal.trim() !== user.email.trim();
+  const showVerify = user && emailVal !== undefined && emailVal.trim() !== user.email.trim();
 
   const onSubmit = async (values: AccountSettingsFormValues) => {
     if (!user) return;
@@ -433,11 +425,7 @@ export function AccountSettingsPage(props?: {
                         validateStatus={errors.existingPassword ? "error" : ""}
                         help={errors.existingPassword?.message}
                       >
-                        <Input.Password
-                          {...field}
-                          size="large"
-                          autoComplete="current-password"
-                        />
+                        <Input.Password {...field} size="large" autoComplete="current-password" />
                       </Form.Item>
                     )}
                   />
@@ -454,11 +442,7 @@ export function AccountSettingsPage(props?: {
                         validateStatus={errors.newPassword ? "error" : ""}
                         help={errors.newPassword?.message}
                       >
-                        <Input.Password
-                          {...field}
-                          size="large"
-                          autoComplete="new-password"
-                        />
+                        <Input.Password {...field} size="large" autoComplete="new-password" />
                       </Form.Item>
                     )}
                   />
@@ -473,11 +457,7 @@ export function AccountSettingsPage(props?: {
                         validateStatus={errors.confirmPassword ? "error" : ""}
                         help={errors.confirmPassword?.message}
                       >
-                        <Input.Password
-                          {...field}
-                          size="large"
-                          autoComplete="new-password"
-                        />
+                        <Input.Password {...field} size="large" autoComplete="new-password" />
                       </Form.Item>
                     )}
                   />

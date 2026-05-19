@@ -4,11 +4,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { CrmModal, PrimaryFooterButton, SecondaryFooterButton } from "../crm-modal";
 import { taskFormSchema, type TaskFormValues } from "../../schemas";
-import {
-  useCreateTaskMutation,
-  useGetDealsQuery,
-  useGetUsersQuery,
-} from "../../store/api";
+import { useCreateTaskMutation, useGetDealsQuery, useGetUsersQuery } from "../../store/api";
 import { TaskModalEditFields } from "./task-modal-fields";
 
 const defaultValues: TaskFormValues = {

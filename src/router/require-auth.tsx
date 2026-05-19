@@ -10,9 +10,7 @@ export function RequireAuth(props: PropsWithChildren) {
   const location = useLocation();
 
   if (!userId) {
-    return (
-      <Navigate to={path.login} replace state={{ from: location.pathname }} />
-    );
+    return <Navigate to={path.login} replace state={{ from: location.pathname }} />;
   }
 
   return children;

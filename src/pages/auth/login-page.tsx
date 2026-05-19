@@ -36,9 +36,7 @@ export function LoginPage() {
     } catch (err) {
       const e = err as FetchBaseQueryError;
       const detail =
-        typeof e.data === "string"
-          ? e.data
-          : "Не удалось войти. Запущен ли json-server?";
+        typeof e.data === "string" ? e.data : "Не удалось войти. Запущен ли json-server?";
       void message.error(detail);
     }
   };
@@ -47,8 +45,7 @@ export function LoginPage() {
     <AuthSplitLayout
       leftFooter={
         <LeftFooter>
-          У вас ещё нет аккаунта?{" "}
-          <Link to={path.register}>Зарегистрироваться</Link>
+          У вас ещё нет аккаунта? <Link to={path.register}>Зарегистрироваться</Link>
         </LeftFooter>
       }
     >
@@ -83,11 +80,7 @@ export function LoginPage() {
                   validateStatus={errors.password ? "error" : ""}
                   help={errors.password?.message}
                 >
-                  <Input.Password
-                    {...field}
-                    autoComplete="current-password"
-                    placeholder="••••••"
-                  />
+                  <Input.Password {...field} autoComplete="current-password" placeholder="••••••" />
                 </Form.Item>
               )}
             />
@@ -95,13 +88,7 @@ export function LoginPage() {
               <Link to={path.passwordRecovery}>Забыли пароль?</Link>
             </ForgotPasswordRow>
             <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                block
-                loading={isLoading}
-                size="large"
-              >
+              <Button type="primary" htmlType="submit" block loading={isLoading} size="large">
                 Войти
               </Button>
             </Form.Item>

@@ -30,11 +30,9 @@ export const authApi = createApi({
         const users = (await res.json()) as UserRecord[];
         const q = body.email.trim().toLowerCase();
         const hit = users.find((u) => {
-          const emailMatch =
-            typeof u.email === "string" && u.email.trim().toLowerCase() === q;
+          const emailMatch = typeof u.email === "string" && u.email.trim().toLowerCase() === q;
           const usernameMatch =
-            typeof u.username === "string" &&
-            u.username.trim().toLowerCase() === q;
+            typeof u.username === "string" && u.username.trim().toLowerCase() === q;
           return u.password === body.password && (emailMatch || usernameMatch);
         });
         if (!hit) {
@@ -65,9 +63,7 @@ export const authApi = createApi({
         }
         const allUsers = (await dupRes.json()) as UserRecord[];
         const clash = allUsers.some(
-          (u) =>
-            typeof u.email === "string" &&
-            u.email.trim().toLowerCase() === emailNorm,
+          (u) => typeof u.email === "string" && u.email.trim().toLowerCase() === emailNorm,
         );
         if (clash) {
           return {
@@ -101,10 +97,7 @@ export const authApi = createApi({
       },
     }),
 
-    requestPasswordReset: builder.mutation<
-      { ok: true },
-      PasswordRecoveryFormValues
-    >({
+    requestPasswordReset: builder.mutation<{ ok: true }, PasswordRecoveryFormValues>({
       async queryFn(body) {
         void body;
         await sleep(500);
@@ -127,10 +120,7 @@ export const authApi = createApi({
       },
     }),
 
-    updateUserPassword: builder.mutation<
-      UserRecord,
-      { id: string; password: string }
-    >({
+    updateUserPassword: builder.mutation<UserRecord, { id: string; password: string }>({
       async queryFn({ id, password }) {
         const res = await fetch(`/api/users/${id}`, {
           method: "PATCH",

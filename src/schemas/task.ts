@@ -2,15 +2,9 @@ import * as z from "zod";
 import { collapseWhitespaceTrim } from "./normalize";
 
 export const taskFormSchema = z.object({
-  title: z
-    .string()
-    .transform(collapseWhitespaceTrim)
-    .pipe(z.string().min(1, "Обязательное поле")),
+  title: z.string().transform(collapseWhitespaceTrim).pipe(z.string().min(1, "Обязательное поле")),
   description: z.string().transform(collapseWhitespaceTrim),
-  dealId: z
-    .string()
-    .transform(collapseWhitespaceTrim)
-    .pipe(z.string().min(1, "Выберите сделку")),
+  dealId: z.string().transform(collapseWhitespaceTrim).pipe(z.string().min(1, "Выберите сделку")),
   assigneeId: z
     .string()
     .transform(collapseWhitespaceTrim)

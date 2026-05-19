@@ -3,10 +3,7 @@ import { Button, Form, message } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { path } from "../../lib/constants/navigation";
-import {
-  passwordRecoveryFormSchema,
-  type PasswordRecoveryFormValues,
-} from "../../schemas";
+import { passwordRecoveryFormSchema, type PasswordRecoveryFormValues } from "../../schemas";
 import { useRequestPasswordResetMutation } from "../../store/api";
 import { UiInput } from "../../components/ui/input";
 import { AuthSplitLayout } from "./auth-split-layout";
@@ -49,8 +46,8 @@ export function PasswordRecoveryPage() {
       <FormCard>
         <CardTitle>Восстановление пароля</CardTitle>
         <CardSubtitle>
-          Укажите почту, на которую вы регистрировали аккаунт, и мы отправим вам
-          инструкцию по восстановлению пароля.
+          Укажите почту, на которую вы регистрировали аккаунт, и мы отправим вам инструкцию по
+          восстановлению пароля.
         </CardSubtitle>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Form layout="vertical" requiredMark component="div">
@@ -73,13 +70,7 @@ export function PasswordRecoveryPage() {
               )}
             />
             <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                block
-                loading={isLoading}
-                size="large"
-              >
+              <Button type="primary" htmlType="submit" block loading={isLoading} size="large">
                 Восстановить
               </Button>
             </Form.Item>

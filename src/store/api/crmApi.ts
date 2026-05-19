@@ -46,9 +46,7 @@ export const crmApi = createApi({
       query: () => ({ url: "/clients" }),
       transformResponse: (rows: Client[], _meta, arg) => {
         const includeDeleted =
-          typeof arg === "object" &&
-          arg !== null &&
-          Boolean(arg.includeDeleted);
+          typeof arg === "object" && arg !== null && Boolean(arg.includeDeleted);
         return includeDeleted ? rows : rows.filter((c) => !c.deleted);
       },
       providesTags: listTagFactory<Client>("Client"),
@@ -57,9 +55,7 @@ export const crmApi = createApi({
     getClientById: builder.query<Client, string>({
       query: (id) => `/clients/${id}`,
       providesTags: (result, _err, id) =>
-        result
-          ? [{ type: "Client" as const, id: result.id }]
-          : [{ type: "Client" as const, id }],
+        result ? [{ type: "Client" as const, id: result.id }] : [{ type: "Client" as const, id }],
     }),
 
     createClient: builder.mutation<Client, ClientFormValues>({
@@ -82,10 +78,7 @@ export const crmApi = createApi({
       invalidatesTags: [{ type: "Client", id: "LIST" }],
     }),
 
-    updateClient: builder.mutation<
-      Client,
-      { id: string; data: ClientFormValues }
-    >({
+    updateClient: builder.mutation<Client, { id: string; data: ClientFormValues }>({
       query: ({ id, data }) => ({
         url: `/clients/${id}`,
         method: "PATCH",
@@ -113,9 +106,7 @@ export const crmApi = createApi({
       query: (arg) => ({
         url: "/deals",
         params:
-          arg && typeof arg === "object" && arg.clientId
-            ? { clientId: arg.clientId }
-            : undefined,
+          arg && typeof arg === "object" && arg.clientId ? { clientId: arg.clientId } : undefined,
       }),
       providesTags: listTagFactory<Deal>("Deal"),
     }),
@@ -123,9 +114,7 @@ export const crmApi = createApi({
     getDealById: builder.query<Deal, string>({
       query: (id) => `/deals/${id}`,
       providesTags: (result, _err, id) =>
-        result
-          ? [{ type: "Deal" as const, id: result.id }]
-          : [{ type: "Deal" as const, id }],
+        result ? [{ type: "Deal" as const, id: result.id }] : [{ type: "Deal" as const, id }],
     }),
 
     createDeal: builder.mutation<Deal, DealFormValues>({
@@ -168,10 +157,7 @@ export const crmApi = createApi({
     getTasks: builder.query<Task[], { dealId?: string } | void>({
       query: (arg) => ({
         url: "/tasks",
-        params:
-          arg && typeof arg === "object" && arg.dealId
-            ? { dealId: arg.dealId }
-            : undefined,
+        params: arg && typeof arg === "object" && arg.dealId ? { dealId: arg.dealId } : undefined,
       }),
       providesTags: listTagFactory<Task>("Task"),
     }),
@@ -179,9 +165,7 @@ export const crmApi = createApi({
     getTaskById: builder.query<Task, string>({
       query: (id) => `/tasks/${id}`,
       providesTags: (result, _err, id) =>
-        result
-          ? [{ type: "Task" as const, id: result.id }]
-          : [{ type: "Task" as const, id }],
+        result ? [{ type: "Task" as const, id: result.id }] : [{ type: "Task" as const, id }],
     }),
 
     createTask: builder.mutation<Task, TaskFormValues>({
@@ -233,15 +217,10 @@ export const crmApi = createApi({
       query: (id) => `/users/${id}`,
       transformResponse: (row: UserRecord) => stripUserPassword(row),
       providesTags: (result, _err, id) =>
-        result
-          ? [{ type: "User" as const, id: result.id }]
-          : [{ type: "User" as const, id }],
+        result ? [{ type: "User" as const, id: result.id }] : [{ type: "User" as const, id }],
     }),
 
-    updateUserProfile: builder.mutation<
-      User,
-      { id: string; data: AccountProfilePatch }
-    >({
+    updateUserProfile: builder.mutation<User, { id: string; data: AccountProfilePatch }>({
       query: ({ id, data }) => ({
         url: `/users/${id}`,
         method: "PATCH",

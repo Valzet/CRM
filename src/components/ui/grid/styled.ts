@@ -1,5 +1,5 @@
-import styled from 'styled-components'
-import { grid, gridDesktopInlineSizePx } from '../../../theme/tokens'
+import styled from "styled-components";
+import { grid, gridDesktopInlineSizePx } from "../../../theme/tokens";
 
 export const PageGrid = styled.div`
   box-sizing: border-box;
@@ -17,20 +17,17 @@ export const PageGrid = styled.div`
     margin-right: auto;
     padding-left: 0;
     padding-right: 0;
-    grid-template-columns: repeat(
-      ${grid.desktop.columns},
-      ${grid.desktop.columnWidthPx}px
-    );
+    grid-template-columns: repeat(${grid.desktop.columns}, ${grid.desktop.columnWidthPx}px);
     justify-content: center;
   }
-`
+`;
 
-export type GridSpanDesktop = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
-export type GridSpanMobile = 1 | 2 | 3 | 4
+export type GridSpanDesktop = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export type GridSpanMobile = 1 | 2 | 3 | 4;
 
 export const GridColumn = styled.div<{
-  $desktopSpan: GridSpanDesktop
-  $mobileSpan?: GridSpanMobile
+  $desktopSpan: GridSpanDesktop;
+  $mobileSpan?: GridSpanMobile;
 }>`
   min-width: 0;
   grid-column: span ${({ $mobileSpan = 4 }) => $mobileSpan};
@@ -38,4 +35,4 @@ export const GridColumn = styled.div<{
   @media (min-width: ${({ theme }) => theme.grid.breakpoints.desktopMin}) {
     grid-column: span ${({ $desktopSpan }) => $desktopSpan};
   }
-`
+`;

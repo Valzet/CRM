@@ -67,11 +67,7 @@ export function RegisterPage() {
                   validateStatus={errors.firstName ? "error" : ""}
                   help={errors.firstName?.message}
                 >
-                  <UiInput
-                    {...field}
-                    autoComplete="given-name"
-                    placeholder="Ярополк"
-                  />
+                  <UiInput {...field} autoComplete="given-name" placeholder="Ярополк" />
                 </Form.Item>
               )}
             />
@@ -84,11 +80,7 @@ export function RegisterPage() {
                   validateStatus={errors.lastName ? "error" : ""}
                   help={errors.lastName?.message}
                 >
-                  <UiInput
-                    {...field}
-                    autoComplete="family-name"
-                    placeholder="Иванов"
-                  />
+                  <UiInput {...field} autoComplete="family-name" placeholder="Иванов" />
                 </Form.Item>
               )}
             />
@@ -119,11 +111,7 @@ export function RegisterPage() {
                   validateStatus={errors.username ? "error" : ""}
                   help={errors.username?.message}
                 >
-                  <UiInput
-                    {...field}
-                    autoComplete="username"
-                    placeholder="Yaropolk"
-                  />
+                  <UiInput {...field} autoComplete="username" placeholder="Yaropolk" />
                 </Form.Item>
               )}
             />
@@ -136,11 +124,7 @@ export function RegisterPage() {
                   validateStatus={errors.password ? "error" : ""}
                   help={errors.password?.message}
                 >
-                  <Input.Password
-                    {...field}
-                    autoComplete="new-password"
-                    placeholder="••••••"
-                  />
+                  <Input.Password {...field} autoComplete="new-password" placeholder="••••••" />
                 </Form.Item>
               )}
             />
@@ -153,22 +137,12 @@ export function RegisterPage() {
                   validateStatus={errors.confirmPassword ? "error" : ""}
                   help={errors.confirmPassword?.message}
                 >
-                  <Input.Password
-                    {...field}
-                    autoComplete="new-password"
-                    placeholder="••••••"
-                  />
+                  <Input.Password {...field} autoComplete="new-password" placeholder="••••••" />
                 </Form.Item>
               )}
             />
             <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                block
-                loading={isLoading}
-                size="large"
-              >
+              <Button type="primary" htmlType="submit" block loading={isLoading} size="large">
                 Зарегистрироваться
               </Button>
             </Form.Item>

@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { Radio } from 'antd';
+import styled from "styled-components";
+import { Radio } from "antd";
 
 export const ContentWrapper = styled.section`
   position: relative;
@@ -26,7 +26,7 @@ export const ViewTitle = styled.div`
   align-self: center;
   margin: 0;
   padding: 10px 0;
-  font-family: 'Inter';
+  font-family: "Inter";
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -56,7 +56,7 @@ export const RegistrationButton = styled.button`
   z-index: 21;
 
   ::after {
-    content: '+';
+    content: "+";
     padding-left: 8px;
   }
 `;

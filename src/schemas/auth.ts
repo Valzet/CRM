@@ -13,10 +13,7 @@ export type LoginFormValues = z.infer<typeof loginFormSchema>;
 
 export const registerFormSchema = z
   .object({
-    firstName: z
-      .string()
-      .transform(collapseWhitespaceTrim)
-      .pipe(z.string().min(1, "Введите имя")),
+    firstName: z.string().transform(collapseWhitespaceTrim).pipe(z.string().min(1, "Введите имя")),
     lastName: z
       .string()
       .transform(collapseWhitespaceTrim)
@@ -40,15 +37,10 @@ export const registerFormSchema = z
 export type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
 export const passwordRecoveryFormSchema = z.object({
-  email: z
-    .string()
-    .transform(collapseWhitespaceTrim)
-    .pipe(z.string().email("Некорректный email")),
+  email: z.string().transform(collapseWhitespaceTrim).pipe(z.string().email("Некорректный email")),
 });
 
-export type PasswordRecoveryFormValues = z.infer<
-  typeof passwordRecoveryFormSchema
->;
+export type PasswordRecoveryFormValues = z.infer<typeof passwordRecoveryFormSchema>;
 
 export const emailConfirmFormSchema = z.object({
   confirmationLink: z

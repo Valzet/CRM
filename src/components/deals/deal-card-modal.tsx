@@ -11,11 +11,7 @@ import {
 } from "../crm-modal";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { dealFormSchema, type DealFormValues } from "../../schemas";
-import {
-  useGetClientsQuery,
-  useGetDealByIdQuery,
-  useUpdateDealMutation,
-} from "../../store/api";
+import { useGetClientsQuery, useGetDealByIdQuery, useUpdateDealMutation } from "../../store/api";
 import { DealModalEditFields, DealModalViewFields } from "./deal-modal-fields";
 
 const defaultValues: DealFormValues = {
@@ -80,16 +76,13 @@ export function DealCardModal(props: Props) {
   }, [deal, open, reset]);
 
   const values = watch();
-  const clientName =
-    clientsAll?.find((c) => c.id === values.clientId)?.name ?? "—";
+  const clientName = clientsAll?.find((c) => c.id === values.clientId)?.name ?? "—";
 
   const onSave = async (formValues: DealFormValues) => {
     if (!dealId) return;
     const validClient =
       clientsForSelect.some((c) => c.id === formValues.clientId) &&
-      (clientsForSelect.some(
-        (c) => !c.deleted && c.id === formValues.clientId,
-      ) ||
+      (clientsForSelect.some((c) => !c.deleted && c.id === formValues.clientId) ||
         deal?.clientId === formValues.clientId);
     if (!validClient) {
       void message.warning(
@@ -127,15 +120,10 @@ export function DealCardModal(props: Props) {
     }
   };
 
-  const meta = deal?.createdAt
-    ? `Создана ${formatDateRu(deal.createdAt)}`
-    : undefined;
+  const meta = deal?.createdAt ? `Создана ${formatDateRu(deal.createdAt)}` : undefined;
 
   const canComplete =
-    deal &&
-    deal.status !== "completed" &&
-    deal.status !== "cancelled" &&
-    mode === "view";
+    deal && deal.status !== "completed" && deal.status !== "cancelled" && mode === "view";
 
   const footer =
     mode === "view" ? (
@@ -160,9 +148,7 @@ export function DealCardModal(props: Props) {
         >
           Сохранить
         </PrimaryFooterButton>
-        <SecondaryFooterButton onClick={() => setMode("view")}>
-          Отменить
-        </SecondaryFooterButton>
+        <SecondaryFooterButton onClick={() => setMode("view")}>Отменить</SecondaryFooterButton>
       </>
     );
 

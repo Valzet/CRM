@@ -31,15 +31,7 @@ type EditProps = {
 };
 
 export function TaskModalEditFields(props: EditProps) {
-  const {
-    control,
-    errors,
-    deals,
-    users,
-    isLoadingDeals,
-    isLoadingUsers,
-    currentStatus,
-  } = props;
+  const { control, errors, deals, users, isLoadingDeals, isLoadingUsers, currentStatus } = props;
 
   return (
     <FieldGrid $columns={1}>

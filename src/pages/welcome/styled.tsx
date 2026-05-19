@@ -107,18 +107,11 @@ export const StatsValueCell = styled.div<{ $variant?: "primary" | "delta" }>`
   text-align: center;
   border-top: 1px solid ${color.background.shadowHint};
   font-size: ${(p) =>
-    p.$variant === "primary"
-      ? typography.heading.h2.fontSize
-      : typography.body.sm.fontSize};
+    p.$variant === "primary" ? typography.heading.h2.fontSize : typography.body.sm.fontSize};
   line-height: ${(p) =>
-    p.$variant === "primary"
-      ? typography.heading.h2.lineHeight
-      : typography.body.sm.lineHeight};
+    p.$variant === "primary" ? typography.heading.h2.lineHeight : typography.body.sm.lineHeight};
   font-weight: ${(p) => (p.$variant === "primary" ? 700 : 500)};
-  color: ${(p) =>
-    p.$variant === "primary"
-      ? color.accent.primary
-      : color.accent.success};
+  color: ${(p) => (p.$variant === "primary" ? color.accent.primary : color.accent.success)};
 
   @media (max-width: 900px) {
     display: inline-block;
@@ -234,7 +227,9 @@ export const DealAmount = styled.div`
   }
 `;
 
-export const DealStatus = styled.div<{ $status: "new" | "in_progress" | "completed" | "cancelled" }>`
+export const DealStatus = styled.div<{
+  $status: "new" | "in_progress" | "completed" | "cancelled";
+}>`
   font-size: ${typography.body.sm.fontSize};
   line-height: ${typography.body.sm.lineHeight};
   text-align: right;
@@ -261,8 +256,7 @@ export const DealDate = styled.div`
 `;
 
 export const TaskCard = styled.div<{ $completed?: boolean }>`
-  background: ${(p) =>
-    p.$completed ? color.background.success : color.background.secondary};
+  background: ${(p) => (p.$completed ? color.background.success : color.background.secondary)};
   border: 1px solid ${color.background.shadowHint};
   border-radius: 12px;
   padding: 16px;

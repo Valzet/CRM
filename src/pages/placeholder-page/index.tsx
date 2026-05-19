@@ -17,9 +17,7 @@ export function PlaceholderPage(props: PlaceholderPageProps) {
         {title}
       </Typography.Title>
       {description ? (
-        <Typography.Paragraph type="secondary">
-          {description}
-        </Typography.Paragraph>
+        <Typography.Paragraph type="secondary">{description}</Typography.Paragraph>
       ) : null}
       {children}
     </div>

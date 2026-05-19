@@ -52,9 +52,7 @@ export function DealModalViewFields(props: ViewProps) {
         </Field>
         <Field>
           <FieldLabel>Статус</FieldLabel>
-          <StatusReadOnly
-            $tone={values.status === "in_progress" ? "primary" : "default"}
-          >
+          <StatusReadOnly $tone={values.status === "in_progress" ? "primary" : "default"}>
             {statusLabel}
           </StatusReadOnly>
         </Field>
@@ -130,9 +128,7 @@ export function DealModalEditFields(props: EditProps) {
                   value={field.value}
                   onChange={(v) => field.onChange(v ?? 1)}
                   status={errors.amount ? "error" : undefined}
-                  formatter={(v) =>
-                    v ? `${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ") : ""
-                  }
+                  formatter={(v) => (v ? `${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ") : "")}
                   parser={(v) => Number(v?.replace(/\s/g, "") ?? 0)}
                 />
               )}

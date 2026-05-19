@@ -41,12 +41,9 @@ export function TaskFormPage() {
   const navigate = useNavigate();
   const isEdit = Boolean(taskId);
 
-  const { data: task, isLoading: isLoadingTask } = useGetTaskByIdQuery(
-    taskId!,
-    {
-      skip: !isEdit,
-    },
-  );
+  const { data: task, isLoading: isLoadingTask } = useGetTaskByIdQuery(taskId!, {
+    skip: !isEdit,
+  });
 
   const { data: deals, isLoading: isLoadingDeals } = useGetDealsQuery();
   const { data: users, isLoading: isLoadingUsers } = useGetUsersQuery();
@@ -111,11 +108,7 @@ export function TaskFormPage() {
         </Typography.Paragraph>
       ) : null}
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        noValidate
-        style={{ marginTop: 24 }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ marginTop: 24 }}>
         <Form layout="vertical" requiredMark component="div">
           <Controller
             name="title"
