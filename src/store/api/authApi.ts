@@ -49,7 +49,6 @@ export const authApi = createApi({
       },
     }),
 
-    /** Создаёт пользователя в json-server (мок). Поле username сохранится, если сервер не отфильтрует. */
     register: builder.mutation<UserRecord, RegisterFormValues>({
       async queryFn(body) {
         await sleep(150);

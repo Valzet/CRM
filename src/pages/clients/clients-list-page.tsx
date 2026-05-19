@@ -1,14 +1,13 @@
 import { Alert, Button, Space, Spin, Table } from "antd";
 
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { UiButton } from "../../components/ui/button";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { formatPhoneRu } from "../../lib/format/phone-ru";
-import { path } from "../../lib/constants/navigation";
 import { useGetClientsQuery } from "../../store/api";
 import type { Client } from "../../types";
-import { ClientEditModal } from "./client-edit-modal";
+import { ClientCardModal } from "./client-card-modal";
+import { ClientCreateModal } from "./client-create-modal";
 import {
   CellLink,
   PageHeading,
@@ -51,7 +50,8 @@ export function ClientsListPage() {
     refetch,
   } = useGetClientsQuery({ includeDeleted: true });
   const [q, setQ] = useState("");
-  const [editId, setEditId] = useState<string | null>(null);
+  const [cardId, setCardId] = useState<string | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
   const filtered = useMemo(
     () => clients.filter((c) => clientMatchesQuery(c, q)),
     [clients, q],
@@ -93,9 +93,9 @@ export function ClientsListPage() {
       <PageHeading>Клиенты</PageHeading>
 
       <Toolbar>
-        <Link to={`${path.clients}/new`}>
-          <UiButton type="primary">Новый клиент</UiButton>
-        </Link>
+        <UiButton type="primary" onClick={() => setCreateOpen(true)}>
+          Новый клиент
+        </UiButton>
         <SearchField
           allowClear
           placeholder="Искать"
@@ -113,7 +113,7 @@ export function ClientsListPage() {
           dataSource={filtered}
           rowClassName={(record) => (record.deleted ? "row-deleted" : "")}
           onRow={(record) => ({
-            onClick: () => setEditId(record.id),
+            onClick: () => setCardId(record.id),
             style: { cursor: "pointer" },
           })}
           columns={[
@@ -184,10 +184,14 @@ export function ClientsListPage() {
         />
       </TableWrap>
 
-      <ClientEditModal
-        clientId={editId}
-        open={editId !== null}
-        onClose={() => setEditId(null)}
+      <ClientCardModal
+        clientId={cardId}
+        open={cardId !== null}
+        onClose={() => setCardId(null)}
+      />
+      <ClientCreateModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
       />
     </PageRoot>
   );

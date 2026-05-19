@@ -1,6 +1,5 @@
 import { Button, Spin } from "antd";
-import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { useMemo, useState } from "react";
 import { useAppSelector } from "../../hooks";
 import {
   boundsMonthToToday,
@@ -12,8 +11,10 @@ import {
 import { DEAL_STATUS_META } from "../../lib/deal-status";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { TASK_STATUS_META } from "../../lib/task-status";
-import { path } from "../../lib/constants/navigation";
 import { selectAuthUserId } from "../../store/auth-slice";
+import { ClientCreateModal } from "../clients/client-create-modal";
+import { DealCreateModal } from "../deals/deal-create-modal";
+import { TaskCreateModal } from "../tasks/task-create-modal";
 import {
   useGetClientsQuery,
   useGetDealsQuery,
@@ -77,6 +78,9 @@ function findDealTitle(dealsList: Deal[], dealId: string) {
 }
 
 export function WelcomePage() {
+  const [clientCreateOpen, setClientCreateOpen] = useState(false);
+  const [dealCreateOpen, setDealCreateOpen] = useState(false);
+  const [taskCreateOpen, setTaskCreateOpen] = useState(false);
   const userId = useAppSelector(selectAuthUserId);
   const { data: user } = useGetUserByIdQuery(userId ?? "", { skip: !userId });
   const { data: clientsDeletedAware = [], isLoading: lc } = useGetClientsQuery({
@@ -242,9 +246,9 @@ export function WelcomePage() {
         <EmptyHint>Нет сделок для отображения топа клиентов.</EmptyHint>
       )}
       <SectionAction>
-        <Link to={`${path.clients}/new`}>
-          <Button type="primary">Новый клиент</Button>
-        </Link>
+        <Button type="primary" onClick={() => setClientCreateOpen(true)}>
+          Новый клиент
+        </Button>
       </SectionAction>
 
       <SectionTitle>Топ 10 активных сделок</SectionTitle>
@@ -270,9 +274,9 @@ export function WelcomePage() {
         <EmptyHint>Активных сделок пока нет.</EmptyHint>
       )}
       <SectionAction>
-        <Link to={`${path.deals}/new`}>
-          <Button type="primary">Новая сделка</Button>
-        </Link>
+        <Button type="primary" onClick={() => setDealCreateOpen(true)}>
+          Новая сделка
+        </Button>
       </SectionAction>
 
       <SectionTitle>Последние 10 задач</SectionTitle>
@@ -290,10 +294,23 @@ export function WelcomePage() {
         <EmptyHint>Задач пока нет.</EmptyHint>
       )}
       <SectionAction>
-        <Link to={`${path.tasks}/new`}>
-          <Button type="primary">Новая задача</Button>
-        </Link>
+        <Button type="primary" onClick={() => setTaskCreateOpen(true)}>
+          Новая задача
+        </Button>
       </SectionAction>
+
+      <ClientCreateModal
+        open={clientCreateOpen}
+        onClose={() => setClientCreateOpen(false)}
+      />
+      <DealCreateModal
+        open={dealCreateOpen}
+        onClose={() => setDealCreateOpen(false)}
+      />
+      <TaskCreateModal
+        open={taskCreateOpen}
+        onClose={() => setTaskCreateOpen(false)}
+      />
     </WelcomeRoot>
   );
 }

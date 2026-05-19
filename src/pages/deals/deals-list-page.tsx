@@ -1,13 +1,12 @@
 import { Alert, Button, Space, Spin, Table } from "antd";
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { UiButton } from "../../components/ui/button";
 import { DEAL_STATUS_META } from "../../lib/deal-status";
 import { formatDateRu } from "../../lib/format/date-ru";
-import { path } from "../../lib/constants/navigation";
 import { useGetClientsQuery, useGetDealsQuery } from "../../store/api";
 import type { Deal } from "../../types";
-import { DealEditModal } from "./deal-edit-modal";
+import { DealCardModal } from "./deal-card-modal";
+import { DealCreateModal } from "./deal-create-modal";
 import {
   DealTitleCell,
   PageHeading,
@@ -30,7 +29,8 @@ export function DealsListPage() {
   } = useGetDealsQuery();
   const { data: clients = [] } = useGetClientsQuery({ includeDeleted: true });
   const [q, setQ] = useState("");
-  const [editId, setEditId] = useState<string | null>(null);
+  const [cardId, setCardId] = useState<string | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -98,9 +98,9 @@ export function DealsListPage() {
       <PageHeading>Сделки</PageHeading>
 
       <Toolbar>
-        <Link to={`${path.deals}/new`}>
-          <UiButton type="primary">Новая сделка</UiButton>
-        </Link>
+        <UiButton type="primary" onClick={() => setCreateOpen(true)}>
+          Новая сделка
+        </UiButton>
         <SearchField
           allowClear
           placeholder="Искать"
@@ -118,7 +118,7 @@ export function DealsListPage() {
           dataSource={filtered}
           rowClassName={(record) => dealRowClassName(record.status)}
           onRow={(record) => ({
-            onClick: () => setEditId(record.id),
+            onClick: () => setCardId(record.id),
             style: { cursor: "pointer" },
           })}
           columns={[
@@ -176,10 +176,14 @@ export function DealsListPage() {
         />
       </TableWrap>
 
-      <DealEditModal
-        dealId={editId}
-        open={editId !== null}
-        onClose={() => setEditId(null)}
+      <DealCardModal
+        dealId={cardId}
+        open={cardId !== null}
+        onClose={() => setCardId(null)}
+      />
+      <DealCreateModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
       />
     </PageRoot>
   );

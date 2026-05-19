@@ -1,0 +1,195 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Spin, message } from "antd";
+import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { CrmModal } from "../../components/crm-modal";
+import {
+  PrimaryFooterButton,
+  SecondaryFooterButton,
+  SuccessFooterButton,
+} from "../../components/crm-modal/crm-modal.styled";
+import { formatDateRu } from "../../lib/format/date-ru";
+import { dealFormSchema, type DealFormValues } from "../../schemas";
+import {
+  useGetClientsQuery,
+  useGetDealByIdQuery,
+  useUpdateDealMutation,
+} from "../../store/api";
+import { DealModalEditFields, DealModalViewFields } from "./deal-modal-fields";
+
+const defaultValues: DealFormValues = {
+  title: "",
+  description: "",
+  clientId: "",
+  amount: 1,
+  status: "new",
+};
+
+type Props = {
+  dealId: string | null;
+  open: boolean;
+  onClose: () => void;
+};
+
+export function DealCardModal(props: Props) {
+  const { dealId, open, onClose } = props;
+  const [mode, setMode] = useState<"view" | "edit">("view");
+  const { data: deal, isFetching } = useGetDealByIdQuery(dealId!, {
+    skip: !open || !dealId,
+  });
+  const { data: clientsAll, isLoading: isLoadingClients } = useGetClientsQuery({
+    includeDeleted: true,
+  });
+  const [updateDeal, { isLoading: updating }] = useUpdateDealMutation();
+
+  const clientsForSelect = useMemo(() => {
+    const active = clientsAll?.filter((c) => !c.deleted) ?? [];
+    if (!deal) return active;
+    if (active.some((c) => c.id === deal.clientId)) return active;
+    const cur = clientsAll?.find((c) => c.id === deal.clientId);
+    return cur ? [...active, cur] : active;
+  }, [clientsAll, deal]);
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm<DealFormValues>({
+    resolver: zodResolver(dealFormSchema),
+    defaultValues,
+    mode: "onTouched",
+  });
+
+  useEffect(() => {
+    if (!open) {
+      setMode("view");
+      return;
+    }
+    if (deal) {
+      reset({
+        title: deal.title,
+        description: deal.description,
+        clientId: deal.clientId,
+        amount: deal.amount,
+        status: deal.status,
+      });
+    }
+  }, [deal, open, reset]);
+
+  const values = watch();
+  const clientName =
+    clientsAll?.find((c) => c.id === values.clientId)?.name ?? "—";
+
+  const onSave = async (formValues: DealFormValues) => {
+    if (!dealId) return;
+    const validClient =
+      clientsForSelect.some((c) => c.id === formValues.clientId) &&
+      (clientsForSelect.some(
+        (c) => !c.deleted && c.id === formValues.clientId,
+      ) ||
+        deal?.clientId === formValues.clientId);
+    if (!validClient) {
+      void message.warning(
+        "Нельзя привязать сделку к удалённому клиенту. Выберите активного клиента.",
+      );
+      return;
+    }
+    try {
+      await updateDeal({ id: dealId, data: formValues }).unwrap();
+      void message.success("Сделка сохранена");
+      setMode("view");
+    } catch {
+      void message.error("Не удалось сохранить");
+    }
+  };
+
+  const onComplete = async () => {
+    if (!dealId || !deal) return;
+    try {
+      await updateDeal({
+        id: dealId,
+        data: {
+          title: deal.title,
+          description: deal.description,
+          clientId: deal.clientId,
+          amount: deal.amount,
+          status: "completed",
+          completedAt: new Date().toISOString(),
+        },
+      }).unwrap();
+      void message.success("Сделка завершена");
+      onClose();
+    } catch {
+      void message.error("Не удалось завершить сделку");
+    }
+  };
+
+  const meta = deal?.createdAt
+    ? `Создана ${formatDateRu(deal.createdAt)}`
+    : undefined;
+
+  const canComplete =
+    deal &&
+    deal.status !== "completed" &&
+    deal.status !== "cancelled" &&
+    mode === "view";
+
+  const footer =
+    mode === "view" ? (
+      <>
+        <PrimaryFooterButton type="primary" onClick={() => setMode("edit")}>
+          Редактировать
+        </PrimaryFooterButton>
+        {canComplete ? (
+          <SuccessFooterButton onClick={() => void onComplete()}>
+            Завершить сделку
+          </SuccessFooterButton>
+        ) : (
+          <SecondaryFooterButton onClick={onClose}>Закрыть</SecondaryFooterButton>
+        )}
+      </>
+    ) : (
+      <>
+        <PrimaryFooterButton
+          type="primary"
+          loading={updating}
+          onClick={() => void handleSubmit(onSave)()}
+        >
+          Сохранить
+        </PrimaryFooterButton>
+        <SecondaryFooterButton onClick={() => setMode("view")}>
+          Отменить
+        </SecondaryFooterButton>
+      </>
+    );
+
+  return (
+    <CrmModal
+      open={open}
+      onClose={onClose}
+      title="Карточка сделки"
+      meta={meta}
+      loading={isFetching}
+      footer={footer}
+    >
+      {isFetching && !deal ? (
+        <div style={{ textAlign: "center", padding: 24 }}>
+          <Spin />
+        </div>
+      ) : mode === "view" ? (
+        <DealModalViewFields values={values} clientName={clientName} />
+      ) : (
+        <form onSubmit={handleSubmit(onSave)} noValidate>
+          <DealModalEditFields
+            control={control}
+            errors={errors}
+            clients={clientsForSelect}
+            isLoadingClients={isLoadingClients}
+          />
+        </form>
+      )}
+    </CrmModal>
+  );
+}

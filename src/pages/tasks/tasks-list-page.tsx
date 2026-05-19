@@ -1,16 +1,16 @@
 import { Alert, Button, Space, Spin, Table } from "antd";
 import { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { UiButton } from "../../components/ui/button";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { TASK_STATUS_META } from "../../lib/task-status";
-import { path } from "../../lib/constants/navigation";
 import {
   useGetDealsQuery,
   useGetTasksQuery,
   useGetUsersQuery,
 } from "../../store/api";
 import type { Task } from "../../types";
+import { TaskCreateModal } from "./task-create-modal";
+import { TaskEditModal } from "./task-edit-modal";
 import {
   PageHeading,
   PageRoot,
@@ -50,7 +50,6 @@ function taskMatchesQuery(
 }
 
 export function TasksListPage() {
-  const navigate = useNavigate();
   const {
     data: tasks = [],
     isLoading,
@@ -61,6 +60,8 @@ export function TasksListPage() {
   const { data: deals = [] } = useGetDealsQuery();
   const { data: users = [] } = useGetUsersQuery();
   const [q, setQ] = useState("");
+  const [createOpen, setCreateOpen] = useState(false);
+  const [editTaskId, setEditTaskId] = useState<string | null>(null);
 
   const dealTitleById = useMemo(() => {
     const map = new Map(deals.map((d) => [d.id, d.title]));
@@ -121,9 +122,9 @@ export function TasksListPage() {
       <PageHeading>Задачи</PageHeading>
 
       <Toolbar>
-        <Link to={`${path.tasks}/new`}>
-          <UiButton type="primary">Новая задача</UiButton>
-        </Link>
+        <UiButton type="primary" onClick={() => setCreateOpen(true)}>
+          Новая задача
+        </UiButton>
         <SearchField
           allowClear
           placeholder="Искать"
@@ -141,7 +142,7 @@ export function TasksListPage() {
           dataSource={filtered}
           rowClassName={(_, index) => taskRowClassName(index ?? 0)}
           onRow={(record) => ({
-            onClick: () => navigate(`${path.tasks}/${record.id}/edit`),
+            onClick: () => setEditTaskId(record.id),
             style: { cursor: "pointer" },
           })}
           columns={[
@@ -196,6 +197,16 @@ export function TasksListPage() {
           ]}
         />
       </TableWrap>
+
+      <TaskCreateModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+      />
+      <TaskEditModal
+        taskId={editTaskId}
+        open={editTaskId !== null}
+        onClose={() => setEditTaskId(null)}
+      />
     </PageRoot>
   );
 }

@@ -147,7 +147,13 @@ export const crmApi = createApi({
       invalidatesTags: [{ type: "Deal", id: "LIST" }],
     }),
 
-    updateDeal: builder.mutation<Deal, { id: string; data: DealFormValues }>({
+    updateDeal: builder.mutation<
+      Deal,
+      {
+        id: string;
+        data: DealFormValues & Partial<Pick<Deal, "completedAt">>;
+      }
+    >({
       query: ({ id, data }) => ({
         url: `/deals/${id}`,
         method: "PATCH",

@@ -1,0 +1,127 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Spin, message } from "antd";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { CrmModal } from "../../components/crm-modal";
+import {
+  PrimaryFooterButton,
+  SecondaryFooterButton,
+} from "../../components/crm-modal/crm-modal.styled";
+import { isoToDatetimeLocalValue } from "../../lib/date/datetime-local";
+import { formatDateRu } from "../../lib/format/date-ru";
+import { taskFormSchema, type TaskFormValues } from "../../schemas";
+import {
+  useGetDealsQuery,
+  useGetTaskByIdQuery,
+  useGetUsersQuery,
+  useUpdateTaskMutation,
+} from "../../store/api";
+import { TaskModalEditFields } from "./task-modal-fields";
+
+const defaultValues: TaskFormValues = {
+  title: "",
+  description: "",
+  dealId: "",
+  assigneeId: "",
+  status: "new",
+  dueDateLocal: "",
+};
+
+type Props = {
+  taskId: string | null;
+  open: boolean;
+  onClose: () => void;
+};
+
+export function TaskEditModal(props: Props) {
+  const { taskId, open, onClose } = props;
+  const { data: task, isFetching } = useGetTaskByIdQuery(taskId!, {
+    skip: !open || !taskId,
+  });
+  const [updateTask, { isLoading }] = useUpdateTaskMutation();
+  const { data: deals = [], isLoading: isLoadingDeals } = useGetDealsQuery();
+  const { data: users = [], isLoading: isLoadingUsers } = useGetUsersQuery();
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<TaskFormValues>({
+    resolver: zodResolver(taskFormSchema),
+    defaultValues,
+    mode: "onTouched",
+  });
+
+  useEffect(() => {
+    if (!open) {
+      reset(defaultValues);
+      return;
+    }
+    if (task) {
+      reset({
+        title: task.title,
+        description: task.description,
+        dealId: task.dealId,
+        assigneeId: task.assigneeId,
+        status: task.status,
+        dueDateLocal: isoToDatetimeLocalValue(task.dueDate),
+      });
+    }
+  }, [task, open, reset]);
+
+  const onSubmit = async (values: TaskFormValues) => {
+    if (!taskId) return;
+    try {
+      await updateTask({ id: taskId, data: values }).unwrap();
+      void message.success("Задача сохранена");
+      onClose();
+    } catch {
+      void message.error("Не удалось сохранить задачу");
+    }
+  };
+
+  const meta = task?.createdAt
+    ? `Создана ${formatDateRu(task.createdAt)}`
+    : undefined;
+
+  return (
+    <CrmModal
+      open={open}
+      onClose={onClose}
+      title="Редактирование задачи"
+      meta={meta}
+      loading={isFetching}
+      footer={
+        <>
+          <PrimaryFooterButton
+            type="primary"
+            loading={isLoading}
+            onClick={() => void handleSubmit(onSubmit)()}
+          >
+            Сохранить
+          </PrimaryFooterButton>
+          <SecondaryFooterButton onClick={onClose}>Отменить</SecondaryFooterButton>
+        </>
+      }
+    >
+      {isFetching && !task ? (
+        <div style={{ textAlign: "center", padding: 24 }}>
+          <Spin />
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          <TaskModalEditFields
+            control={control}
+            errors={errors}
+            deals={deals}
+            users={users}
+            isLoadingDeals={isLoadingDeals}
+            isLoadingUsers={isLoadingUsers}
+            currentStatus={task?.status}
+          />
+        </form>
+      )}
+    </CrmModal>
+  );
+}
