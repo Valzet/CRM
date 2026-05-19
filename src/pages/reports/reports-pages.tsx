@@ -174,11 +174,6 @@ function ReportsError(props: { error: unknown; onRetry: () => void }) {
         type="warning"
         showIcon
         message="Не удалось загрузить отчёт"
-        description={
-          error && typeof error === "object" && "status" in error
-            ? "Запустите json-server: npm run server"
-            : "Проверьте сеть."
-        }
       />
       <Button onClick={onRetry}>Повторить</Button>
     </Space>

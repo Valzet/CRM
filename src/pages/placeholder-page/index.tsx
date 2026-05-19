@@ -7,7 +7,6 @@ type PlaceholderPageProps = {
   children?: ReactNode;
 };
 
-/** В разработке. */
 export function PlaceholderPage(props: PlaceholderPageProps) {
   const { title, description, children } = props;
 
