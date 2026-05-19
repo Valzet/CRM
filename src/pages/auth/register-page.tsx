@@ -28,7 +28,7 @@ export function RegisterPage() {
   const onSubmit = async (values: RegisterFormValues) => {
     try {
       await registerUser(values).unwrap();
-      void message.success("Регистрация прошла успешно. Войдите в аккаунт.");
+      console.log("Регистрация прошла успешно. Войдите в аккаунт.");
       navigate(path.login, { replace: true });
     } catch (err) {
       const e = err as FetchBaseQueryError;
@@ -36,7 +36,7 @@ export function RegisterPage() {
         typeof e.data === "string"
           ? e.data
           : "Не удалось зарегистрироваться. Запущен ли json-server?";
-      void message.error(detail);
+      console.error(detail);
     }
   };
 

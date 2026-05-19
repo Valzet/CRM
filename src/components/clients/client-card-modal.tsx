@@ -64,32 +64,24 @@ export function ClientCardModal(props: Props) {
     if (!clientId) return;
     try {
       await updateClient({ id: clientId, data: formValues }).unwrap();
-      void message.success("Клиент сохранён");
+      console.log("Клиент сохранён");
       setMode("view");
     } catch {
-      void message.error("Не удалось сохранить");
+      console.error("Не удалось сохранить");
     }
   };
 
   const onRemove = () => {
     if (!clientId) return;
-    Modal.confirm({
-      title: "Удалить клиента?",
-      content: "Клиент будет помечен как удалённый. Новые сделки с ним создать нельзя.",
-      okText: "Удалить",
-      okButtonProps: { danger: true, loading: deleting },
-      cancelText: "Отмена",
-      async onOk() {
-        try {
-          await softDelete(clientId).unwrap();
-          void message.success("Клиент удалён");
-          onClose();
-        } catch {
-          void message.error("Не удалось удалить");
-          throw new Error("cancel");
-        }
-      },
-    });
+
+    try {
+      softDelete(clientId).unwrap();
+      console.log("Клиент удалён");
+      onClose();
+    } catch {
+      console.error("Не удалось удалить");
+      throw new Error("cancel");
+    }
   };
 
   const meta = client?.createdAt ? `добавлен ${formatDateRu(client.createdAt)}` : undefined;

@@ -42,9 +42,9 @@ export function EmailConfirmationPage() {
   const onSubmit = async (values: EmailConfirmFormValues) => {
     try {
       await confirmEmail(values).unwrap();
-      void message.success("Почта подтверждена (демо).");
+      console.log("Почта подтверждена (демо).");
     } catch {
-      void message.error("Не удалось подтвердить");
+      console.error("Не удалось подтвердить");
     }
   };
 
@@ -53,7 +53,7 @@ export function EmailConfirmationPage() {
       await resend().unwrap();
       void message.info("Письмо отправлено повторно (демо).");
     } catch {
-      void message.error("Не удалось отправить");
+      console.error("Не удалось отправить");
     }
   };
 

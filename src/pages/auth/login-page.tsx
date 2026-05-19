@@ -32,13 +32,13 @@ export function LoginPage() {
     try {
       const result = await login(values).unwrap();
       dispatch(setAuthUser(result.userId));
-      void message.success("Вход выполнен");
+      console.log("Вход выполнен");
       navigate(path.welcome, { replace: true });
     } catch (err) {
       const e = err as FetchBaseQueryError;
       const detail =
         typeof e.data === "string" ? e.data : "Не удалось войти. Запущен ли json-server?";
-      void message.error(detail);
+      console.error(detail);
     }
   };
 

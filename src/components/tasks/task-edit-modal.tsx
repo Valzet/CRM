@@ -67,10 +67,10 @@ export function TaskEditModal(props: Props) {
     if (!taskId) return;
     try {
       await updateTask({ id: taskId, data: values }).unwrap();
-      void message.success("Задача сохранена");
+      console.log("Задача сохранена");
       onClose();
     } catch {
-      void message.error("Не удалось сохранить задачу");
+      console.error("Не удалось сохранить задачу");
     }
   };
 

@@ -35,11 +35,12 @@ export function ClientCreateModal(props: Props) {
   const onSubmit = async (values: ClientFormValues) => {
     try {
       await createClient(values).unwrap();
-      void message.success("Клиент создан");
+      console.log("Клиент создан");
       onClose();
     } catch {
-      void message.error("Не удалось создать клиента");
+     console.error("Не удалось создать клиента");
     }
+    onClose();
   };
 
   return (

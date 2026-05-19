@@ -44,10 +44,10 @@ export function DealCreateModal(props: Props) {
     }
     try {
       await createDeal(values).unwrap();
-      void message.success("Сделка создана");
+      console.log("Сделка создана");
       onClose();
     } catch {
-      void message.error("Не удалось создать сделку");
+      console.error("Не удалось создать сделку");
     }
   };
 

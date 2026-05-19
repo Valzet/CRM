@@ -37,10 +37,10 @@ export function TaskCreateModal(props: Props) {
   const onSubmit = async (values: TaskFormValues) => {
     try {
       await createTask(values).unwrap();
-      void message.success("Задача создана");
+      console.log("Задача создана");
       onClose();
     } catch {
-      void message.error("Не удалось создать задачу");
+      console.error("Не удалось создать задачу");
     }
   };
 

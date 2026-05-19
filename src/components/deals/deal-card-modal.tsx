@@ -85,10 +85,10 @@ export function DealCardModal(props: Props) {
     }
     try {
       await updateDeal({ id: dealId, data: formValues }).unwrap();
-      void message.success("Сделка сохранена");
+      console.log("Сделка сохранена");
       setMode("view");
     } catch {
-      void message.error("Не удалось сохранить");
+      console.error("Не удалось сохранить");
     }
   };
 
@@ -106,10 +106,10 @@ export function DealCardModal(props: Props) {
           completedAt: new Date().toISOString(),
         },
       }).unwrap();
-      void message.success("Сделка завершена");
+      console.log("Сделка завершена");
       onClose();
     } catch {
-      void message.error("Не удалось завершить сделку");
+      console.error("Не удалось завершить сделку");
     }
   };
 

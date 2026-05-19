@@ -32,7 +32,7 @@ export function PasswordRecoveryPage() {
         state: { flow: "password-recovery" as const },
       });
     } catch {
-      void message.error("Запрос не выполнен");
+      console.error("Запрос не выполнен");
     }
   };
 
