@@ -3,17 +3,10 @@ import { message } from "antd";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { CrmModal, PrimaryFooterButton, SecondaryFooterButton } from "../crm-modal";
+import { dealFormDefaultValues } from "../../lib/constants/forms";
 import { dealFormSchema, type DealFormValues } from "../../schemas";
 import { useCreateDealMutation, useGetClientsQuery } from "../../store/api";
 import { DealModalEditFields } from "./deal-modal-fields";
-
-const defaultValues: DealFormValues = {
-  title: "",
-  description: "",
-  clientId: "",
-  amount: 1,
-  status: "new",
-};
 
 type Props = {
   open: boolean;
@@ -35,12 +28,12 @@ export function DealCreateModal(props: Props) {
     formState: { errors },
   } = useForm<DealFormValues>({
     resolver: zodResolver(dealFormSchema),
-    defaultValues,
+    defaultValues: dealFormDefaultValues,
     mode: "onTouched",
   });
 
   useEffect(() => {
-    if (!open) reset(defaultValues);
+    if (!open) reset(dealFormDefaultValues);
   }, [open, reset]);
 
   const onSubmit = async (values: DealFormValues) => {

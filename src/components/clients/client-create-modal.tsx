@@ -3,18 +3,10 @@ import { message } from "antd";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { CrmModal, PrimaryFooterButton, SecondaryFooterButton } from "../crm-modal";
+import { clientFormDefaultValues } from "../../lib/constants/forms";
 import { clientFormSchema, type ClientFormValues } from "../../schemas";
 import { useCreateClientMutation } from "../../store/api";
 import { ClientModalEditFields } from "./client-modal-fields";
-
-const defaultValues: ClientFormValues = {
-  name: "",
-  phone: "",
-  email: "",
-  company: "",
-  website: "",
-  comment: "",
-};
 
 type Props = {
   open: boolean;
@@ -32,12 +24,12 @@ export function ClientCreateModal(props: Props) {
     formState: { errors },
   } = useForm<ClientFormValues>({
     resolver: zodResolver(clientFormSchema),
-    defaultValues,
+    defaultValues: clientFormDefaultValues,
     mode: "onTouched",
   });
 
   useEffect(() => {
-    if (!open) reset(defaultValues);
+    if (!open) reset(clientFormDefaultValues);
   }, [open, reset]);
 
   const onSubmit = async (values: ClientFormValues) => {

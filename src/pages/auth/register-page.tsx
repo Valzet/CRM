@@ -3,6 +3,7 @@ import { Button, Form, Input, message } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { registerFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { registerFormSchema, type RegisterFormValues } from "../../schemas";
 import { useRegisterMutation } from "../../store/api";
@@ -20,14 +21,7 @@ export function RegisterPage() {
     formState: { errors },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      username: "",
-      password: "",
-      confirmPassword: "",
-    },
+    defaultValues: registerFormDefaultValues,
     mode: "onTouched",
   });
 

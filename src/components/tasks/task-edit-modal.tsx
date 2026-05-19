@@ -8,6 +8,7 @@ import {
   PrimaryFooterButton,
   SecondaryFooterButton,
 } from "../crm-modal";
+import { taskFormDefaultValues } from "../../lib/constants/forms";
 import { isoToDatetimeLocalValue } from "../../lib/date/datetime-local";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { taskFormSchema, type TaskFormValues } from "../../schemas";
@@ -18,15 +19,6 @@ import {
   useUpdateTaskMutation,
 } from "../../store/api";
 import { TaskModalEditFields } from "./task-modal-fields";
-
-const defaultValues: TaskFormValues = {
-  title: "",
-  description: "",
-  dealId: "",
-  assigneeId: "",
-  status: "new",
-  dueDateLocal: "",
-};
 
 type Props = {
   taskId: string | null;
@@ -50,13 +42,13 @@ export function TaskEditModal(props: Props) {
     formState: { errors },
   } = useForm<TaskFormValues>({
     resolver: zodResolver(taskFormSchema),
-    defaultValues,
+    defaultValues: taskFormDefaultValues,
     mode: "onTouched",
   });
 
   useEffect(() => {
     if (!open) {
-      reset(defaultValues);
+      reset(taskFormDefaultValues);
       return;
     }
     if (task) {

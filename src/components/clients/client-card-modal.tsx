@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CrmModal, ModalBodyLoading } from "../crm-modal";
 import { DangerFooterButton, PrimaryFooterButton, SecondaryFooterButton } from "../crm-modal";
+import { clientFormDefaultValues } from "../../lib/constants/forms";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { clientFormSchema, type ClientFormValues } from "../../schemas";
 import {
@@ -12,15 +13,6 @@ import {
   useUpdateClientMutation,
 } from "../../store/api";
 import { ClientModalEditFields, ClientModalViewFields } from "./client-modal-fields";
-
-const defaultValues: ClientFormValues = {
-  name: "",
-  phone: "",
-  email: "",
-  company: "",
-  website: "",
-  comment: "",
-};
 
 type Props = {
   clientId: string | null;
@@ -45,7 +37,7 @@ export function ClientCardModal(props: Props) {
     formState: { errors },
   } = useForm<ClientFormValues>({
     resolver: zodResolver(clientFormSchema),
-    defaultValues,
+    defaultValues: clientFormDefaultValues,
     mode: "onTouched",
   });
 

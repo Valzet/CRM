@@ -3,6 +3,7 @@ import { Button, Form, Spin, Typography } from "antd";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { clientFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { clientFormSchema, type ClientFormValues } from "../../schemas";
 import {
@@ -11,15 +12,6 @@ import {
   useUpdateClientMutation,
 } from "../../store/api";
 import { ClientFormFields } from "./client-form-fields";
-
-const defaultValues: ClientFormValues = {
-  name: "",
-  phone: "",
-  email: "",
-  company: "",
-  website: "",
-  comment: "",
-};
 
 export function ClientFormPage() {
   const { clientId } = useParams<{ clientId: string }>();
@@ -37,7 +29,7 @@ export function ClientFormPage() {
     formState: { errors },
   } = useForm<ClientFormValues>({
     resolver: zodResolver(clientFormSchema),
-    defaultValues,
+    defaultValues: clientFormDefaultValues,
     mode: "onTouched",
   });
 

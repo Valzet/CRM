@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Form, message } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useLocation } from "react-router-dom";
+import { emailConfirmFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { emailConfirmFormSchema, type EmailConfirmFormValues } from "../../schemas";
 import { useConfirmEmailMutation, useResendConfirmationEmailMutation } from "../../store/api";
@@ -34,7 +35,7 @@ export function EmailConfirmationPage() {
     formState: { errors },
   } = useForm<EmailConfirmFormValues>({
     resolver: zodResolver(emailConfirmFormSchema),
-    defaultValues: { confirmationLink: "" },
+    defaultValues: emailConfirmFormDefaultValues,
     mode: "onTouched",
   });
 

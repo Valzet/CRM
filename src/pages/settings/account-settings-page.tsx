@@ -15,6 +15,7 @@ import {
 import { useEffect } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { accountSettingsFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { clearAuth, selectAuthUserId } from "../../store/auth-slice";
@@ -61,15 +62,7 @@ export function AccountSettingsPage(props?: { variant?: "settings" | "profile" }
     formState: { errors },
   } = useForm<AccountSettingsFormValues>({
     resolver: zodResolver(accountSettingsSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      username: "",
-      existingPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    },
+    defaultValues: accountSettingsFormDefaultValues,
     mode: "onTouched",
   });
 

@@ -9,18 +9,11 @@ import {
   SecondaryFooterButton,
   SuccessFooterButton,
 } from "../crm-modal";
+import { dealFormDefaultValues } from "../../lib/constants/forms";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { dealFormSchema, type DealFormValues } from "../../schemas";
 import { useGetClientsQuery, useGetDealByIdQuery, useUpdateDealMutation } from "../../store/api";
 import { DealModalEditFields, DealModalViewFields } from "./deal-modal-fields";
-
-const defaultValues: DealFormValues = {
-  title: "",
-  description: "",
-  clientId: "",
-  amount: 1,
-  status: "new",
-};
 
 type Props = {
   dealId: string | null;
@@ -55,7 +48,7 @@ export function DealCardModal(props: Props) {
     formState: { errors },
   } = useForm<DealFormValues>({
     resolver: zodResolver(dealFormSchema),
-    defaultValues,
+    defaultValues: dealFormDefaultValues,
     mode: "onTouched",
   });
 

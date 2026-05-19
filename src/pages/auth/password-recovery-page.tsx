@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Form, message } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { passwordRecoveryFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { passwordRecoveryFormSchema, type PasswordRecoveryFormValues } from "../../schemas";
 import { useRequestPasswordResetMutation } from "../../store/api";
@@ -19,7 +20,7 @@ export function PasswordRecoveryPage() {
     formState: { errors },
   } = useForm<PasswordRecoveryFormValues>({
     resolver: zodResolver(passwordRecoveryFormSchema),
-    defaultValues: { email: "" },
+    defaultValues: passwordRecoveryFormDefaultValues,
     mode: "onTouched",
   });
 

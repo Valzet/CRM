@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { isoToDatetimeLocalValue } from "../../lib/date/datetime-local";
+import { taskFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { taskFormSchema, type TaskFormValues } from "../../schemas";
 import type { TaskStatus } from "../../types";
@@ -25,15 +26,6 @@ const statusOptionsFor = (current?: TaskStatus) => {
   if (current === "completed")
     return [{ value: "completed", label: "Завершена" }, ...workflowStatuses];
   return workflowStatuses;
-};
-
-const defaultValues: TaskFormValues = {
-  title: "",
-  description: "",
-  dealId: "",
-  assigneeId: "",
-  status: "new",
-  dueDateLocal: "",
 };
 
 export function TaskFormPage() {
@@ -58,7 +50,7 @@ export function TaskFormPage() {
     formState: { errors },
   } = useForm<TaskFormValues>({
     resolver: zodResolver(taskFormSchema),
-    defaultValues,
+    defaultValues: taskFormDefaultValues,
     mode: "onTouched",
   });
 

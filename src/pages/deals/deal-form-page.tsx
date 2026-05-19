@@ -3,6 +3,7 @@ import { Button, Form, Spin, Typography, message } from "antd";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { dealFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { dealFormSchema, type DealFormValues } from "../../schemas";
 import {
@@ -12,14 +13,6 @@ import {
   useUpdateDealMutation,
 } from "../../store/api";
 import { DealFormFields } from "./deal-form-fields";
-
-const defaultValues: DealFormValues = {
-  title: "",
-  description: "",
-  clientId: "",
-  amount: 1,
-  status: "new",
-};
 
 export function DealFormPage() {
   const { dealId } = useParams<{ dealId: string }>();
@@ -52,7 +45,7 @@ export function DealFormPage() {
     formState: { errors },
   } = useForm<DealFormValues>({
     resolver: zodResolver(dealFormSchema),
-    defaultValues,
+    defaultValues: dealFormDefaultValues,
     mode: "onTouched",
   });
 

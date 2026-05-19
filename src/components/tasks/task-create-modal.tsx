@@ -3,18 +3,10 @@ import { message } from "antd";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { CrmModal, PrimaryFooterButton, SecondaryFooterButton } from "../crm-modal";
+import { taskFormDefaultValues } from "../../lib/constants/forms";
 import { taskFormSchema, type TaskFormValues } from "../../schemas";
 import { useCreateTaskMutation, useGetDealsQuery, useGetUsersQuery } from "../../store/api";
 import { TaskModalEditFields } from "./task-modal-fields";
-
-const defaultValues: TaskFormValues = {
-  title: "",
-  description: "",
-  dealId: "",
-  assigneeId: "",
-  status: "new",
-  dueDateLocal: "",
-};
 
 type Props = {
   open: boolean;
@@ -34,12 +26,12 @@ export function TaskCreateModal(props: Props) {
     formState: { errors },
   } = useForm<TaskFormValues>({
     resolver: zodResolver(taskFormSchema),
-    defaultValues,
+    defaultValues: taskFormDefaultValues,
     mode: "onTouched",
   });
 
   useEffect(() => {
-    if (!open) reset(defaultValues);
+    if (!open) reset(taskFormDefaultValues);
   }, [open, reset]);
 
   const onSubmit = async (values: TaskFormValues) => {

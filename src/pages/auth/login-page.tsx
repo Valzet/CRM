@@ -4,6 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useAppDispatch } from "../../hooks";
+import { loginFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { loginFormSchema, type LoginFormValues } from "../../schemas";
 import { useLoginMutation } from "../../store/api";
@@ -23,7 +24,7 @@ export function LoginPage() {
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: loginFormDefaultValues,
     mode: "onTouched",
   });
 
