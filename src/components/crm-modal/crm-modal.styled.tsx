@@ -96,6 +96,16 @@ export const FieldLabel = styled.span`
 `;
 
 export const FieldControl = styled.div`
+  .ant-select,
+  .ant-input,
+  .ant-input-affix-wrapper,
+  .ant-input-number,
+  .ant-input-textarea,
+  .ant-select-selector,
+  .ant-input-textarea textarea {
+    width: 100%;
+  }
+
   .ant-input,
   .ant-input-affix-wrapper,
   .ant-input-number,

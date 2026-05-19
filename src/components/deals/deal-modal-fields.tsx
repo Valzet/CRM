@@ -123,7 +123,6 @@ export function DealModalEditFields(props: EditProps) {
               control={control}
               render={({ field }) => (
                 <InputNumber
-                  style={{ width: "100%" }}
                   min={1}
                   value={field.value}
                   onChange={(v) => field.onChange(v ?? 1)}
