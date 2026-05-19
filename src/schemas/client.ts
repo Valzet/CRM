@@ -9,10 +9,7 @@ export const clientFormSchema = z.object({
     .transform(collapseWhitespaceTrim)
     .pipe(z.union([z.literal(""), z.string().email("Некорректный email")])),
   company: z.string().transform(collapseWhitespaceTrim),
-  website: z
-    .string()
-    .transform(collapseWhitespaceTrim)
-    .pipe(z.union([z.literal(""), z.string().url("Некорректный URL")])),
+  website: z.string().transform(collapseWhitespaceTrim),
   comment: z.string().transform(collapseWhitespaceTrim),
 });
 
