@@ -167,14 +167,10 @@ function ReportsSpinner() {
 }
 
 function ReportsError(props: { error: unknown; onRetry: () => void }) {
-  const { error, onRetry } = props;
+  const { onRetry } = props;
   return (
     <Space direction="vertical" style={{ width: "100%" }}>
-      <Alert
-        type="warning"
-        showIcon
-        message="Не удалось загрузить отчёт"
-      />
+      <Alert type="warning" showIcon message="Не удалось загрузить отчёт" />
       <Button onClick={onRetry}>Повторить</Button>
     </Space>
   );

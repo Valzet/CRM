@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal, message } from "antd";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CrmModal, ModalBodyLoading } from "../crm-modal";
@@ -27,7 +26,7 @@ export function ClientCardModal(props: Props) {
     skip: !open || !clientId,
   });
   const [updateClient, { isLoading: updating }] = useUpdateClientMutation();
-  const [softDelete, { isLoading: deleting }] = useSoftDeleteClientMutation();
+  const [softDelete] = useSoftDeleteClientMutation();
 
   const {
     control,

@@ -1,17 +1,6 @@
 import { CameraOutlined } from "@ant-design/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Alert,
-  Avatar,
-  Button,
-  Col,
-  Form,
-  Input,
-  Modal,
-  Row,
-  Spin,
-  message,
-} from "antd";
+import { Alert, Avatar, Button, Col, Form, Input, Modal, Row, Spin } from "antd";
 import { useEffect } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -28,7 +17,20 @@ import {
   useUpdateUserProfileMutation,
 } from "../../store/api";
 import { UiInput } from "../../components/ui/input";
-import { AvatarBlock, AvatarCameraBtn, BackLinkRow, DeleteAccountLink, FormFooter, MetaLine, PageHeading, SectionHeading, SettingsInner, SettingsPageRoot, SettingsSurface, StyledForm } from "./settings.styled";
+import {
+  AvatarBlock,
+  AvatarCameraBtn,
+  BackLinkRow,
+  DeleteAccountLink,
+  FormFooter,
+  MetaLine,
+  PageHeading,
+  SectionHeading,
+  SettingsInner,
+  SettingsPageRoot,
+  SettingsSurface,
+  StyledForm,
+} from "./settings.styled";
 
 function splitName(full: string): { first: string; last: string } {
   const p = full.trim().split(/\s+/);
