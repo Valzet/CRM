@@ -42,6 +42,7 @@ export function TaskCreateModal(props: Props) {
     } catch {
       console.error("Не удалось создать задачу");
     }
+    handleSubmit
   };
 
   return (
