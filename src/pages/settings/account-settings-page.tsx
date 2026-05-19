@@ -4,7 +4,6 @@ import {
   Alert,
   Avatar,
   Button,
-  Card,
   Col,
   Form,
   Input,
@@ -17,6 +16,7 @@ import {
 import { useEffect } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import { path } from "../../lib/constants/navigation";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { clearAuth, selectAuthUserId } from "../../store/auth-slice";
@@ -32,6 +32,107 @@ import {
   useUpdateUserProfileMutation,
 } from "../../store/api";
 import { UiInput } from "../../components/ui/input";
+import { color, fontFamilies, typography } from "../../theme/tokens";
+
+const SettingsPageRoot = styled.div`
+  flex: 1;
+  min-height: 100%;
+  padding: 28px 4px 48px;
+  background: transparent;
+  max-width: 680px;
+`;
+
+const SettingsInner = styled.div<{ $centered?: boolean }>`
+  width: 100%;
+  max-width: ${(p) => (p.$centered ? "720px" : "none")};
+  margin: ${(p) => (p.$centered ? "0 auto" : "0")};
+`;
+
+const PageHeading = styled.h1`
+  margin: 0 0 28px;
+  font-family: ${fontFamilies.body};
+  font-size: ${typography.heading.h2.fontSize};
+  line-height: ${typography.heading.h2.lineHeight};
+  font-weight: ${typography.heading.h2.fontWeight};
+  color: ${color.neutral.textPrimary};
+`;
+
+const SettingsSurface = styled.div`
+  background: ${color.background.secondary};
+  border-radius: 12px;
+  padding: 40px 40px 32px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  border: 1px solid ${color.background.shadowHint};
+
+  @media (max-width: 600px) {
+    padding: 24px 20px;
+  }
+`;
+
+const AvatarBlock = styled.div`
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 32px;
+`;
+
+const AvatarCameraBtn = styled(Button)`
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
+`;
+
+const MetaLine = styled(Typography.Text)`
+  display: block;
+  margin-bottom: 20px;
+  color: ${color.neutral.textSecondary};
+  font-size: ${typography.body.sm.fontSize};
+`;
+
+const StyledForm = styled(Form)`
+  .ant-form-item .ant-form-item-label > label {
+    color: ${color.neutral.textSecondary};
+    font-size: ${typography.body.xs.fontSize};
+    line-height: ${typography.body.xs.lineHeight};
+    height: auto;
+  }
+`;
+
+const SectionHeading = styled.h2`
+  margin: 8px 0 20px;
+  font-family: ${fontFamilies.body};
+  font-size: ${typography.heading.h3.fontSize};
+  line-height: ${typography.heading.h3.lineHeight};
+  font-weight: ${typography.heading.h3.fontWeight};
+  color: ${color.neutral.textPrimary};
+`;
+
+const FormFooter = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 8px;
+`;
+
+const DeleteAccountLink = styled(Button)`
+  && {
+    padding: 0;
+    height: auto;
+    color: ${color.accent.primary};
+    font-weight: 500;
+  }
+  &&:hover {
+    color: ${color.accent.hover};
+  }
+`;
+
+const BackLinkRow = styled.div`
+  margin-top: 24px;
+  padding-top: 8px;
+`;
 
 function splitName(full: string): { first: string; last: string } {
   const p = full.trim().split(/\s+/);
@@ -163,223 +264,248 @@ export function AccountSettingsPage(props?: {
 
   if (isLoading) {
     return (
-      <div style={{ padding: 48, textAlign: "center" }}>
-        <Spin />
-      </div>
+      <SettingsPageRoot>
+        <SettingsInner $centered={variant === "profile"}>
+          <div style={{ padding: 48, textAlign: "center" }}>
+            <Spin />
+          </div>
+        </SettingsInner>
+      </SettingsPageRoot>
     );
   }
 
   if (isError || !user) {
     return (
-      <>
-        <Typography.Title level={3} style={{ marginTop: 0 }}>
-          {pageTitle}
-        </Typography.Title>
-        <Alert
-          type="error"
-          showIcon
-          message="Не удалось загрузить данные"
-          description={
-            error && "status" in error
-              ? "Запустите json-server: npm run server"
-              : "Проверьте сеть."
-          }
-          action={
-            <Button size="small" onClick={() => refetch()}>
-              Повторить
-            </Button>
-          }
-        />
-      </>
+      <SettingsPageRoot>
+        <SettingsInner $centered={variant === "profile"}>
+          <PageHeading>{pageTitle}</PageHeading>
+          <Alert
+            type="error"
+            showIcon
+            message="Не удалось загрузить данные"
+            description={
+              error && "status" in error
+                ? "Запустите json-server: npm run server"
+                : "Проверьте сеть."
+            }
+            action={
+              <Button size="small" onClick={() => refetch()}>
+                Повторить
+              </Button>
+            }
+          />
+        </SettingsInner>
+      </SettingsPageRoot>
     );
   }
 
   const busy = saving || savingPw || deleting;
 
   return (
-    <div>
-      <Typography.Title level={3} style={{ marginTop: 0 }}>
-        {pageTitle}
-      </Typography.Title>
+    <SettingsPageRoot>
+      <SettingsInner $centered={variant === "profile"}>
+        <PageHeading>{pageTitle}</PageHeading>
 
-      <Card style={{ maxWidth: 920 }}>
-        <div style={{ marginBottom: 24, position: "relative", width: 96 }}>
-          <Avatar size={96} style={{ backgroundColor: "#3b82f6" }}>
-            {user.name.charAt(0).toUpperCase()}
-          </Avatar>
-          <Button
-            type="primary"
-            shape="circle"
-            size="small"
-            icon={<CameraOutlined />}
-            style={{ position: "absolute", right: -4, bottom: -4 }}
-            aria-label="Сменить фото"
-            title="Скоро"
-            disabled
-          />
-        </div>
-
-        <Typography.Text
-          type="secondary"
-          style={{ display: "block", marginBottom: 16 }}
-        >
-          Добавлен {new Date(user.createdAt).toLocaleDateString("ru-RU")}
-        </Typography.Text>
-
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <Form layout="vertical" requiredMark component="div">
-            <Row gutter={16}>
-              <Col xs={24} md={12}>
-                <Controller
-                  name="firstName"
-                  control={control}
-                  render={({ field }) => (
-                    <Form.Item
-                      label="Имя"
-                      required
-                      validateStatus={errors.firstName ? "error" : ""}
-                      help={errors.firstName?.message}
-                    >
-                      <UiInput {...field} />
-                    </Form.Item>
-                  )}
-                />
-              </Col>
-              <Col xs={24} md={12}>
-                <Controller
-                  name="lastName"
-                  control={control}
-                  render={({ field }) => (
-                    <Form.Item
-                      label="Фамилия"
-                      required
-                      validateStatus={errors.lastName ? "error" : ""}
-                      help={errors.lastName?.message}
-                    >
-                      <UiInput {...field} />
-                    </Form.Item>
-                  )}
-                />
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col xs={24} md={12}>
-                <Controller
-                  name="email"
-                  control={control}
-                  render={({ field }) => (
-                    <Form.Item
-                      label="Email"
-                      required
-                      validateStatus={errors.email ? "error" : ""}
-                      help={errors.email?.message}
-                    >
-                      <UiInput {...field} type="email" />
-                    </Form.Item>
-                  )}
-                />
-              </Col>
-              <Col xs={24} md={12}>
-                <Controller
-                  name="username"
-                  control={control}
-                  render={({ field }) => (
-                    <Form.Item
-                      label="Имя аккаунта"
-                      required
-                      validateStatus={errors.username ? "error" : ""}
-                      help={errors.username?.message}
-                    >
-                      <UiInput {...field} />
-                    </Form.Item>
-                  )}
-                />
-              </Col>
-            </Row>
-
-            {showVerify ? (
-              <Alert
-                type="warning"
-                showIcon
-                style={{ marginBottom: 16 }}
-                message="Подтвердите почту, чтобы пользоваться всеми возможностями системы"
-                action={
-                  <Button size="small" type="primary" onClick={onSendVerify}>
-                    Отправить ссылку
-                  </Button>
-                }
-              />
-            ) : null}
-
-            <Typography.Title level={5}>Пароль</Typography.Title>
-            <Controller
-              name="existingPassword"
-              control={control}
-              render={({ field }) => (
-                <Form.Item
-                  label="Существующий пароль"
-                  validateStatus={errors.existingPassword ? "error" : ""}
-                  help={errors.existingPassword?.message}
-                >
-                  <Input.Password {...field} autoComplete="current-password" />
-                </Form.Item>
-              )}
+        <SettingsSurface>
+          <AvatarBlock>
+            <Avatar
+              size={120}
+              style={{
+                backgroundColor: "#ec4899",
+                fontSize: 42,
+                fontWeight: 600,
+              }}
+            >
+              {user.name.charAt(0).toUpperCase()}
+            </Avatar>
+            <AvatarCameraBtn
+              type="primary"
+              shape="circle"
+              size="small"
+              icon={<CameraOutlined />}
+              aria-label="Сменить фото"
+              title="Скоро"
+              disabled
             />
-            <Row gutter={16}>
-              <Col xs={24} md={12}>
-                <Controller
-                  name="newPassword"
-                  control={control}
-                  render={({ field }) => (
-                    <Form.Item
-                      label="Новый пароль"
-                      validateStatus={errors.newPassword ? "error" : ""}
-                      help={errors.newPassword?.message}
-                    >
-                      <Input.Password {...field} autoComplete="new-password" />
-                    </Form.Item>
-                  )}
-                />
-              </Col>
-              <Col xs={24} md={12}>
-                <Controller
-                  name="confirmPassword"
-                  control={control}
-                  render={({ field }) => (
-                    <Form.Item
-                      label="Повторите пароль"
-                      validateStatus={errors.confirmPassword ? "error" : ""}
-                      help={errors.confirmPassword?.message}
-                    >
-                      <Input.Password {...field} autoComplete="new-password" />
-                    </Form.Item>
-                  )}
-                />
-              </Col>
-            </Row>
+          </AvatarBlock>
 
-            <Form.Item>
-              <Button type="primary" htmlType="submit" loading={busy}>
-                Сохранить
-              </Button>
-            </Form.Item>
-          </Form>
-        </form>
+          {variant === "profile" ? (
+            <MetaLine type="secondary">
+              Добавлен {new Date(user.createdAt).toLocaleDateString("ru-RU")}
+            </MetaLine>
+          ) : null}
 
-        {variant === "settings" ? (
-          <Button
-            type="link"
-            danger
-            onClick={onDelete}
-            style={{ padding: 0, height: "auto" }}
-          >
-            Удалить аккаунт
-          </Button>
-        ) : null}
-        <div style={{ marginTop: 16 }}>
-          <Link to={path.welcome}>← На главную</Link>
-        </div>
-      </Card>
-    </div>
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <StyledForm layout="vertical" requiredMark component="div">
+              <Row gutter={[20, 0]}>
+                <Col xs={24} md={12}>
+                  <Controller
+                    name="firstName"
+                    control={control}
+                    render={({ field }) => (
+                      <Form.Item
+                        label="Имя"
+                        required
+                        validateStatus={errors.firstName ? "error" : ""}
+                        help={errors.firstName?.message}
+                      >
+                        <UiInput {...field} size="large" />
+                      </Form.Item>
+                    )}
+                  />
+                </Col>
+                <Col xs={24} md={12}>
+                  <Controller
+                    name="lastName"
+                    control={control}
+                    render={({ field }) => (
+                      <Form.Item
+                        label="Фамилия"
+                        required
+                        validateStatus={errors.lastName ? "error" : ""}
+                        help={errors.lastName?.message}
+                      >
+                        <UiInput {...field} size="large" />
+                      </Form.Item>
+                    )}
+                  />
+                </Col>
+              </Row>
+              <Row gutter={[20, 0]}>
+                <Col xs={24} md={12}>
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field }) => (
+                      <Form.Item
+                        label="Email"
+                        required
+                        validateStatus={errors.email ? "error" : ""}
+                        help={errors.email?.message}
+                      >
+                        <UiInput {...field} type="email" size="large" />
+                      </Form.Item>
+                    )}
+                  />
+                </Col>
+                <Col xs={24} md={12}>
+                  <Controller
+                    name="username"
+                    control={control}
+                    render={({ field }) => (
+                      <Form.Item
+                        label="Имя аккаунта"
+                        required
+                        validateStatus={errors.username ? "error" : ""}
+                        help={errors.username?.message}
+                      >
+                        <UiInput {...field} size="large" />
+                      </Form.Item>
+                    )}
+                  />
+                </Col>
+              </Row>
+
+              {showVerify ? (
+                <Alert
+                  type="warning"
+                  showIcon
+                  style={{ marginBottom: 20 }}
+                  message="Подтвердите почту, чтобы пользоваться всеми возможностями системы"
+                  action={
+                    <Button size="small" type="primary" onClick={onSendVerify}>
+                      Отправить ссылку
+                    </Button>
+                  }
+                />
+              ) : null}
+
+              <SectionHeading>Пароль</SectionHeading>
+
+              <Row gutter={[20, 0]}>
+                <Col xs={12}>
+                  <Controller
+                    name="existingPassword"
+                    control={control}
+                    render={({ field }) => (
+                      <Form.Item
+                        label="Существующий пароль"
+                        validateStatus={errors.existingPassword ? "error" : ""}
+                        help={errors.existingPassword?.message}
+                      >
+                        <Input.Password
+                          {...field}
+                          size="large"
+                          autoComplete="current-password"
+                        />
+                      </Form.Item>
+                    )}
+                  />
+                </Col>
+              </Row>
+              <Row gutter={[20, 0]}>
+                <Col xs={24} md={12}>
+                  <Controller
+                    name="newPassword"
+                    control={control}
+                    render={({ field }) => (
+                      <Form.Item
+                        label="Новый пароль"
+                        validateStatus={errors.newPassword ? "error" : ""}
+                        help={errors.newPassword?.message}
+                      >
+                        <Input.Password
+                          {...field}
+                          size="large"
+                          autoComplete="new-password"
+                        />
+                      </Form.Item>
+                    )}
+                  />
+                </Col>
+                <Col xs={24} md={12}>
+                  <Controller
+                    name="confirmPassword"
+                    control={control}
+                    render={({ field }) => (
+                      <Form.Item
+                        label="Повторите пароль"
+                        validateStatus={errors.confirmPassword ? "error" : ""}
+                        help={errors.confirmPassword?.message}
+                      >
+                        <Input.Password
+                          {...field}
+                          size="large"
+                          autoComplete="new-password"
+                        />
+                      </Form.Item>
+                    )}
+                  />
+                </Col>
+              </Row>
+
+              <FormFooter>
+                {variant === "settings" ? (
+                  <DeleteAccountLink type="link" onClick={onDelete}>
+                    Удалить аккаунт
+                  </DeleteAccountLink>
+                ) : (
+                  <span />
+                )}
+                <Button type="primary" htmlType="submit" size="large" loading={busy}>
+                  Сохранить
+                </Button>
+              </FormFooter>
+            </StyledForm>
+          </form>
+
+          {variant === "profile" ? (
+            <BackLinkRow>
+              <Link to={path.welcome}>← На главную</Link>
+            </BackLinkRow>
+          ) : null}
+        </SettingsSurface>
+      </SettingsInner>
+    </SettingsPageRoot>
   );
 }
