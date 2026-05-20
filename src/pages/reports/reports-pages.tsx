@@ -1,7 +1,9 @@
 import type { TableColumnsType } from "antd";
 import { Alert, Button, Space, Spin, Table } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useIsMobile } from "../../hooks";
 import { DEAL_STATUS_META } from "../../lib/deal-status";
 import { isoTimestampInRange } from "../../lib/date/periods";
 import { formatDateRu } from "../../lib/format/date-ru";
@@ -36,6 +38,14 @@ import {
   ToolbarFilters,
   dealStageRowClassName,
 } from "./reports-pages.styled";
+import {
+  ActivityReportMobileCard,
+  NewClientReportMobileCard,
+  OverdueReportMobileCard,
+  SalesReportMobileCard,
+  StageReportMobileCard,
+} from "./reports-mobile-cards";
+import { MobileCardList } from "./reports-mobile-cards.styled";
 
 type ClientReportRow = Client & { key: string };
 
@@ -125,13 +135,16 @@ function PaginatedReportTable<T extends { key: string }>(props: {
   dataSource: T[];
   wrap?: "default" | "stages" | "overdue";
   rowClassName?: (record: T) => string;
+  renderMobileCard?: (record: T) => ReactNode;
 }) {
-  const { columns, dataSource, wrap = "default", rowClassName } = props;
+  const { columns, dataSource, wrap = "default", rowClassName, renderMobileCard } = props;
+  const isMobile = useIsMobile();
   const [page, setPage] = useState(1);
-
-  useEffect(() => {
+  const [prevDataSource, setPrevDataSource] = useState(dataSource);
+  if (dataSource !== prevDataSource) {
+    setPrevDataSource(dataSource);
     setPage(1);
-  }, [dataSource]);
+  }
 
   const pageData = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
@@ -140,6 +153,25 @@ function PaginatedReportTable<T extends { key: string }>(props: {
 
   const Wrap =
     wrap === "stages" ? StagesTableWrap : wrap === "overdue" ? OverdueTableWrap : TableWrap;
+
+  if (isMobile && renderMobileCard) {
+    return (
+      <>
+        {pageData.length ? (
+          <MobileCardList>
+            {pageData.map((row) => (
+              <li key={row.key}>{renderMobileCard(row)}</li>
+            ))}
+          </MobileCardList>
+        ) : (
+          <p style={{ margin: 0, color: "var(--crm-color-text-secondary)", textAlign: "center" }}>
+            Нет данных за выбранный период
+          </p>
+        )}
+        <ReportPagination page={page} total={dataSource.length} onPage={setPage} />
+      </>
+    );
+  }
 
   return (
     <>
@@ -184,8 +216,10 @@ function ReportBlock<T extends { key: string }>(props: {
   dataSource: T[];
   wrap?: "default" | "stages" | "overdue";
   rowClassName?: (record: T) => string;
+  renderMobileCard?: (record: T) => ReactNode;
 }) {
-  const { title, preset, onPreset, columns, dataSource, wrap, rowClassName } = props;
+  const { title, preset, onPreset, columns, dataSource, wrap, rowClassName, renderMobileCard } =
+    props;
 
   return (
     <ReportSection>
@@ -196,6 +230,7 @@ function ReportBlock<T extends { key: string }>(props: {
         dataSource={dataSource}
         wrap={wrap}
         rowClassName={rowClassName}
+        renderMobileCard={renderMobileCard}
       />
     </ReportSection>
   );
@@ -416,6 +451,9 @@ export function ReportsSalesPage() {
         onPreset={setPreset}
         columns={salesColumns}
         dataSource={completedRows}
+        renderMobileCard={(row) => (
+          <SalesReportMobileCard deal={row.deal} clientName={row.clientName} />
+        )}
       />
       <ReportBlock
         title="Этапы сделок"
@@ -425,6 +463,9 @@ export function ReportsSalesPage() {
         dataSource={stagesRows}
         wrap="stages"
         rowClassName={(row) => dealStageRowClassName(row.status)}
+        renderMobileCard={(row) => (
+          <StageReportMobileCard status={row.status} count={row.count} sum={row.sum} />
+        )}
       />
     </>
   );
@@ -499,6 +540,7 @@ export function ReportsClientsPage() {
         onPreset={setNewClientsPreset}
         columns={newClientsColumns}
         dataSource={newClientsRows}
+        renderMobileCard={(row) => <NewClientReportMobileCard client={row} />}
       />
       <ReportBlock
         title="Активности клиентов"
@@ -506,6 +548,7 @@ export function ReportsClientsPage() {
         onPreset={setActivityPreset}
         columns={activityColumns}
         dataSource={activityRows}
+        renderMobileCard={(row) => <ActivityReportMobileCard {...row} />}
       />
     </>
   );
@@ -556,6 +599,7 @@ export function ReportsTasksPage() {
       dataSource={overdue}
       wrap="overdue"
       rowClassName={() => "row-overdue"}
+      renderMobileCard={(row) => <OverdueReportMobileCard {...row} />}
     />
   );
 }

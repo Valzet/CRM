@@ -2,13 +2,17 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 import styled, { css } from "styled-components";
 import { UiButton } from "../../components/ui/button";
-import { color, fontFamilies, typography } from "../../theme/tokens";
+import { color, fontFamilies, grid, typography } from "../../theme/tokens";
 import type { DealStatus } from "../../types/deal";
 
 export const ReportSection = styled.section`
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    gap: 12px;
+  }
 `;
 
 export const SectionTitle = styled.h2`
@@ -26,6 +30,12 @@ export const SectionToolbar = styled.div`
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
 `;
 
 export const ToolbarFilters = styled.div`
@@ -33,6 +43,12 @@ export const ToolbarFilters = styled.div`
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
 `;
 
 export const FilterSelect = styled(Select)`
@@ -43,6 +59,11 @@ export const FilterSelect = styled(Select)`
     border-color: ${color.neutral.border} !important;
     font-size: ${typography.body.sm.fontSize};
   }
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    min-width: 0;
+    width: 100%;
+  }
 ` as typeof Select;
 
 export const ToolbarActions = styled.div`
@@ -50,6 +71,16 @@ export const ToolbarActions = styled.div`
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+
+    .ant-btn {
+      width: 100%;
+    }
+  }
 `;
 
 export const ExportButton = styled(UiButton)`

@@ -2,7 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Form, Input, Select, Spin, Typography } from "antd";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { BackLink } from "../../components/ui";
 import { isoToDatetimeLocalValue } from "../../lib/date/datetime-local";
 import { taskFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
@@ -93,7 +94,7 @@ export function TaskFormPage() {
       <Typography.Title level={3} style={{ marginTop: 0 }}>
         {title}
       </Typography.Title>
-      <Link to={path.tasks}>← К списку</Link>
+      <BackLink to={path.tasks}>К списку</BackLink>
       {dealTitle ? (
         <Typography.Paragraph type="secondary" style={{ marginTop: 8 }}>
           Сделка: {dealTitle}

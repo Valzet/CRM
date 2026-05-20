@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { CrmModal, ModalBodyLoading } from "../crm-modal";
 import { DangerFooterButton, PrimaryFooterButton, SecondaryFooterButton } from "../crm-modal";
 import { clientFormDefaultValues } from "../../lib/constants/forms";
@@ -22,6 +22,9 @@ type Props = {
 export function ClientCardModal(props: Props) {
   const { clientId, open, onClose } = props;
   const [mode, setMode] = useState<"view" | "edit">("view");
+  if (!open && mode !== "view") {
+    setMode("view");
+  }
   const { data: client, isFetching } = useGetClientByIdQuery(clientId!, {
     skip: !open || !clientId,
   });
@@ -32,7 +35,6 @@ export function ClientCardModal(props: Props) {
     control,
     handleSubmit,
     reset,
-    watch,
     formState: { errors },
   } = useForm<ClientFormValues>({
     resolver: zodResolver(clientFormSchema),
@@ -41,12 +43,8 @@ export function ClientCardModal(props: Props) {
   });
 
   useEffect(() => {
-    if (!open) {
-      setMode("view");
-      return;
-    }
-    if (client && !client.deleted) {
-      reset({
+    if (!open || !client || client.deleted) return;
+    reset({
         name: client.name,
         phone: client.phone,
         email: client.email,
@@ -54,10 +52,14 @@ export function ClientCardModal(props: Props) {
         website: client.website,
         comment: client.comment,
       });
-    }
   }, [client, open, reset]);
 
-  const values = watch();
+  const handleClose = () => {
+    setMode("view");
+    onClose();
+  };
+
+  const values = useWatch({ control }) as ClientFormValues;
 
   const onSave = async (formValues: ClientFormValues) => {
     if (!clientId) return;
@@ -76,7 +78,7 @@ export function ClientCardModal(props: Props) {
     try {
       softDelete(clientId).unwrap();
       console.log("Клиент удалён");
-      onClose();
+      handleClose();
     } catch {
       console.error("Не удалось удалить");
       throw new Error("cancel");
@@ -115,7 +117,7 @@ export function ClientCardModal(props: Props) {
   return (
     <CrmModal
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       title="Карточка клиента"
       meta={meta}
       loading={isFetching}

@@ -11,9 +11,7 @@ import type { Deal } from "../../types/deal";
 import type { Task } from "../../types/task";
 import type { User, UserRecord } from "../../types/user";
 
-function stripUserPassword(row: UserRecord): User {
-  const { password, ...rest } = row;
-  password;
+function stripUserPassword({ password: _password, ...rest }: UserRecord): User {
   return rest;
 }
 

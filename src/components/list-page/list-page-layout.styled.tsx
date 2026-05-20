@@ -1,14 +1,23 @@
 import { SearchOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { UiInput } from "../ui/input";
-import { color, fontFamilies, typography } from "../../theme/tokens";
+import { color, fontFamilies, grid, layout, typography } from "../../theme/tokens";
 
-export const PageRoot = styled.div`
+export const PageRoot = styled.div<{ $mobileStickyFooter?: boolean }>`
   flex: 1;
   min-height: 100%;
   margin: 0 -20px;
   padding: 28px 24px 48px;
   background: ${color.background.secondary};
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    margin: 0;
+    padding: 16px 0
+      ${(p) =>
+        p.$mobileStickyFooter
+          ? `calc(${layout.mobileScrollPaddingBottomPx}px + env(safe-area-inset-bottom, 0px))`
+          : "32px"};
+  }
 `;
 
 export const PageHeading = styled.h1`
@@ -25,6 +34,19 @@ export const Toolbar = styled.div`
   align-items: center;
   gap: 16px;
   margin-bottom: 24px;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+`;
+
+export const ToolbarCreate = styled.div`
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    display: none;
+  }
 `;
 
 export const SearchField = styled(UiInput)`

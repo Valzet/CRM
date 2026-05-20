@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Radio } from "antd";
+import { color, grid } from "../../theme/tokens";
 
 export const ContentWrapper = styled.section`
   position: relative;
@@ -10,9 +11,14 @@ export const ContentWrapper = styled.section`
   max-height: 100%;
   box-sizing: border-box;
   padding: 0 20px;
-  background-color: #f3f4f6;
+  background-color: ${color.background.primary};
   overflow: hidden;
   overflow-y: auto;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    padding: 0 ${grid.mobile.marginPx}px;
+    background-color: ${color.background.secondary};
+  }
 `;
 
 export const TitleWrapper = styled.div`

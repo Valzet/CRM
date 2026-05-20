@@ -1,6 +1,6 @@
 import { Tabs } from "antd";
 import styled from "styled-components";
-import { color, typography } from "../../theme/tokens";
+import { color, grid, typography } from "../../theme/tokens";
 
 export const ReportsTabs = styled(Tabs)`
   .ant-tabs-nav {
@@ -8,6 +8,21 @@ export const ReportsTabs = styled(Tabs)`
 
     &::before {
       border-bottom-color: ${color.background.shadowHint};
+    }
+  }
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    .ant-tabs-nav {
+      margin-bottom: 20px;
+    }
+
+    .ant-tabs-nav-list {
+      flex-wrap: nowrap;
+    }
+
+    .ant-tabs-tab {
+      margin: 0 20px 0 0;
+      padding: 8px 0;
     }
   }
 
@@ -41,4 +56,9 @@ export const TabPanel = styled.div`
   display: flex;
   flex-direction: column;
   gap: 40px;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    gap: 28px;
+    padding-bottom: 16px;
+  }
 `;

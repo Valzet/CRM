@@ -1,3 +1,4 @@
+export { BackLink } from "./back-link";
 export { UiButton, type UiButtonProps } from "./button";
 export { UiCheckbox, type UiCheckboxProps } from "./checkbox";
 export { UiInput, type UiInputProps } from "./input";

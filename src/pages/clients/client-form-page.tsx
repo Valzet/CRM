@@ -2,7 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Form, Spin, Typography } from "antd";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { BackLink } from "../../components/ui";
 import { clientFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { clientFormSchema, type ClientFormValues } from "../../schemas";
@@ -71,7 +72,7 @@ export function ClientFormPage() {
       <Typography.Title level={3} style={{ marginTop: 0 }}>
         {title}
       </Typography.Title>
-      <Link to={path.clients}>← К списку</Link>
+      <BackLink to={path.clients}>К списку</BackLink>
       <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ marginTop: 24 }}>
         <Form layout="vertical" requiredMark component="div">
           <ClientFormFields control={control} errors={errors} />

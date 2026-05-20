@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { message } from "antd";
 import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import {
   CrmModal,
   ModalBodyLoading,
@@ -24,6 +24,9 @@ type Props = {
 export function DealCardModal(props: Props) {
   const { dealId, open, onClose } = props;
   const [mode, setMode] = useState<"view" | "edit">("view");
+  if (!open && mode !== "view") {
+    setMode("view");
+  }
   const { data: deal, isFetching } = useGetDealByIdQuery(dealId!, {
     skip: !open || !dealId,
   });
@@ -44,7 +47,6 @@ export function DealCardModal(props: Props) {
     control,
     handleSubmit,
     reset,
-    watch,
     formState: { errors },
   } = useForm<DealFormValues>({
     resolver: zodResolver(dealFormSchema),
@@ -53,23 +55,23 @@ export function DealCardModal(props: Props) {
   });
 
   useEffect(() => {
-    if (!open) {
-      setMode("view");
-      return;
-    }
-    if (deal) {
-      reset({
-        title: deal.title,
-        description: deal.description,
-        clientId: deal.clientId,
-        amount: deal.amount,
-        status: deal.status,
-      });
-    }
+    if (!open || !deal) return;
+    reset({
+      title: deal.title,
+      description: deal.description,
+      clientId: deal.clientId,
+      amount: deal.amount,
+      status: deal.status,
+    });
   }, [deal, open, reset]);
 
-  const values = watch();
-  const clientName = clientsAll?.find((c) => c.id === values.clientId)?.name ?? "—";
+  const values = useWatch({ control }) as DealFormValues;
+  const clientName = clientsAll?.find((c) => c.id === values?.clientId)?.name ?? "—";
+
+  const handleClose = () => {
+    setMode("view");
+    onClose();
+  };
 
   const onSave = async (formValues: DealFormValues) => {
     if (!dealId) return;
@@ -107,7 +109,7 @@ export function DealCardModal(props: Props) {
         },
       }).unwrap();
       console.log("Сделка завершена");
-      onClose();
+      handleClose();
     } catch {
       console.error("Не удалось завершить сделку");
     }
@@ -129,7 +131,7 @@ export function DealCardModal(props: Props) {
             Завершить сделку
           </SuccessFooterButton>
         ) : (
-          <SecondaryFooterButton onClick={onClose}>Закрыть</SecondaryFooterButton>
+          <SecondaryFooterButton onClick={handleClose}>Закрыть</SecondaryFooterButton>
         )}
       </>
     ) : (
@@ -148,7 +150,7 @@ export function DealCardModal(props: Props) {
   return (
     <CrmModal
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       title="Карточка сделки"
       meta={meta}
       loading={isFetching}

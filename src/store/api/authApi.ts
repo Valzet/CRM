@@ -98,16 +98,14 @@ export const authApi = createApi({
     }),
 
     requestPasswordReset: builder.mutation<{ ok: true }, PasswordRecoveryFormValues>({
-      async queryFn(body) {
-        body;
+      async queryFn(_body) {
         await sleep(500);
         return { data: { ok: true as const } };
       },
     }),
 
     confirmEmail: builder.mutation<{ ok: true }, EmailConfirmFormValues>({
-      async queryFn(body) {
-        body;
+      async queryFn(_body) {
         await sleep(450);
         return { data: { ok: true as const } };
       },

@@ -3,7 +3,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, Avatar, Button, Col, Form, Input, Modal, Row, Spin } from "antd";
 import { useEffect } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { BackLink } from "../../components/ui";
 import { accountSettingsFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { useAppDispatch, useAppSelector } from "../../hooks";
@@ -369,7 +370,7 @@ export function AccountSettingsPage(props?: { variant?: "settings" | "profile" }
 
           {variant === "profile" ? (
             <BackLinkRow>
-              <Link to={path.welcome}>← На главную</Link>
+              <BackLink to={path.welcome}>На главную</BackLink>
             </BackLinkRow>
           ) : null}
         </SettingsSurface>

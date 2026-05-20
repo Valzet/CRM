@@ -3,9 +3,7 @@ import type { ReactNode } from "react";
 import { forwardRef } from "react";
 
 export type UiButtonProps = ButtonProps & {
-  /** Иконка слева: SVG, `<img />` или компонент из `@ant-design/icons`. */
   leadingIcon?: ReactNode;
-  /** Иконка справа; при одиночном использовании включается `iconPlacement="end"`. */
   trailingIcon?: ReactNode;
 };
 
@@ -26,14 +24,6 @@ function resolvedIconPlacement(
   return trailingIcon && !leadingIcon ? "end" : "start";
 }
 
-/**
- * Обёртка над Ant Design `Button` со слотами `leadingIcon` / `trailingIcon`.
- *
- * Где подставить иконку:
- * - только слева → `leadingIcon` (или родной `icon`);
- * - только справа → `trailingIcon`;
- * - с обеих сторон → передайте оба свойства — рендер flex-контейнера внутри кнопки.
- */
 export const UiButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, UiButtonProps>(
   function UiButton(props, ref) {
     const { leadingIcon, trailingIcon, icon, iconPlacement, children, ...rest } = props;

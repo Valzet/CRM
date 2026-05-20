@@ -3,7 +3,6 @@ import { authApi } from "./api/authApi";
 import { crmApi } from "./api/crmApi";
 import { authSlice } from "./auth-slice";
 
-/** Заготовка корня Redux; добавляйте сюда слайсы по мере их появления. */
 const appSlice = createSlice({
   name: "app",
   initialState: {} as Record<string, never>,

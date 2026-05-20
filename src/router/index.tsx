@@ -2,6 +2,7 @@ import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { MainLayout } from "../app/main-layout";
 import { Page, path } from "../lib/constants/navigation";
 import {
+  AuthRoot,
   EmailConfirmationPage,
   LoginPage,
   PasswordRecoveryPage,
@@ -25,6 +26,7 @@ import { RequireAuth } from "./require-auth";
 function AppRoutes() {
   return (
     <Routes>
+      <Route path={Page.MAIN} element={<AuthRoot />} />
       <Route path={Page.LOGIN} element={<LoginPage />} />
       <Route path={path.register} element={<RegisterPage />} />
       <Route path={path.passwordRecovery} element={<PasswordRecoveryPage />} />
@@ -32,7 +34,6 @@ function AppRoutes() {
       <Route path={Page.UNAVAILABLE} element={<UnavailablePage />} />
 
       <Route
-        path={Page.MAIN}
         element={
           <RequireAuth>
             <MainLayout />

@@ -1,4 +1,3 @@
-
 import { Avatar } from "antd";
 import { useLocation } from "react-router-dom";
 import logoImg from "../../assets/logo/Logo4.png";
@@ -10,6 +9,7 @@ import { selectAuthUserId } from "../../store/auth-slice";
 import { useGetUserByIdQuery } from "../../store/api";
 import { color } from "../../theme/tokens";
 import { useSidebar } from "./sidebar-context";
+import { mainNavItems } from "./nav-items";
 import {
   BrandRow,
   BrandLink,
@@ -27,47 +27,23 @@ import {
 
 type MainSidebarProps = {
   onNavigate?: () => void;
-  /** В мобильном Drawer всегда показываем полное меню. */
-  forceExpanded?: boolean;
 };
-import brief from '../../assets/icons/24x24/Briefcase.svg';
-import home from '../../assets/icons/24x24/Home.svg';
-import clients from '../../assets/icons/24x24/Team.svg';
-import projects from '../../assets/icons/24x24/Project.svg';
-import tasks from '../../assets/icons/24x24/Task.svg';
-/** Светлый сайдбар YaPlex: сворачивается по кнопке, на мобиле — в Drawer. */
-export function MainSidebar({ onNavigate, forceExpanded }: MainSidebarProps) {
-  const { collapsed: collapsedState, toggleCollapsed } = useSidebar();
-  const collapsed = forceExpanded ? false : collapsedState;
+
+
+export function MainSidebar({ onNavigate }: MainSidebarProps) {
+  const { collapsed, toggleCollapsed } = useSidebar();
   const userId = useAppSelector(selectAuthUserId);
   const { data: me } = useGetUserByIdQuery(userId ?? "", { skip: !userId });
   const displayName = me?.username?.trim() || me?.name?.split(/\s+/)[0] || "Пользователь";
   const { pathname } = useLocation();
-  const reportsActive = pathname.startsWith("/reports");
-
-  const navItems = [
-    { to: path.welcome, end: true, icon: <img src={home} aria-hidden />, label: "Главная" },
-    { to: path.clients, icon: <img src={clients} aria-hidden />, label: "Клиенты" },
-    { to: path.deals, icon: <img src={brief} aria-hidden />, label: "Сделки" },
-    {
-      to: path.reports.sales,
-      end: true,
-      icon: <img src={tasks} aria-hidden />,
-      label: "Отчёты",
-      dataActive: reportsActive,
-    },
-    { to: path.tasks, icon: <img src={projects} aria-hidden />, label: "Задачи" },
-  ] as const;
 
   return (
     <Shell $collapsed={collapsed} aria-label="Навигация">
-       {!collapsed ?<BrandRow $collapsed={collapsed}>
-     
-        <BrandLink to={path.welcome} end onClick={onNavigate}>
-           <BrandLogo src={logoImg} alt="" decoding="async" /> 
-        </BrandLink>
-       
-        {!collapsed && !forceExpanded ? (
+      {!collapsed ? (
+        <BrandRow $collapsed={collapsed}>
+          <BrandLink to={path.welcome} end onClick={onNavigate}>
+            <BrandLogo src={logoImg} alt="" decoding="async" />
+          </BrandLink>
           <CollapseBtn
             type="button"
             onClick={toggleCollapsed}
@@ -76,10 +52,9 @@ export function MainSidebar({ onNavigate, forceExpanded }: MainSidebarProps) {
           >
             <img src={collapseIcon} alt="" />
           </CollapseBtn>
-        ) : null}
-      </BrandRow>
- : null}
-      {collapsed && !forceExpanded ? (
+        </BrandRow>
+      ) : null}
+      {collapsed ? (
         <CollapseRow>
           <CollapseBtn
             type="button"
@@ -93,19 +68,22 @@ export function MainSidebar({ onNavigate, forceExpanded }: MainSidebarProps) {
       ) : null}
 
       <NavBlock>
-        {navItems.map((item) => (
-          <Item
-            key={item.to}
-            to={item.to}
-            end={"end" in item ? item.end : undefined}
-            $collapsed={collapsed}
-            data-active={"dataActive" in item && item.dataActive ? "true" : undefined}
-            onClick={onNavigate}
-          >
-            {item.icon}
-            <ItemLabel $hidden={collapsed}>{item.label}</ItemLabel>
-          </Item>
-        ))}
+        {mainNavItems.map((item) => {
+          const isActive = item.matchPrefix ? pathname.startsWith(item.matchPrefix) : false;
+          return (
+            <Item
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              $collapsed={collapsed}
+              data-active={isActive ? "true" : undefined}
+              onClick={onNavigate}
+            >
+              <img src={item.iconSrc} alt="" aria-hidden />
+              <ItemLabel $hidden={collapsed}>{item.label}</ItemLabel>
+            </Item>
+          );
+        })}
       </NavBlock>
 
       <Footer $collapsed={collapsed}>

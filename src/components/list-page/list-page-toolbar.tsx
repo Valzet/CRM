@@ -1,5 +1,5 @@
 import { UiButton } from "../ui/button";
-import { SearchField, SearchIcon, Toolbar } from "./list-page-layout.styled";
+import { SearchField, SearchIcon, Toolbar, ToolbarCreate } from "./list-page-layout.styled";
 
 type Props = {
   createLabel: string;
@@ -13,9 +13,11 @@ export function ListPageToolbar(props: Props) {
 
   return (
     <Toolbar>
-      <UiButton type="primary" onClick={onCreate}>
-        {createLabel}
-      </UiButton>
+      <ToolbarCreate>
+        <UiButton type="primary" onClick={onCreate}>
+          {createLabel}
+        </UiButton>
+      </ToolbarCreate>
       <SearchField
         allowClear
         placeholder="Искать"

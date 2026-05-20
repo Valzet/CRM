@@ -1,7 +1,6 @@
 import * as z from "zod";
 import { collapseWhitespaceTrim } from "./normalize";
 
-/** PATCH /users — имя одной строкой + логин. */
 export type AccountProfilePatch = {
   name: string;
   email: string;

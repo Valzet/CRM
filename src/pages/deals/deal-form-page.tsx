@@ -2,7 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Form, Spin, Typography, message } from "antd";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { BackLink } from "../../components/ui";
 import { dealFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { dealFormSchema, type DealFormValues } from "../../schemas";
@@ -95,7 +96,7 @@ export function DealFormPage() {
       <Typography.Title level={3} style={{ marginTop: 0 }}>
         {title}
       </Typography.Title>
-      <Link to={path.deals}>← К списку</Link>
+      <BackLink to={path.deals}>К списку</BackLink>
       {clientLabel ? (
         <Typography.Paragraph type="secondary" style={{ marginTop: 8 }}>
           Клиент: {clientLabel}

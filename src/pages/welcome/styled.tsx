@@ -1,11 +1,17 @@
-import styled from "styled-components";
-import { color, fontFamilies, typography } from "../../theme/tokens";
+import styled, { css } from "styled-components";
+import { color, fontFamilies, grid, layout, typography } from "../../theme/tokens";
 
 export const WelcomeRoot = styled.div`
   flex: 1;
   min-height: 100%;
   padding: 28px 4px 48px;
   margin-bottom: 20px;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    padding: 20px 0
+      calc(${layout.mobileScrollPaddingBottomPx}px + env(safe-area-inset-bottom, 0px));
+    margin-bottom: 0;
+  }
 `;
 
 export const PageTitle = styled.h1`
@@ -323,4 +329,130 @@ export const EmptyHint = styled.p`
   font-size: ${typography.body.sm.fontSize};
   line-height: ${typography.body.sm.lineHeight};
   color: ${color.neutral.textSecondary};
+`;
+
+export const DashboardTabs = styled.nav`
+  display: none;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    margin: 0 0 20px;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+`;
+
+export const DashboardTab = styled.button<{ $active?: boolean }>`
+  flex-shrink: 0;
+  padding: 0 0 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: ${fontFamilies.body};
+  font-size: ${typography.body.sm.fontSize};
+  line-height: ${typography.body.sm.lineHeight};
+  font-weight: ${(p) => (p.$active ? 600 : 400)};
+  color: ${(p) => (p.$active ? color.accent.primary : color.neutral.textSecondary)};
+  border-bottom: 2px solid ${(p) => (p.$active ? color.accent.primary : "transparent")};
+`;
+
+export const MobileStatsStack = styled.div`
+  display: none;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+`;
+
+export const MobileStatCard = styled.div`
+  padding: 16px;
+  background: ${color.background.secondary};
+  border: 1px solid ${color.background.shadowHint};
+  border-radius: 12px;
+`;
+
+export const MobileStatTitle = styled.div`
+  margin-bottom: 12px;
+  font-size: ${typography.body.sm.fontSize};
+  line-height: ${typography.body.sm.lineHeight};
+  font-weight: 600;
+  color: ${color.neutral.textPrimary};
+`;
+
+export const MobileStatRow = styled.div`
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 16px;
+`;
+
+export const MobileStatMain = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 72px;
+`;
+
+export const MobileStatValue = styled.div`
+  font-size: ${typography.heading.h2.fontSize};
+  line-height: ${typography.heading.h2.lineHeight};
+  font-weight: 700;
+  color: ${color.accent.primary};
+`;
+
+export const MobileStatCaption = styled.div`
+  margin-top: 4px;
+  font-size: ${typography.body.xs.fontSize};
+  line-height: ${typography.body.xs.lineHeight};
+  color: ${color.neutral.textSecondary};
+`;
+
+export const MobileStatDeltas = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  flex: 1;
+  align-content: center;
+`;
+
+export const MobileStatDelta = styled.div`
+  font-size: ${typography.body.xs.fontSize};
+  line-height: ${typography.body.xs.lineHeight};
+  color: ${color.accent.success};
+  font-weight: 500;
+`;
+
+export const MobileOnly = styled.div`
+  display: none;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    display: block;
+  }
+`;
+
+export const DesktopOnly = styled.div`
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    display: none;
+  }
+`;
+
+export { StickyListAction as StickyMobileAction } from "../../components/list-page/mobile-list.styled";
+
+const hideOnMobile = css`
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    display: none;
+  }
+`;
+
+export const SectionBlock = styled.section<{ $mobileHidden?: boolean }>`
+  ${(p) => (p.$mobileHidden ? hideOnMobile : "")}
 `;

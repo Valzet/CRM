@@ -1,6 +1,6 @@
 import { Button, Spin } from "antd";
 import { useMemo, useState } from "react";
-import { useAppSelector } from "../../hooks";
+import { useAppSelector, useIsMobile } from "../../hooks";
 import {
   boundsMonthToToday,
   boundsQuarterToToday,
@@ -55,7 +55,24 @@ import {
   TaskStatus,
   TaskTitle,
   WelcomeRoot,
+  DesktopOnly,
+  MobileOnly,
+  MobileStatCaption,
+  MobileStatCard,
+  MobileStatDelta,
+  MobileStatDeltas,
+  MobileStatMain,
+  MobileStatRow,
+  MobileStatTitle,
+  MobileStatValue,
+  MobileStatsStack,
+  StickyMobileAction,
 } from "./styled";
+import {
+  WelcomeDashboardTabs,
+  WelcomeTabPanel,
+  type WelcomeDashboardTab,
+} from "./welcome-dashboard-tabs";
 
 function isDealActive(d: Deal) {
   return d.status === "new" || d.status === "in_progress";
@@ -78,6 +95,8 @@ function findDealTitle(dealsList: Deal[], dealId: string) {
 }
 
 export function WelcomePage() {
+  const isMobile = useIsMobile();
+  const [dashboardTab, setDashboardTab] = useState<WelcomeDashboardTab>("home");
   const [clientCreateOpen, setClientCreateOpen] = useState(false);
   const [dealCreateOpen, setDealCreateOpen] = useState(false);
   const [taskCreateOpen, setTaskCreateOpen] = useState(false);
@@ -178,6 +197,15 @@ export function WelcomePage() {
     );
   }
 
+  const stickyAction =
+    dashboardTab === "clients"
+      ? { label: "Новый клиент", onClick: () => setClientCreateOpen(true) }
+      : dashboardTab === "deals"
+        ? { label: "Новая сделка", onClick: () => setDealCreateOpen(true) }
+        : dashboardTab === "tasks"
+          ? { label: "Новая задача", onClick: () => setTaskCreateOpen(true) }
+          : null;
+
   return (
     <WelcomeRoot>
       <PageTitle>Добро пожаловать, {firstName}!</PageTitle>
@@ -185,29 +213,59 @@ export function WelcomePage() {
         Посмотрите сводную информацию по вашим клиентам, сделкам и задачам
       </PageSubtitle>
 
-      <StatsCard>
-        <StatsTable>
-          <StatsHeaderRow>
-            <StatsHeaderCell />
-            <StatsHeaderCell>на сегодня</StatsHeaderCell>
-            <StatsHeaderCell>за сегодня</StatsHeaderCell>
-            <StatsHeaderCell>за неделю</StatsHeaderCell>
-            <StatsHeaderCell>за месяц</StatsHeaderCell>
-            <StatsHeaderCell>за квартал</StatsHeaderCell>
-          </StatsHeaderRow>
-          {statsRows.map((row) => (
-            <StatsRow key={row.key}>
-              <StatsLabelCell>{row.row}</StatsLabelCell>
-              <StatsValueCell $variant="primary">{row.today}</StatsValueCell>
-              <StatsValueCell>{formatDelta(row.addedToday)}</StatsValueCell>
-              <StatsValueCell>{formatDelta(row.addedWeek)}</StatsValueCell>
-              <StatsValueCell>{formatDelta(row.addedMonth)}</StatsValueCell>
-              <StatsValueCell>{formatDelta(row.addedQuarter)}</StatsValueCell>
-            </StatsRow>
-          ))}
-        </StatsTable>
-      </StatsCard>
+      {isMobile ? (
+        <WelcomeDashboardTabs active={dashboardTab} onChange={setDashboardTab} />
+      ) : null}
 
+      <WelcomeTabPanel isMobile={isMobile} active={dashboardTab} section="home">
+        <MobileOnly>
+          <MobileStatsStack>
+            {statsRows.map((row) => (
+              <MobileStatCard key={row.key}>
+                <MobileStatTitle>{row.row}</MobileStatTitle>
+                <MobileStatRow>
+                  <MobileStatMain>
+                    <MobileStatValue>{row.today}</MobileStatValue>
+                    <MobileStatCaption>на сегодня</MobileStatCaption>
+                  </MobileStatMain>
+                  <MobileStatDeltas>
+                    <MobileStatDelta>за сегодня {formatDelta(row.addedToday)}</MobileStatDelta>
+                    <MobileStatDelta>за неделю {formatDelta(row.addedWeek)}</MobileStatDelta>
+                    <MobileStatDelta>за месяц {formatDelta(row.addedMonth)}</MobileStatDelta>
+                    <MobileStatDelta>за квартал {formatDelta(row.addedQuarter)}</MobileStatDelta>
+                  </MobileStatDeltas>
+                </MobileStatRow>
+              </MobileStatCard>
+            ))}
+          </MobileStatsStack>
+        </MobileOnly>
+        <DesktopOnly>
+          <StatsCard>
+            <StatsTable>
+              <StatsHeaderRow>
+                <StatsHeaderCell />
+                <StatsHeaderCell>на сегодня</StatsHeaderCell>
+                <StatsHeaderCell>за сегодня</StatsHeaderCell>
+                <StatsHeaderCell>за неделю</StatsHeaderCell>
+                <StatsHeaderCell>за месяц</StatsHeaderCell>
+                <StatsHeaderCell>за квартал</StatsHeaderCell>
+              </StatsHeaderRow>
+              {statsRows.map((row) => (
+                <StatsRow key={row.key}>
+                  <StatsLabelCell>{row.row}</StatsLabelCell>
+                  <StatsValueCell $variant="primary">{row.today}</StatsValueCell>
+                  <StatsValueCell>{formatDelta(row.addedToday)}</StatsValueCell>
+                  <StatsValueCell>{formatDelta(row.addedWeek)}</StatsValueCell>
+                  <StatsValueCell>{formatDelta(row.addedMonth)}</StatsValueCell>
+                  <StatsValueCell>{formatDelta(row.addedQuarter)}</StatsValueCell>
+                </StatsRow>
+              ))}
+            </StatsTable>
+          </StatsCard>
+        </DesktopOnly>
+      </WelcomeTabPanel>
+
+      <WelcomeTabPanel isMobile={isMobile} active={dashboardTab} section="clients">
       <SectionTitle>топ 10 активных клиентов</SectionTitle>
       {topClients.length ? (
         <CardsGrid>
@@ -224,12 +282,16 @@ export function WelcomePage() {
       ) : (
         <EmptyHint>Нет сделок для отображения топа клиентов.</EmptyHint>
       )}
-      <SectionAction>
-        <Button type="primary" onClick={() => setClientCreateOpen(true)}>
-          Новый клиент
-        </Button>
-      </SectionAction>
+      <DesktopOnly>
+        <SectionAction>
+          <Button type="primary" onClick={() => setClientCreateOpen(true)}>
+            Новый клиент
+          </Button>
+        </SectionAction>
+      </DesktopOnly>
+      </WelcomeTabPanel>
 
+      <WelcomeTabPanel isMobile={isMobile} active={dashboardTab} section="deals">
       <SectionTitle>Топ 10 активных сделок</SectionTitle>
       {recentActiveDeals.length ? (
         <DealsList>
@@ -246,12 +308,16 @@ export function WelcomePage() {
       ) : (
         <EmptyHint>Активных сделок пока нет.</EmptyHint>
       )}
-      <SectionAction>
-        <Button type="primary" onClick={() => setDealCreateOpen(true)}>
-          Новая сделка
-        </Button>
-      </SectionAction>
+      <DesktopOnly>
+        <SectionAction>
+          <Button type="primary" onClick={() => setDealCreateOpen(true)}>
+            Новая сделка
+          </Button>
+        </SectionAction>
+      </DesktopOnly>
+      </WelcomeTabPanel>
 
+      <WelcomeTabPanel isMobile={isMobile} active={dashboardTab} section="tasks">
       <SectionTitle>Последние 10 задач</SectionTitle>
       {recentTasks.length ? (
         <CardsGrid>
@@ -262,11 +328,22 @@ export function WelcomePage() {
       ) : (
         <EmptyHint>Задач пока нет.</EmptyHint>
       )}
-      <SectionAction>
-        <Button type="primary" onClick={() => setTaskCreateOpen(true)}>
-          Новая задача
-        </Button>
-      </SectionAction>
+      <DesktopOnly>
+        <SectionAction>
+          <Button type="primary" onClick={() => setTaskCreateOpen(true)}>
+            Новая задача
+          </Button>
+        </SectionAction>
+      </DesktopOnly>
+      </WelcomeTabPanel>
+
+      {isMobile && stickyAction ? (
+        <StickyMobileAction>
+          <Button type="primary" block onClick={stickyAction.onClick}>
+            {stickyAction.label}
+          </Button>
+        </StickyMobileAction>
+      ) : null}
 
       <ClientCreateModal open={clientCreateOpen} onClose={() => setClientCreateOpen(false)} />
       <DealCreateModal open={dealCreateOpen} onClose={() => setDealCreateOpen(false)} />

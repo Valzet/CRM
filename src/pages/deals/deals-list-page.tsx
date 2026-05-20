@@ -1,8 +1,10 @@
 import { Table } from "antd";
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   DealCardModal,
   DealCreateModal,
+  DealsMobileList,
   DealStatusCell,
   DealTitleCell,
   DealsTableWrap,
@@ -11,10 +13,13 @@ import {
 import {
   ListPageError,
   ListPageLoading,
+  ListPageStickyAction,
   ListPageToolbar,
   PageHeading,
   PageRoot,
 } from "../../components/list-page";
+import { useIsMobile } from "../../hooks";
+import { path } from "../../lib/constants/navigation";
 import { DEAL_STATUS_META } from "../../lib/deal-status";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { formatMoneyRu } from "../../lib/format/money-ru";
@@ -22,6 +27,8 @@ import { useGetClientsQuery, useGetDealsQuery } from "../../store/api";
 import type { Deal } from "../../types";
 
 export function DealsListPage() {
+  const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const { data: deals = [], isLoading, isError, error, refetch } = useGetDealsQuery();
   const { data: clients = [] } = useGetClientsQuery({ includeDeleted: true });
   const [q, setQ] = useState("");
@@ -68,17 +75,28 @@ export function DealsListPage() {
     );
   }
 
+  const openCreate = () => {
+    if (isMobile) {
+      navigate(`${path.deals}/new`);
+      return;
+    }
+    setCreateOpen(true);
+  };
+
   return (
-    <PageRoot>
+    <PageRoot $mobileStickyFooter={isMobile}>
       <PageHeading>Сделки</PageHeading>
 
       <ListPageToolbar
         createLabel="Новая сделка"
-        onCreate={() => setCreateOpen(true)}
+        onCreate={openCreate}
         searchValue={q}
         onSearchChange={setQ}
       />
 
+      {isMobile ? (
+        <DealsMobileList deals={filtered} clientNameById={nameByClientId} />
+      ) : (
       <DealsTableWrap>
         <Table<Deal>
           rowKey="id"
@@ -139,9 +157,16 @@ export function DealsListPage() {
           ]}
         />
       </DealsTableWrap>
+      )}
 
-      <DealCardModal dealId={cardId} open={cardId !== null} onClose={() => setCardId(null)} />
-      <DealCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />
+      {isMobile ? <ListPageStickyAction label="Новая сделка" onClick={openCreate} /> : null}
+
+      {!isMobile ? (
+        <>
+          <DealCardModal dealId={cardId} open={cardId !== null} onClose={() => setCardId(null)} />
+          <DealCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />
+        </>
+      ) : null}
     </PageRoot>
   );
 }

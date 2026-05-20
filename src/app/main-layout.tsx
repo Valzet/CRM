@@ -1,14 +1,14 @@
-import { MenuOutlined } from "@ant-design/icons";
-import { Button, Drawer } from "antd";
-import { useMediaQuery } from "../hooks/use-media-query";
+import { Drawer } from "antd";
+import { useIsMobile } from "../hooks";
 import { MainContent, ViewContainer } from "../layouts";
+import { MobileHeader } from "../layouts/mobile-header";
 import { MainSidebar } from "../layouts/sidebar/main-sidebar";
+import { MobileSidebar } from "../layouts/sidebar/mobile-sidebar";
 import { SidebarProvider, useSidebar } from "../layouts/sidebar/sidebar-context";
-import { grid, layout } from "../theme/tokens";
-import { MainPane, MobileBar, Shell } from "./main.styled";
+import { MainPane, Shell } from "./main.styled";
 
 function MainLayoutInner() {
-  const isMobile = useMediaQuery(`(max-width: ${grid.breakpoints.mobileMax})`);
+  const isMobile = useIsMobile();
   const { mobileOpen, openMobile, closeMobile } = useSidebar();
 
   return (
@@ -20,28 +20,22 @@ function MainLayoutInner() {
           placement="left"
           open={mobileOpen}
           onClose={closeMobile}
-          width={layout.sidebarExpandedPx}
+          width="100%"
+          style={{ maxWidth: 375 }}
           styles={{
-            body: { padding: 0 },
+            body: { padding: 0, background: "transparent" },
             header: { display: "none" },
+            content: { background: "transparent", boxShadow: "none" },
+            mask: { backgroundColor: "rgba(15, 23, 42, 0.25)" },
           }}
           aria-label="Меню"
         >
-          <MainSidebar onNavigate={closeMobile} forceExpanded />
+          <MobileSidebar onClose={closeMobile} />
         </Drawer>
       ) : null}
 
       <MainPane>
-        {isMobile ? (
-          <MobileBar>
-            <Button
-              type="text"
-              icon={<MenuOutlined />}
-              onClick={openMobile}
-              aria-label="Открыть меню"
-            />
-          </MobileBar>
-        ) : null}
+        {isMobile ? <MobileHeader onMenuOpen={openMobile} /> : null}
         <MainContent>
           <ViewContainer />
         </MainContent>

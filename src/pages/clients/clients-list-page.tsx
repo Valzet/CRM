@@ -1,14 +1,23 @@
 import { Table } from "antd";
 import { useMemo, useState } from "react";
-import { ClientCardModal, ClientCreateModal, ClientsTableWrap } from "../../components/clients";
+import { useNavigate } from "react-router-dom";
+import {
+  ClientCardModal,
+  ClientCreateModal,
+  ClientsMobileList,
+  ClientsTableWrap,
+} from "../../components/clients";
 import {
   CellLink,
   ListPageError,
   ListPageLoading,
+  ListPageStickyAction,
   ListPageToolbar,
   PageHeading,
   PageRoot,
 } from "../../components/list-page";
+import { useIsMobile } from "../../hooks";
+import { path } from "../../lib/constants/navigation";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { formatPhoneRu } from "../../lib/format/phone-ru";
 import { useGetClientsQuery } from "../../store/api";
@@ -38,6 +47,8 @@ function displayWebsite(url: string): string {
 }
 
 export function ClientsListPage() {
+  const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const {
     data: clients = [],
     isLoading,
@@ -67,17 +78,28 @@ export function ClientsListPage() {
     );
   }
 
+  const openCreate = () => {
+    if (isMobile) {
+      navigate(`${path.clients}/new`);
+      return;
+    }
+    setCreateOpen(true);
+  };
+
   return (
-    <PageRoot>
+    <PageRoot $mobileStickyFooter={isMobile}>
       <PageHeading>Клиенты</PageHeading>
 
       <ListPageToolbar
         createLabel="Новый клиент"
-        onCreate={() => setCreateOpen(true)}
+        onCreate={openCreate}
         searchValue={q}
         onSearchChange={setQ}
       />
 
+      {isMobile ? (
+        <ClientsMobileList clients={filtered} />
+      ) : (
       <ClientsTableWrap>
         <Table<Client>
           rowKey="id"
@@ -153,9 +175,18 @@ export function ClientsListPage() {
           ]}
         />
       </ClientsTableWrap>
+      )}
 
-      <ClientCardModal clientId={cardId} open={cardId !== null} onClose={() => setCardId(null)} />
-      <ClientCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />
+      {isMobile ? (
+        <ListPageStickyAction label="Новый клиент" onClick={openCreate} />
+      ) : null}
+
+      {!isMobile ? (
+        <>
+          <ClientCardModal clientId={cardId} open={cardId !== null} onClose={() => setCardId(null)} />
+          <ClientCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />
+        </>
+      ) : null}
     </PageRoot>
   );
 }

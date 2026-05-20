@@ -1,8 +1,10 @@
 import { Table } from "antd";
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   ListPageError,
   ListPageLoading,
+  ListPageStickyAction,
   ListPageToolbar,
   PageHeading,
   PageRoot,
@@ -10,11 +12,14 @@ import {
 import {
   TaskCreateModal,
   TaskEditModal,
+  TasksMobileList,
   TaskStatusCell,
   TaskTitleCell,
   TasksTableWrap,
   taskRowClassName,
 } from "../../components/tasks";
+import { useIsMobile } from "../../hooks";
+import { path } from "../../lib/constants/navigation";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { TASK_STATUS_META } from "../../lib/task-status";
 import { useGetDealsQuery, useGetTasksQuery, useGetUsersQuery } from "../../store/api";
@@ -42,6 +47,8 @@ function taskMatchesQuery(t: Task, needle: string, dealTitle: string, assigneeNa
 }
 
 export function TasksListPage() {
+  const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const { data: tasks = [], isLoading, isError, error, refetch } = useGetTasksQuery();
   const { data: deals = [] } = useGetDealsQuery();
   const { data: users = [] } = useGetUsersQuery();
@@ -82,17 +89,28 @@ export function TasksListPage() {
     );
   }
 
+  const openCreate = () => {
+    if (isMobile) {
+      navigate(`${path.tasks}/new`);
+      return;
+    }
+    setCreateOpen(true);
+  };
+
   return (
-    <PageRoot>
+    <PageRoot $mobileStickyFooter={isMobile}>
       <PageHeading>Задачи</PageHeading>
 
       <ListPageToolbar
         createLabel="Новая задача"
-        onCreate={() => setCreateOpen(true)}
+        onCreate={openCreate}
         searchValue={q}
         onSearchChange={setQ}
       />
 
+      {isMobile ? (
+        <TasksMobileList tasks={filtered} dealTitleById={dealTitleById} />
+      ) : (
       <TasksTableWrap>
         <Table<Task>
           rowKey="id"
@@ -153,13 +171,20 @@ export function TasksListPage() {
           ]}
         />
       </TasksTableWrap>
+      )}
 
-      <TaskCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />
-      <TaskEditModal
-        taskId={editTaskId}
-        open={editTaskId !== null}
-        onClose={() => setEditTaskId(null)}
-      />
+      {isMobile ? <ListPageStickyAction label="Новая задача" onClick={openCreate} /> : null}
+
+      {!isMobile ? (
+        <>
+          <TaskCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />
+          <TaskEditModal
+            taskId={editTaskId}
+            open={editTaskId !== null}
+            onClose={() => setEditTaskId(null)}
+          />
+        </>
+      ) : null}
     </PageRoot>
   );
 }

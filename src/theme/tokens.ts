@@ -11,6 +11,8 @@ export const grid = {
     alignment: "center" as const,
   },
   mobile: {
+    /**ширина из фигмы моб версии */
+    designWidthPx: 375,
     columns: 4,
     alignment: "stretch" as const,
     marginPx: 20,
@@ -25,6 +27,8 @@ export const layout = {
   sidebarExpandedPx: 260,
   sidebarCollapsedPx: 72,
   sidebarItemHeightPx: 44,
+    mobileStickyBarPx: 72,
+    mobileScrollPaddingBottomPx: 100,
 
   navItemMutedBg: "#F4F4F4",
 } as const;

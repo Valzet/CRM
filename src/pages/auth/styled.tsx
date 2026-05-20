@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import backgroundStart from "../../assets/backgroundStart.png";
+import { color, grid } from "../../theme/tokens";
 
 export const AuthRoot = styled.div`
   position: relative;
@@ -32,7 +33,14 @@ export const AuthGrid = styled.div`
   padding: clamp(24px, 4vw, 48px);
   align-items: center;
 
-  @media (max-width: 900px) {
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    grid-template-columns: 1fr;
+    align-items: start;
+    padding: 24px ${grid.mobile.marginPx}px 32px;
+    max-width: ${grid.mobile.designWidthPx}px;
+  }
+
+  @media (min-width: 768px) and (max-width: 900px) {
     grid-template-columns: 1fr;
     align-items: start;
   }
@@ -44,7 +52,11 @@ export const BrandColumn = styled.div`
   gap: 20px;
   max-width: 440px;
 
-  @media (max-width: 900px) {
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    display: none;
+  }
+
+  @media (min-width: 768px) and (max-width: 900px) {
     max-width: none;
   }
 `;
@@ -96,6 +108,10 @@ export const FormColumn = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    justify-content: stretch;
+  }
 `;
 
 export const FormCard = styled.div`
@@ -107,6 +123,14 @@ export const FormCard = styled.div`
   box-shadow:
     0 4px 6px -1px rgb(0 0 0 / 0.06),
     0 16px 40px -12px rgb(0 0 0 / 0.12);
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    max-width: none;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+  }
 `;
 
 export const CardTitle = styled.h1`
@@ -168,5 +192,65 @@ export const ForgotPasswordRow = styled.div`
 
   a:hover {
     text-decoration: underline;
+  }
+`;
+
+export const LandingInner = styled.div`
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: ${grid.mobile.designWidthPx}px;
+  margin: 0 auto;
+  padding: 48px ${grid.mobile.marginPx}px 32px;
+`;
+
+export const LandingBrandMark = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+`;
+
+export const LandingLogo = styled.img`
+  display: block;
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+`;
+
+export const LandingBrandName = styled.span`
+  font-weight: 700;
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+  color: ${color.neutral.textPrimary};
+`;
+
+export const LandingBrandYa = styled.span`
+  color: ${color.accent.primary};
+`;
+
+export const LandingCopy = styled.div`
+  flex: 1;
+`;
+
+export const LandingText = styled.p`
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: ${color.neutral.textSecondary};
+`;
+
+export const LandingActions = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 32px;
+
+  a {
+    display: block;
+    text-decoration: none;
   }
 `;

@@ -1,4 +1,4 @@
-import { color, fontFamilies, typography } from "../../theme/tokens";
+import { color, fontFamilies, grid, typography } from "../../theme/tokens";
 import styled from "styled-components";
 
 import { Button, Form, Typography } from "antd";
@@ -9,6 +9,10 @@ const SettingsPageRoot = styled.div`
   padding: 28px 4px 48px;
   background: transparent;
   max-width: 680px;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    padding: 16px 0 calc(32px + env(safe-area-inset-bottom, 0px));
+  }
 `;
 
 const SettingsInner = styled.div<{ $centered?: boolean }>`
