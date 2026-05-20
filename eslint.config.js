@@ -20,6 +20,18 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
+    },
+  },
+  {
+    files: ["**/*.styled.tsx", "**/styled.tsx", "**/sidebar-context.tsx", "**/welcome-dashboard-tabs.tsx"],
+    rules: {
+      "react-refresh/only-export-components": "off",
+    },
   },
   eslintConfigPrettier,
 ]);
