@@ -68,7 +68,7 @@ function formatAmountRub(amount: number) {
   return `${amount.toLocaleString("ru-RU")} ₽`;
 }
 
-function ReportPagination(props: { page: number; total: number; onPage: (page: number) => void}) {
+function ReportPagination(props: { page: number; total: number; onPage: (page: number) => void }) {
   const { page, total, onPage } = props;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
@@ -109,7 +109,7 @@ function ReportPagination(props: { page: number; total: number; onPage: (page: n
   );
 }
 
-function SectionControls(props: { preset: ReportPreset; onPreset: (v: ReportPreset) => void}) {
+function SectionControls(props: { preset: ReportPreset; onPreset: (v: ReportPreset) => void }) {
   const { preset, onPreset } = props;
 
   return (

@@ -46,9 +46,7 @@ export function MobileSidebar({ onClose, onNavigate }: MobileSidebarProps) {
 
         <MobileNav>
           {mainNavItems.map((item) => {
-            const isActive = item.matchPrefix
-              ? pathname.startsWith(item.matchPrefix)
-              : false;
+            const isActive = item.matchPrefix ? pathname.startsWith(item.matchPrefix) : false;
 
             return (
               <MobileNavItem

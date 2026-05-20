@@ -111,66 +111,66 @@ export function TasksListPage() {
       {isMobile ? (
         <TasksMobileList tasks={filtered} dealTitleById={dealTitleById} />
       ) : (
-      <TasksTableWrap>
-        <Table<Task>
-          rowKey="id"
-          size="middle"
-          pagination={false}
-          dataSource={filtered}
-          rowClassName={(_, index) => taskRowClassName(index ?? 0)}
-          onRow={(record) => ({
-            onClick: () => setEditTaskId(record.id),
-            style: { cursor: "pointer" },
-          })}
-          columns={[
-            {
-              title: "Название",
-              dataIndex: "title",
-              sorter: (a, b) => a.title.localeCompare(b.title),
-              render: (t: string) => <TaskTitleCell>{t}</TaskTitleCell>,
-            },
-            {
-              title: "Сделка",
-              key: "deal",
-              sorter: (a, b) => dealTitleById(a.dealId).localeCompare(dealTitleById(b.dealId)),
-              render: (_, row) => dealTitleById(row.dealId),
-            },
-            {
-              title: "Описание",
-              dataIndex: "description",
-              ellipsis: true,
-              sorter: (a, b) => a.description.localeCompare(b.description),
-            },
-            {
-              title: "Выполнить до",
-              dataIndex: "dueDate",
-              sorter: (a, b) => a.dueDate.localeCompare(b.dueDate),
-              render: (v: string) => formatDateRu(v),
-            },
-            {
-              title: "Исполнитель",
-              key: "assignee",
-              sorter: (a, b) =>
-                userNameById(a.assigneeId).localeCompare(userNameById(b.assigneeId)),
-              render: (_, row) => userNameById(row.assigneeId),
-            },
-            {
-              title: "Статус",
-              dataIndex: "status",
-              sorter: (a, b) => a.status.localeCompare(b.status),
-              render: (s: Task["status"]) => (
-                <TaskStatusCell $status={s}>{TASK_STATUS_META[s].label}</TaskStatusCell>
-              ),
-            },
-            {
-              title: "Дата создания",
-              dataIndex: "createdAt",
-              sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
-              render: (v: string) => formatDateRu(v),
-            },
-          ]}
-        />
-      </TasksTableWrap>
+        <TasksTableWrap>
+          <Table<Task>
+            rowKey="id"
+            size="middle"
+            pagination={false}
+            dataSource={filtered}
+            rowClassName={(_, index) => taskRowClassName(index ?? 0)}
+            onRow={(record) => ({
+              onClick: () => setEditTaskId(record.id),
+              style: { cursor: "pointer" },
+            })}
+            columns={[
+              {
+                title: "Название",
+                dataIndex: "title",
+                sorter: (a, b) => a.title.localeCompare(b.title),
+                render: (t: string) => <TaskTitleCell>{t}</TaskTitleCell>,
+              },
+              {
+                title: "Сделка",
+                key: "deal",
+                sorter: (a, b) => dealTitleById(a.dealId).localeCompare(dealTitleById(b.dealId)),
+                render: (_, row) => dealTitleById(row.dealId),
+              },
+              {
+                title: "Описание",
+                dataIndex: "description",
+                ellipsis: true,
+                sorter: (a, b) => a.description.localeCompare(b.description),
+              },
+              {
+                title: "Выполнить до",
+                dataIndex: "dueDate",
+                sorter: (a, b) => a.dueDate.localeCompare(b.dueDate),
+                render: (v: string) => formatDateRu(v),
+              },
+              {
+                title: "Исполнитель",
+                key: "assignee",
+                sorter: (a, b) =>
+                  userNameById(a.assigneeId).localeCompare(userNameById(b.assigneeId)),
+                render: (_, row) => userNameById(row.assigneeId),
+              },
+              {
+                title: "Статус",
+                dataIndex: "status",
+                sorter: (a, b) => a.status.localeCompare(b.status),
+                render: (s: Task["status"]) => (
+                  <TaskStatusCell $status={s}>{TASK_STATUS_META[s].label}</TaskStatusCell>
+                ),
+              },
+              {
+                title: "Дата создания",
+                dataIndex: "createdAt",
+                sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+                render: (v: string) => formatDateRu(v),
+              },
+            ]}
+          />
+        </TasksTableWrap>
       )}
 
       {isMobile ? <ListPageStickyAction label="Новая задача" onClick={openCreate} /> : null}

@@ -8,8 +8,7 @@ export const WelcomeRoot = styled.div`
   margin-bottom: 20px;
 
   @media (max-width: ${grid.breakpoints.mobileMax}) {
-    padding: 20px 0
-      calc(${layout.mobileScrollPaddingBottomPx}px + env(safe-area-inset-bottom, 0px));
+    padding: 20px 0 calc(${layout.mobileScrollPaddingBottomPx}px + env(safe-area-inset-bottom, 0px));
     margin-bottom: 0;
   }
 `;
@@ -321,7 +320,6 @@ export const TaskStatus = styled.div<{ $status: "new" | "in_progress" | "complet
 
 export const SectionAction = styled.div`
   margin-top: 16px;
-  
 `;
 
 export const EmptyHint = styled.p`

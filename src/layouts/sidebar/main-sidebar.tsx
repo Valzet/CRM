@@ -29,7 +29,6 @@ type MainSidebarProps = {
   onNavigate?: () => void;
 };
 
-
 export function MainSidebar({ onNavigate }: MainSidebarProps) {
   const { collapsed, toggleCollapsed } = useSidebar();
   const userId = useAppSelector(selectAuthUserId);

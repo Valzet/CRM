@@ -11,7 +11,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "server": "json-server db.json --port 3000 --static ./public",
-     "preview": "vite preview"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@ant-design/icons": "^6.2.3",

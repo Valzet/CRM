@@ -17,6 +17,12 @@ export const mainNavItems: NavItemConfig[] = [
   { to: path.welcome, end: true, iconSrc: home, label: "Главная" },
   { to: path.clients, iconSrc: clients, label: "Клиенты" },
   { to: path.deals, iconSrc: brief, label: "Сделки" },
-  { to: path.reports.sales, end: true, iconSrc: projects, label: "Отчёты", matchPrefix: "/reports" },
+  {
+    to: path.reports.sales,
+    end: true,
+    iconSrc: projects,
+    label: "Отчёты",
+    matchPrefix: "/reports",
+  },
   { to: path.tasks, iconSrc: tasks, label: "Задачи" },
 ];

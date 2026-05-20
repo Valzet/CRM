@@ -27,10 +27,7 @@ function shortId(id: string) {
   return id.length > 14 ? `${id.slice(0, 12)}…` : id;
 }
 
-export function SalesReportMobileCard(props: {
-  deal: Deal;
-  clientName: string;
-}) {
+export function SalesReportMobileCard(props: { deal: Deal; clientName: string }) {
   const { deal, clientName } = props;
   return (
     <MobileReportCard>
@@ -49,11 +46,7 @@ export function SalesReportMobileCard(props: {
   );
 }
 
-export function StageReportMobileCard(props: {
-  status: DealStatus;
-  count: number;
-  sum: number;
-}) {
+export function StageReportMobileCard(props: { status: DealStatus; count: number; sum: number }) {
   const { status, count, sum } = props;
   return (
     <MobileStageCard $status={status}>

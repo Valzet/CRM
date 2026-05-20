@@ -45,13 +45,13 @@ export function ClientCardModal(props: Props) {
   useEffect(() => {
     if (!open || !client || client.deleted) return;
     reset({
-        name: client.name,
-        phone: client.phone,
-        email: client.email,
-        company: client.company,
-        website: client.website,
-        comment: client.comment,
-      });
+      name: client.name,
+      phone: client.phone,
+      email: client.email,
+      company: client.company,
+      website: client.website,
+      comment: client.comment,
+    });
   }, [client, open, reset]);
 
   const handleClose = () => {

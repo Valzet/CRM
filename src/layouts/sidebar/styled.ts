@@ -179,7 +179,6 @@ const UserName = styled.span<{ $hidden: boolean }>`
   width: ${(p) => (p.$hidden ? 0 : "auto")};
 `;
 
-
 export {
   BrandRow,
   BrandLink,

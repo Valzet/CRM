@@ -77,7 +77,9 @@ export function ClientsMobileList({ clients }: Props) {
                 <MobileCardMeta as="div" style={{ marginTop: 4 }}>
                   <MobileCardLink
                     href={
-                      client.website.startsWith("http") ? client.website : `https://${client.website}`
+                      client.website.startsWith("http")
+                        ? client.website
+                        : `https://${client.website}`
                     }
                     target="_blank"
                     rel="noreferrer"

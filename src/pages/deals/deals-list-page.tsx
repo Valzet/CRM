@@ -97,66 +97,66 @@ export function DealsListPage() {
       {isMobile ? (
         <DealsMobileList deals={filtered} clientNameById={nameByClientId} />
       ) : (
-      <DealsTableWrap>
-        <Table<Deal>
-          rowKey="id"
-          size="middle"
-          pagination={false}
-          dataSource={filtered}
-          rowClassName={(record) => dealRowClassName(record.status)}
-          onRow={(record) => ({
-            onClick: () => setCardId(record.id),
-            style: { cursor: "pointer" },
-          })}
-          columns={[
-            {
-              title: "Название",
-              dataIndex: "title",
-              sorter: (a, b) => a.title.localeCompare(b.title),
-              render: (t: string) => <DealTitleCell>{t}</DealTitleCell>,
-            },
-            {
-              title: "Клиент",
-              key: "client",
-              sorter: (a, b) =>
-                nameByClientId(a.clientId).localeCompare(nameByClientId(b.clientId)),
-              render: (_, row) => nameByClientId(row.clientId),
-            },
-            {
-              title: "Описание",
-              dataIndex: "description",
-              ellipsis: true,
-              sorter: (a, b) => a.description.localeCompare(b.description),
-            },
-            {
-              title: "Этап (статус)",
-              dataIndex: "status",
-              sorter: (a, b) => a.status.localeCompare(b.status),
-              render: (s: Deal["status"]) => (
-                <DealStatusCell $status={s}>{DEAL_STATUS_META[s].label}</DealStatusCell>
-              ),
-            },
-            {
-              title: "Сумма",
-              dataIndex: "amount",
-              sorter: (a, b) => a.amount - b.amount,
-              render: (v: number) => formatMoneyRu(v),
-            },
-            {
-              title: "Дата создания",
-              dataIndex: "createdAt",
-              sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
-              render: (v: string) => formatDateRu(v),
-            },
-            {
-              title: "Дата завершения",
-              dataIndex: "completedAt",
-              sorter: (a, b) => (a.completedAt ?? "").localeCompare(b.completedAt ?? ""),
-              render: (v: string | undefined) => (v ? formatDateRu(v) : "—"),
-            },
-          ]}
-        />
-      </DealsTableWrap>
+        <DealsTableWrap>
+          <Table<Deal>
+            rowKey="id"
+            size="middle"
+            pagination={false}
+            dataSource={filtered}
+            rowClassName={(record) => dealRowClassName(record.status)}
+            onRow={(record) => ({
+              onClick: () => setCardId(record.id),
+              style: { cursor: "pointer" },
+            })}
+            columns={[
+              {
+                title: "Название",
+                dataIndex: "title",
+                sorter: (a, b) => a.title.localeCompare(b.title),
+                render: (t: string) => <DealTitleCell>{t}</DealTitleCell>,
+              },
+              {
+                title: "Клиент",
+                key: "client",
+                sorter: (a, b) =>
+                  nameByClientId(a.clientId).localeCompare(nameByClientId(b.clientId)),
+                render: (_, row) => nameByClientId(row.clientId),
+              },
+              {
+                title: "Описание",
+                dataIndex: "description",
+                ellipsis: true,
+                sorter: (a, b) => a.description.localeCompare(b.description),
+              },
+              {
+                title: "Этап (статус)",
+                dataIndex: "status",
+                sorter: (a, b) => a.status.localeCompare(b.status),
+                render: (s: Deal["status"]) => (
+                  <DealStatusCell $status={s}>{DEAL_STATUS_META[s].label}</DealStatusCell>
+                ),
+              },
+              {
+                title: "Сумма",
+                dataIndex: "amount",
+                sorter: (a, b) => a.amount - b.amount,
+                render: (v: number) => formatMoneyRu(v),
+              },
+              {
+                title: "Дата создания",
+                dataIndex: "createdAt",
+                sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+                render: (v: string) => formatDateRu(v),
+              },
+              {
+                title: "Дата завершения",
+                dataIndex: "completedAt",
+                sorter: (a, b) => (a.completedAt ?? "").localeCompare(b.completedAt ?? ""),
+                render: (v: string | undefined) => (v ? formatDateRu(v) : "—"),
+              },
+            ]}
+          />
+        </DealsTableWrap>
       )}
 
       {isMobile ? <ListPageStickyAction label="Новая сделка" onClick={openCreate} /> : null}

@@ -27,8 +27,8 @@ export const layout = {
   sidebarExpandedPx: 260,
   sidebarCollapsedPx: 72,
   sidebarItemHeightPx: 44,
-    mobileStickyBarPx: 72,
-    mobileScrollPaddingBottomPx: 100,
+  mobileStickyBarPx: 72,
+  mobileScrollPaddingBottomPx: 100,
 
   navItemMutedBg: "#F4F4F4",
 } as const;

@@ -28,7 +28,12 @@ export default defineConfig([
     },
   },
   {
-    files: ["**/*.styled.tsx", "**/styled.tsx", "**/sidebar-context.tsx", "**/welcome-dashboard-tabs.tsx"],
+    files: [
+      "**/*.styled.tsx",
+      "**/styled.tsx",
+      "**/sidebar-context.tsx",
+      "**/welcome-dashboard-tabs.tsx",
+    ],
     rules: {
       "react-refresh/only-export-components": "off",
     },

@@ -100,90 +100,92 @@ export function ClientsListPage() {
       {isMobile ? (
         <ClientsMobileList clients={filtered} />
       ) : (
-      <ClientsTableWrap>
-        <Table<Client>
-          rowKey="id"
-          size="middle"
-          pagination={false}
-          dataSource={filtered}
-          rowClassName={(record) => (record.deleted ? "row-deleted" : "")}
-          onRow={(record) => ({
-            onClick: () => setCardId(record.id),
-            style: { cursor: "pointer" },
-          })}
-          columns={[
-            {
-              title: "Имя",
-              dataIndex: "name",
-              sorter: (a, b) => a.name.localeCompare(b.name),
-            },
-            {
-              title: "Телефон",
-              dataIndex: "phone",
-              sorter: (a, b) => (a.phone ?? "").localeCompare(b.phone ?? ""),
-              render: (v: string) => formatPhoneRu(v),
-            },
-            {
-              title: "Email",
-              dataIndex: "email",
-              sorter: (a, b) => (a.email ?? "").localeCompare(b.email ?? ""),
-              render: (v: string) =>
-                v ? (
-                  <CellLink href={`mailto:${v}`} onClick={(e) => e.stopPropagation()}>
-                    {v}
-                  </CellLink>
-                ) : (
-                  "—"
-                ),
-            },
-            {
-              title: "Название компании",
-              dataIndex: "company",
-              sorter: (a, b) => a.company.localeCompare(b.company),
-            },
-            {
-              title: "Сайт",
-              dataIndex: "website",
-              sorter: (a, b) => (a.website ?? "").localeCompare(b.website ?? ""),
-              render: (w: string) =>
-                w ? (
-                  <CellLink
-                    href={w.startsWith("http") ? w : `https://${w}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {displayWebsite(w)}
-                  </CellLink>
-                ) : (
-                  "—"
-                ),
-            },
-            {
-              title: "Комментарий",
-              dataIndex: "comment",
-              ellipsis: true,
-              sorter: (a, b) => (a.comment ?? "").localeCompare(b.comment ?? ""),
-            },
-            {
-              title: "Добавлен",
-              dataIndex: "createdAt",
-              align: "right",
-              sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
-              render: (v: string) => formatDateRu(v),
-            },
-          ]}
-        />
-      </ClientsTableWrap>
+        <ClientsTableWrap>
+          <Table<Client>
+            rowKey="id"
+            size="middle"
+            pagination={false}
+            dataSource={filtered}
+            rowClassName={(record) => (record.deleted ? "row-deleted" : "")}
+            onRow={(record) => ({
+              onClick: () => setCardId(record.id),
+              style: { cursor: "pointer" },
+            })}
+            columns={[
+              {
+                title: "Имя",
+                dataIndex: "name",
+                sorter: (a, b) => a.name.localeCompare(b.name),
+              },
+              {
+                title: "Телефон",
+                dataIndex: "phone",
+                sorter: (a, b) => (a.phone ?? "").localeCompare(b.phone ?? ""),
+                render: (v: string) => formatPhoneRu(v),
+              },
+              {
+                title: "Email",
+                dataIndex: "email",
+                sorter: (a, b) => (a.email ?? "").localeCompare(b.email ?? ""),
+                render: (v: string) =>
+                  v ? (
+                    <CellLink href={`mailto:${v}`} onClick={(e) => e.stopPropagation()}>
+                      {v}
+                    </CellLink>
+                  ) : (
+                    "—"
+                  ),
+              },
+              {
+                title: "Название компании",
+                dataIndex: "company",
+                sorter: (a, b) => a.company.localeCompare(b.company),
+              },
+              {
+                title: "Сайт",
+                dataIndex: "website",
+                sorter: (a, b) => (a.website ?? "").localeCompare(b.website ?? ""),
+                render: (w: string) =>
+                  w ? (
+                    <CellLink
+                      href={w.startsWith("http") ? w : `https://${w}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {displayWebsite(w)}
+                    </CellLink>
+                  ) : (
+                    "—"
+                  ),
+              },
+              {
+                title: "Комментарий",
+                dataIndex: "comment",
+                ellipsis: true,
+                sorter: (a, b) => (a.comment ?? "").localeCompare(b.comment ?? ""),
+              },
+              {
+                title: "Добавлен",
+                dataIndex: "createdAt",
+                align: "right",
+                sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+                render: (v: string) => formatDateRu(v),
+              },
+            ]}
+          />
+        </ClientsTableWrap>
       )}
 
-      {isMobile ? (
-        <ListPageStickyAction label="Новый клиент" onClick={openCreate} />
-      ) : null}
+      {isMobile ? <ListPageStickyAction label="Новый клиент" onClick={openCreate} /> : null}
 
       {!isMobile ? (
         <>
-          <ClientCardModal clientId={cardId} open={cardId !== null} onClose={() => setCardId(null)} />
+          <ClientCardModal
+            clientId={cardId}
+            open={cardId !== null}
+            onClose={() => setCardId(null)}
+          />
           <ClientCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />
         </>
       ) : null}

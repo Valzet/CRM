@@ -213,9 +213,7 @@ export function WelcomePage() {
         Посмотрите сводную информацию по вашим клиентам, сделкам и задачам
       </PageSubtitle>
 
-      {isMobile ? (
-        <WelcomeDashboardTabs active={dashboardTab} onChange={setDashboardTab} />
-      ) : null}
+      {isMobile ? <WelcomeDashboardTabs active={dashboardTab} onChange={setDashboardTab} /> : null}
 
       <WelcomeTabPanel isMobile={isMobile} active={dashboardTab} section="home">
         <MobileOnly>
@@ -266,75 +264,79 @@ export function WelcomePage() {
       </WelcomeTabPanel>
 
       <WelcomeTabPanel isMobile={isMobile} active={dashboardTab} section="clients">
-      <SectionTitle>топ 10 активных клиентов</SectionTitle>
-      {topClients.length ? (
-        <CardsGrid>
-          {topClients.map(({ c, n }) => (
-            <ClientCard key={c.id}>
-              <ClientName>{c.name}</ClientName>
-              <ClientCompany>«{c.company}»</ClientCompany>
-              <ClientDealCount>
-                <span>{n}</span> сделок
-              </ClientDealCount>
-            </ClientCard>
-          ))}
-        </CardsGrid>
-      ) : (
-        <EmptyHint>Нет сделок для отображения топа клиентов.</EmptyHint>
-      )}
-      <DesktopOnly>
-        <SectionAction>
-          <Button type="primary" onClick={() => setClientCreateOpen(true)}>
-            Новый клиент
-          </Button>
-        </SectionAction>
-      </DesktopOnly>
+        <SectionTitle>топ 10 активных клиентов</SectionTitle>
+        {topClients.length ? (
+          <CardsGrid>
+            {topClients.map(({ c, n }) => (
+              <ClientCard key={c.id}>
+                <ClientName>{c.name}</ClientName>
+                <ClientCompany>«{c.company}»</ClientCompany>
+                <ClientDealCount>
+                  <span>{n}</span> сделок
+                </ClientDealCount>
+              </ClientCard>
+            ))}
+          </CardsGrid>
+        ) : (
+          <EmptyHint>Нет сделок для отображения топа клиентов.</EmptyHint>
+        )}
+        <DesktopOnly>
+          <SectionAction>
+            <Button type="primary" onClick={() => setClientCreateOpen(true)}>
+              Новый клиент
+            </Button>
+          </SectionAction>
+        </DesktopOnly>
       </WelcomeTabPanel>
 
       <WelcomeTabPanel isMobile={isMobile} active={dashboardTab} section="deals">
-      <SectionTitle>Топ 10 активных сделок</SectionTitle>
-      {recentActiveDeals.length ? (
-        <DealsList>
-          {recentActiveDeals.map((deal) => (
-            <DealRow key={deal.id}>
-              <DealTitle>{deal.title}</DealTitle>
-              <DealClient>{findClientName(clientsDeletedAware, deal.clientId)}</DealClient>
-              <DealAmount>{deal.amount.toLocaleString("ru-RU")} ₽</DealAmount>
-              <DealStatus $status={deal.status}>{DEAL_STATUS_META[deal.status].label}</DealStatus>
-              <DealDate>{formatDateRu(deal.createdAt)}</DealDate>
-            </DealRow>
-          ))}
-        </DealsList>
-      ) : (
-        <EmptyHint>Активных сделок пока нет.</EmptyHint>
-      )}
-      <DesktopOnly>
-        <SectionAction>
-          <Button type="primary" onClick={() => setDealCreateOpen(true)}>
-            Новая сделка
-          </Button>
-        </SectionAction>
-      </DesktopOnly>
+        <SectionTitle>Топ 10 активных сделок</SectionTitle>
+        {recentActiveDeals.length ? (
+          <DealsList>
+            {recentActiveDeals.map((deal) => (
+              <DealRow key={deal.id}>
+                <DealTitle>{deal.title}</DealTitle>
+                <DealClient>{findClientName(clientsDeletedAware, deal.clientId)}</DealClient>
+                <DealAmount>{deal.amount.toLocaleString("ru-RU")} ₽</DealAmount>
+                <DealStatus $status={deal.status}>{DEAL_STATUS_META[deal.status].label}</DealStatus>
+                <DealDate>{formatDateRu(deal.createdAt)}</DealDate>
+              </DealRow>
+            ))}
+          </DealsList>
+        ) : (
+          <EmptyHint>Активных сделок пока нет.</EmptyHint>
+        )}
+        <DesktopOnly>
+          <SectionAction>
+            <Button type="primary" onClick={() => setDealCreateOpen(true)}>
+              Новая сделка
+            </Button>
+          </SectionAction>
+        </DesktopOnly>
       </WelcomeTabPanel>
 
       <WelcomeTabPanel isMobile={isMobile} active={dashboardTab} section="tasks">
-      <SectionTitle>Последние 10 задач</SectionTitle>
-      {recentTasks.length ? (
-        <CardsGrid>
-          {recentTasks.map((task) => (
-            <TaskMiniCard key={task.id} task={task} dealTitle={findDealTitle(deals, task.dealId)} />
-          ))}
-        </CardsGrid>
-      ) : (
-        <EmptyHint>Задач пока нет.</EmptyHint>
-      )}
-      <DesktopOnly>
-        <SectionAction>
-          <Button type="primary" onClick={() => setTaskCreateOpen(true)}>
-            Новая задача
-          </Button>
-        </SectionAction>
-      </DesktopOnly>
+        <SectionTitle>Последние 10 задач</SectionTitle>
+        {recentTasks.length ? (
+          <CardsGrid>
+            {recentTasks.map((task) => (
+              <TaskMiniCard
+                key={task.id}
+                task={task}
+                dealTitle={findDealTitle(deals, task.dealId)}
+              />
+            ))}
+          </CardsGrid>
+        ) : (
+          <EmptyHint>Задач пока нет.</EmptyHint>
+        )}
+        <DesktopOnly>
+          <SectionAction>
+            <Button type="primary" onClick={() => setTaskCreateOpen(true)}>
+              Новая задача
+            </Button>
+          </SectionAction>
+        </DesktopOnly>
       </WelcomeTabPanel>
 
       {isMobile && stickyAction ? (
