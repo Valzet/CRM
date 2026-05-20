@@ -5,6 +5,7 @@ export const WelcomeRoot = styled.div`
   flex: 1;
   min-height: 100%;
   padding: 28px 4px 48px;
+  margin-bottom: 20px;
 `;
 
 export const PageTitle = styled.h1`
@@ -314,6 +315,7 @@ export const TaskStatus = styled.div<{ $status: "new" | "in_progress" | "complet
 
 export const SectionAction = styled.div`
   margin-top: 16px;
+  
 `;
 
 export const EmptyHint = styled.p`
