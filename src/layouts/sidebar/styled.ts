@@ -7,9 +7,11 @@ const Shell = styled.aside<{ $collapsed: boolean }>`
   width: ${(p) =>
     p.$collapsed ? `${layout.sidebarCollapsedPx}px` : `${layout.sidebarExpandedPx}px`};
   flex-shrink: 0;
+  align-self: stretch;
+  height: 100dvh;
+  max-height: 100dvh;
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
   background: ${color.background.secondary};
   color: ${color.neutral.textPrimary};
   border-right: 1px solid ${color.background.shadowHint};
@@ -72,8 +74,7 @@ const CollapseBtn = styled.button`
 const NavBlock = styled.nav`
   display: flex;
   flex-direction: column;
-  flex: 1;
-  overflow-y: auto;
+  flex-shrink: 0;
   padding: 4px 0;
 `;
 
@@ -140,6 +141,7 @@ const ItemLabel = styled.span<{ $hidden: boolean }>`
 `;
 
 const Footer = styled.div<{ $collapsed: boolean }>`
+  margin-top: auto;
   padding: ${(p) => (p.$collapsed ? "12px 8px 16px" : "12px 16px 20px")};
   border-top: 1px solid ${color.background.shadowHint};
   flex-shrink: 0;

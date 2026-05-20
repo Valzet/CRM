@@ -5,8 +5,10 @@ const Shell = styled.div`
   display: flex;
   flex-direction: row;
   flex: 1;
+  height: 100dvh;
+  max-height: 100dvh;
   min-height: 0;
-  min-height: 100dvh;
+  overflow: hidden;
 `;
 
 const MainPane = styled.div`
@@ -15,6 +17,7 @@ const MainPane = styled.div`
   flex: 1;
   min-width: 0;
   min-height: 0;
+  overflow: hidden;
 `;
 
 const MobileBar = styled.div`
