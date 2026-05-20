@@ -66,7 +66,7 @@ export function DealFormPage() {
       clientsForFields.some((c) => c.id === values.clientId && !c.deleted) ||
       deal?.clientId === values.clientId;
     if (!validClient) {
-      void message.warning("Нельзя сохранить сделку: выберите активного клиента.");
+      message.warning("Нельзя сохранить сделку: выберите активного клиента.");
       return;
     }
     if (isEdit && dealId) {

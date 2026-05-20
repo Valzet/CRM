@@ -78,7 +78,7 @@ export function DealCardModal(props: Props) {
       (clientsForSelect.some((c) => !c.deleted && c.id === formValues.clientId) ||
         deal?.clientId === formValues.clientId);
     if (!validClient) {
-      void message.warning(
+      message.warning(
         "Нельзя привязать сделку к удалённому клиенту. Выберите активного клиента.",
       );
       return;
@@ -125,7 +125,7 @@ export function DealCardModal(props: Props) {
           Редактировать
         </PrimaryFooterButton>
         {canComplete ? (
-          <SuccessFooterButton onClick={() => void onComplete()}>
+          <SuccessFooterButton onClick={() => onComplete()}>
             Завершить сделку
           </SuccessFooterButton>
         ) : (
@@ -137,7 +137,7 @@ export function DealCardModal(props: Props) {
         <PrimaryFooterButton
           type="primary"
           loading={updating}
-          onClick={() => void handleSubmit(onSave)()}
+          onClick={() => handleSubmit(onSave)()}
         >
           Сохранить
         </PrimaryFooterButton>

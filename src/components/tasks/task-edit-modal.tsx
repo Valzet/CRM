@@ -88,7 +88,7 @@ export function TaskEditModal(props: Props) {
           <PrimaryFooterButton
             type="primary"
             loading={isLoading}
-            onClick={() => void handleSubmit(onSubmit)()}
+            onClick={() => handleSubmit(onSubmit)()}
           >
             Сохранить
           </PrimaryFooterButton>

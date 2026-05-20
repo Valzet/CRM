@@ -51,7 +51,7 @@ export function EmailConfirmationPage() {
   const onResend = async () => {
     try {
       await resend().unwrap();
-      void message.info("Письмо отправлено повторно (демо).");
+      message.info("Письмо отправлено повторно (демо).");
     } catch {
       console.error("Не удалось отправить");
     }

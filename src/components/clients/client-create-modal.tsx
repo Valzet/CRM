@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { message } from "antd";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { CrmModal, PrimaryFooterButton, SecondaryFooterButton } from "../crm-modal";
@@ -34,12 +35,10 @@ export function ClientCreateModal(props: Props) {
   const onSubmit = async (values: ClientFormValues) => {
     try {
       await createClient(values).unwrap();
-      console.log("Клиент создан");
       onClose();
     } catch {
-      console.error("Не удалось создать клиента");
+      message.error("Не удалось создать клиента");
     }
-    onClose();
   };
 
   return (
@@ -52,7 +51,7 @@ export function ClientCreateModal(props: Props) {
           <PrimaryFooterButton
             type="primary"
             loading={isLoading}
-            onClick={() => void handleSubmit(onSubmit)()}
+            onClick={() => handleSubmit(onSubmit)()}
           >
             Создать
           </PrimaryFooterButton>

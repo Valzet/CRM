@@ -37,12 +37,10 @@ export function TaskCreateModal(props: Props) {
   const onSubmit = async (values: TaskFormValues) => {
     try {
       await createTask(values).unwrap();
-      console.log("Задача создана");
       onClose();
     } catch {
-      console.error("Не удалось создать задачу");
+      message.error("Не удалось создать задачу");
     }
-    handleSubmit
   };
 
   return (
@@ -55,7 +53,7 @@ export function TaskCreateModal(props: Props) {
           <PrimaryFooterButton
             type="primary"
             loading={isLoading}
-            onClick={() => void handleSubmit(onSubmit)()}
+            onClick={() => handleSubmit(onSubmit)()}
           >
             Создать задачу
           </PrimaryFooterButton>

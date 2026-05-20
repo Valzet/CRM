@@ -39,17 +39,15 @@ export function DealCreateModal(props: Props) {
   const onSubmit = async (values: DealFormValues) => {
     const validClient = clientsForSelect.some((c) => c.id === values.clientId);
     if (!validClient) {
-      void message.warning("Выберите активного клиента.");
+      message.warning("Выберите активного клиента.");
       return;
     }
     try {
       await createDeal(values).unwrap();
-      console.log("Сделка создана");
-     
+      onClose();
     } catch {
-      console.error("Не удалось создать сделку");
+      message.error("Не удалось создать сделку");
     }
-     onClose();
   };
 
   return (
@@ -62,7 +60,7 @@ export function DealCreateModal(props: Props) {
           <PrimaryFooterButton
             type="primary"
             loading={isLoading}
-            onClick={() => void handleSubmit(onSubmit)()}
+            onClick={() => handleSubmit(onSubmit)()}
           >
             Создать сделку
           </PrimaryFooterButton>

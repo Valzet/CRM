@@ -13,7 +13,7 @@ import type { User, UserRecord } from "../../types/user";
 
 function stripUserPassword(row: UserRecord): User {
   const { password, ...rest } = row;
-  void password;
+  password;
   return rest;
 }
 

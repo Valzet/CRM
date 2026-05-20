@@ -104,7 +104,7 @@ export function ClientCardModal(props: Props) {
         <PrimaryFooterButton
           type="primary"
           loading={updating}
-          onClick={() => void handleSubmit(onSave)()}
+          onClick={() => handleSubmit(onSave)()}
         >
           Сохранить
         </PrimaryFooterButton>

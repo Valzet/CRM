@@ -58,7 +58,7 @@ function formatAmountRub(amount: number) {
   return `${amount.toLocaleString("ru-RU")} ₽`;
 }
 
-function ReportPagination(props: { page: number; total: number; onPage: (page: number) => void }) {
+function ReportPagination(props: { page: number; total: number; onPage: (page: number) => void}) {
   const { page, total, onPage } = props;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
@@ -99,7 +99,7 @@ function ReportPagination(props: { page: number; total: number; onPage: (page: n
   );
 }
 
-function SectionControls(props: { preset: ReportPreset; onPreset: (v: ReportPreset) => void }) {
+function SectionControls(props: { preset: ReportPreset; onPreset: (v: ReportPreset) => void}) {
   const { preset, onPreset } = props;
 
   return (
@@ -169,7 +169,7 @@ function ReportsSpinner() {
 function ReportsError(props: { error: unknown; onRetry: () => void }) {
   const { onRetry } = props;
   return (
-    <Space direction="vertical" style={{ width: "100%" }}>
+    <Space orientation="vertical" style={{ width: "100%" }}>
       <Alert type="warning" showIcon message="Не удалось загрузить отчёт" />
       <Button onClick={onRetry}>Повторить</Button>
     </Space>
@@ -402,7 +402,7 @@ export function ReportsSalesPage() {
       <ReportsError
         error={error}
         onRetry={() => {
-          void refetch();
+          refetch();
         }}
       />
     );
@@ -485,7 +485,7 @@ export function ReportsClientsPage() {
       <ReportsError
         error={error}
         onRetry={() => {
-          void refetch();
+          refetch();
         }}
       />
     );
@@ -541,7 +541,7 @@ export function ReportsTasksPage() {
       <ReportsError
         error={error}
         onRetry={() => {
-          void refetch();
+          refetch();
         }}
       />
     );
