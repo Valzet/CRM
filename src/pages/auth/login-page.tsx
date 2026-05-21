@@ -1,21 +1,29 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Form, Input } from "antd";
 import { Controller, useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { useAppDispatch } from "../../hooks";
+import { useAppDispatch, useIsMobile } from "../../hooks";
 import { loginFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { loginFormSchema, type LoginFormValues } from "../../schemas";
 import { useLoginMutation } from "../../store/api";
 import { setAuthUser } from "../../store/auth-slice";
 import { UiInput } from "../../components/ui/input";
+import { AuthLandingPage } from "./auth-landing-page";
 import { AuthSplitLayout } from "./auth-split-layout";
 import { CardTitle, ForgotPasswordRow, FormCard, LeftFooter } from "./styled";
 
+type LoginLocationState = {
+  showForm?: boolean;
+};
+
 export function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isMobile = useIsMobile();
   const dispatch = useAppDispatch();
+  const showForm = (location.state as LoginLocationState | null)?.showForm === true;
   const [login, { isLoading }] = useLoginMutation();
 
   const {
@@ -41,6 +49,10 @@ export function LoginPage() {
       console.error(detail);
     }
   };
+
+  if (isMobile && !showForm) {
+    return <AuthLandingPage />;
+  }
 
   return (
     <AuthSplitLayout

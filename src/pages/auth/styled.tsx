@@ -200,29 +200,31 @@ export const LandingInner = styled.div`
   z-index: 1;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   min-height: 100dvh;
   max-width: ${grid.mobile.designWidthPx}px;
   margin: 0 auto;
-  padding: 48px ${grid.mobile.marginPx}px 32px;
+  padding: 32px ${grid.mobile.marginPx}px;
+  gap: 20px;
 `;
 
 export const LandingBrandMark = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 10px;
 `;
 
 export const LandingLogo = styled.img`
   display: block;
-  height: 48px;
-  width: auto;
+  height: 40px;
+  width: 40px;
+  flex-shrink: 0;
   object-fit: contain;
 `;
 
 export const LandingBrandName = styled.span`
   font-weight: 700;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   letter-spacing: -0.02em;
   color: ${color.neutral.textPrimary};
 `;
@@ -231,26 +233,38 @@ export const LandingBrandYa = styled.span`
   color: ${color.accent.primary};
 `;
 
-export const LandingCopy = styled.div`
-  flex: 1;
-`;
-
 export const LandingText = styled.p`
   margin: 0;
   font-size: 15px;
-  line-height: 1.65;
+  line-height: 1.6;
   color: ${color.neutral.textSecondary};
 `;
 
 export const LandingActions = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: auto;
-  padding-top: 32px;
+  gap: 10px;
+  margin-top: 12px;
 
   a {
     display: block;
     text-decoration: none;
+  }
+
+  .ant-btn {
+    height: 48px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .ant-btn-primary {
+    box-shadow: none;
+  }
+
+  .ant-btn-default {
+    background: ${color.background.secondary};
+    border-color: ${color.neutral.border};
+    color: ${color.neutral.textPrimary};
   }
 `;

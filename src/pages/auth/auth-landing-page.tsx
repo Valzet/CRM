@@ -1,6 +1,6 @@
 import { Button } from "antd";
 import { Link } from "react-router-dom";
-import logo from "../../assets/logo/Logo2.png";
+import logoIcon from "../../assets/logo/Full.png";
 import { path } from "../../lib/constants/navigation";
 import {
   AuthRoot,
@@ -8,7 +8,6 @@ import {
   LandingBrandMark,
   LandingBrandName,
   LandingBrandYa,
-  LandingCopy,
   LandingInner,
   LandingLogo,
   LandingText,
@@ -19,26 +18,24 @@ export function AuthLandingPage() {
     <AuthRoot>
       <LandingInner>
         <LandingBrandMark>
-          <LandingLogo src={logo} alt="" decoding="async" />
+          <LandingLogo src={logoIcon} alt="" decoding="async" />
           <LandingBrandName>
             <LandingBrandYa>Ya</LandingBrandYa>Plex
           </LandingBrandName>
         </LandingBrandMark>
-        <LandingCopy>
-          <LandingText>
-            Платформа для управления клиентами, сделками и задачами. Эффективно управляйте
-            бизнес-процессами, отслеживайте ключевые показатели и выстраивайте продуктивные
-            отношения с клиентами.
-          </LandingText>
-        </LandingCopy>
+        <LandingText>
+          Платформа для управления клиентами, сделками и задачами. Эффективно управляйте
+          бизнес-процессами, отслеживайте ключевые показатели и выстраивайте продуктивные
+          отношения с клиентами.
+        </LandingText>
         <LandingActions>
-          <Link to={path.login}>
+          <Link to={path.login} state={{ showForm: true }}>
             <Button type="primary" block size="large">
               Войти
             </Button>
           </Link>
           <Link to={path.register}>
-            <Button block size="large">
+            <Button block size="large" variant="outlined">
               Регистрация
             </Button>
           </Link>
