@@ -66,6 +66,7 @@ import {
   MobileStatTitle,
   MobileStatValue,
   MobileStatsStack,
+  StickyFooterSpacer,
   StickyMobileAction,
 } from "./styled";
 import {
@@ -340,11 +341,14 @@ export function WelcomePage() {
       </WelcomeTabPanel>
 
       {isMobile && stickyAction ? (
-        <StickyMobileAction>
-          <Button type="primary" block onClick={stickyAction.onClick}>
-            {stickyAction.label}
-          </Button>
-        </StickyMobileAction>
+        <>
+          <StickyFooterSpacer aria-hidden />
+          <StickyMobileAction>
+            <Button type="primary" block onClick={stickyAction.onClick}>
+              {stickyAction.label}
+            </Button>
+          </StickyMobileAction>
+        </>
       ) : null}
 
       <ClientCreateModal open={clientCreateOpen} onClose={() => setClientCreateOpen(false)} />

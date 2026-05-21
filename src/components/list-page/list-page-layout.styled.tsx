@@ -1,7 +1,7 @@
 import { SearchOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { UiInput } from "../ui/input";
-import { color, fontFamilies, grid, layout, typography } from "../../theme/tokens";
+import { color, fontFamilies, grid, typography } from "../../theme/tokens";
 
 export const PageRoot = styled.div<{ $mobileStickyFooter?: boolean }>`
   flex: 1;
@@ -12,11 +12,14 @@ export const PageRoot = styled.div<{ $mobileStickyFooter?: boolean }>`
 
   @media (max-width: ${grid.breakpoints.mobileMax}) {
     margin: 0;
-    padding: 16px 0
-      ${(p) =>
-        p.$mobileStickyFooter
-          ? `calc(${layout.mobileScrollPaddingBottomPx}px + env(safe-area-inset-bottom, 0px))`
-          : "32px"};
+    padding: 16px 0 32px;
+    ${(p) =>
+      p.$mobileStickyFooter
+        ? `
+      flex: none;
+      min-height: auto;
+    `
+        : ""}
   }
 `;
 

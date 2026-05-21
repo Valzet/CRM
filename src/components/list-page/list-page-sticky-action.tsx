@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { StickyListAction } from "./mobile-list.styled";
+import { StickyFooterSpacer, StickyListAction } from "./mobile-list.styled";
 
 type Props = {
   label: string;
@@ -8,10 +8,13 @@ type Props = {
 
 export function ListPageStickyAction({ label, onClick }: Props) {
   return (
-    <StickyListAction>
-      <Button type="primary" block onClick={onClick}>
-        {label}
-      </Button>
-    </StickyListAction>
+    <>
+      <StickyFooterSpacer aria-hidden />
+      <StickyListAction>
+        <Button type="primary" block onClick={onClick}>
+          {label}
+        </Button>
+      </StickyListAction>
+    </>
   );
 }

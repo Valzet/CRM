@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { color, grid, typography } from "../../theme/tokens";
+import { color, cssMobileStickyFooterClearance, grid, typography } from "../../theme/tokens";
 import { CellLink } from "./list-page-layout.styled";
 
 export const MobileCardList = styled.ul`
@@ -72,6 +72,17 @@ export const MobileCardNote = styled.p`
   font-size: ${typography.body.sm.fontSize};
   line-height: ${typography.body.sm.lineHeight};
   color: ${color.neutral.textSecondary};
+`;
+
+/** Резервирует место в потоке документа под фиксированную нижнюю панель. */
+export const StickyFooterSpacer = styled.div`
+  display: none;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    display: block;
+    flex-shrink: 0;
+    height: ${cssMobileStickyFooterClearance};
+  }
 `;
 
 export const StickyListAction = styled.div`

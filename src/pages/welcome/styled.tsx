@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { color, fontFamilies, grid, layout, typography } from "../../theme/tokens";
+import { color, fontFamilies, grid, typography } from "../../theme/tokens";
 
 export const WelcomeRoot = styled.div`
   flex: 1;
@@ -8,8 +8,10 @@ export const WelcomeRoot = styled.div`
   margin-bottom: 20px;
 
   @media (max-width: ${grid.breakpoints.mobileMax}) {
-    padding: 20px 0 calc(${layout.mobileScrollPaddingBottomPx}px + env(safe-area-inset-bottom, 0px));
+    padding: 20px 0 32px;
     margin-bottom: 0;
+    flex: none;
+    min-height: auto;
   }
 `;
 
@@ -443,7 +445,10 @@ export const DesktopOnly = styled.div`
   }
 `;
 
-export { StickyListAction as StickyMobileAction } from "../../components/list-page/mobile-list.styled";
+export {
+  StickyFooterSpacer,
+  StickyListAction as StickyMobileAction,
+} from "../../components/list-page/mobile-list.styled";
 
 const hideOnMobile = css`
   @media (max-width: ${grid.breakpoints.mobileMax}) {
