@@ -21,30 +21,10 @@ import {
 import { useIsMobile } from "../../hooks";
 import { path } from "../../lib/constants/navigation";
 import { formatDateRu } from "../../lib/format/date-ru";
+import { taskMatchesQuery } from "../../lib/search/task-matches-query";
 import { TASK_STATUS_META } from "../../lib/task-status";
 import { useGetDealsQuery, useGetTasksQuery, useGetUsersQuery } from "../../store/api";
 import type { Task } from "../../types";
-
-function taskMatchesQuery(t: Task, needle: string, dealTitle: string, assigneeName: string) {
-  const n = needle.trim().toLowerCase();
-  if (!n) return true;
-  const statusLabel = (TASK_STATUS_META[t.status]?.label ?? t.status).toLowerCase();
-  const hay = [
-    t.title,
-    t.description,
-    dealTitle,
-    assigneeName,
-    t.status,
-    statusLabel,
-    t.dueDate,
-    formatDateRu(t.dueDate),
-    t.createdAt,
-    formatDateRu(t.createdAt),
-  ]
-    .join(" ")
-    .toLowerCase();
-  return hay.includes(n);
-}
 
 export function TasksListPage() {
   const isMobile = useIsMobile();

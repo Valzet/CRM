@@ -204,7 +204,6 @@ export function AccountSettingsPage(props?: { variant?: "settings" | "profile" }
             >
               {user.name.charAt(0).toUpperCase()}
             </Avatar>
-            {/* отличные набор иконок от яндекса. Пришлось иконку антд использовать */}
             <AvatarCameraBtn
               type="primary"
               style={{ background: color.accent.primary, width: "40px", height: "40px" }}

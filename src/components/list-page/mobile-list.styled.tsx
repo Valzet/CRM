@@ -74,7 +74,6 @@ export const MobileCardNote = styled.p`
   color: ${color.neutral.textSecondary};
 `;
 
-/** Резервирует место в потоке документа под фиксированную нижнюю панель. */
 export const StickyFooterSpacer = styled.div`
   display: none;
 

@@ -1,5 +1,5 @@
 import { Table } from "antd";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type MouseEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ClientCardModal,
@@ -20,27 +20,9 @@ import { useIsMobile } from "../../hooks";
 import { path } from "../../lib/constants/navigation";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { formatPhoneRu } from "../../lib/format/phone-ru";
+import { clientMatchesQuery } from "../../lib/search/client-matches-query";
 import { useGetClientsQuery } from "../../store/api";
 import type { Client } from "../../types";
-
-function clientMatchesQuery(c: Client, needle: string) {
-  const n = needle.trim().toLowerCase();
-  if (!n) return true;
-  const hay = [
-    c.name,
-    c.phone ?? "",
-    formatPhoneRu(c.phone),
-    c.email ?? "",
-    c.company ?? "",
-    c.website ?? "",
-    c.comment ?? "",
-    c.createdAt ?? "",
-    formatDateRu(c.createdAt),
-  ]
-    .join(" ")
-    .toLowerCase();
-  return hay.includes(n);
-}
 
 function displayWebsite(url: string): string {
   return url.replace(/^https?:\/\//i, "").replace(/\/$/, "");
@@ -129,7 +111,7 @@ export function ClientsListPage() {
                 sorter: (a, b) => (a.email ?? "").localeCompare(b.email ?? ""),
                 render: (v: string) =>
                   v ? (
-                    <CellLink href={`mailto:${v}`} onClick={(e) => e.stopPropagation()}>
+                    <CellLink href={`mailto:${v}`} onClick={(e: MouseEvent) => e.stopPropagation()}>
                       {v}
                     </CellLink>
                   ) : (
@@ -151,7 +133,7 @@ export function ClientsListPage() {
                       href={w.startsWith("http") ? w : `https://${w}`}
                       target="_blank"
                       rel="noreferrer"
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e: MouseEvent) => e.stopPropagation()}
                     >
                       {displayWebsite(w)}
                     </CellLink>

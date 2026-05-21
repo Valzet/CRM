@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "../../hooks";
+import { dealCompletionIso } from "../../lib/deal/deal-completion-iso";
 import { DEAL_STATUS_META } from "../../lib/deal-status";
 import { isoTimestampInRange } from "../../lib/date/periods";
 import { formatDateRu } from "../../lib/format/date-ru";
@@ -59,10 +60,6 @@ const PRESET_OPTS: { value: ReportPreset; label: string }[] = [
 ];
 
 const VIEW_OPTS = [{ value: "list", label: "Списком" }] as const;
-
-function dealCompletionIso(d: Deal) {
-  return d.completedAt ?? d.createdAt;
-}
 
 function formatAmountRub(amount: number) {
   return `${amount.toLocaleString("ru-RU")} ₽`;

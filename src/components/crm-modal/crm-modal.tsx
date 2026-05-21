@@ -29,7 +29,7 @@ export function CrmModal(props: Props) {
       onCancel={onClose}
       footer={null}
       width={MODAL_WIDTH_PX}
-      destroyOnClose
+      destroyOnHidden
       centered
       confirmLoading={loading}
       closable

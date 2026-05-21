@@ -1,3 +1,4 @@
+import type { ChangeEvent } from "react";
 import { UiButton } from "../ui/button";
 import { SearchField, SearchIcon, Toolbar, ToolbarCreate } from "./list-page-layout.styled";
 
@@ -23,7 +24,7 @@ export function ListPageToolbar(props: Props) {
         placeholder="Искать"
         prefixIcon={<SearchIcon />}
         value={searchValue}
-        onChange={(e) => onSearchChange(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)}
       />
     </Toolbar>
   );

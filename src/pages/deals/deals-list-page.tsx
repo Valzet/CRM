@@ -23,6 +23,7 @@ import { path } from "../../lib/constants/navigation";
 import { DEAL_STATUS_META } from "../../lib/deal-status";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { formatMoneyRu } from "../../lib/format/money-ru";
+import { dealMatchesQuery } from "../../lib/search/deal-matches-query";
 import { useGetClientsQuery, useGetDealsQuery } from "../../store/api";
 import type { Deal } from "../../types";
 
@@ -35,28 +36,10 @@ export function DealsListPage() {
   const [cardId, setCardId] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
 
-  const filtered = useMemo(() => {
-    const s = q.trim().toLowerCase();
-    if (!s) return deals;
-    return deals.filter((d) => {
-      const cn = (clients.find((c) => c.id === d.clientId)?.name ?? "—").toLowerCase();
-      const statusLabel = (DEAL_STATUS_META[d.status]?.label ?? d.status).toLowerCase();
-      const hay = [
-        d.title,
-        d.description,
-        String(d.amount),
-        d.status,
-        statusLabel,
-        cn,
-        d.createdAt,
-        formatDateRu(d.createdAt),
-        d.completedAt ? formatDateRu(d.completedAt) : "",
-      ]
-        .join(" ")
-        .toLowerCase();
-      return hay.includes(s);
-    });
-  }, [deals, q, clients]);
+  const filtered = useMemo(
+    () => deals.filter((d) => dealMatchesQuery(d, q, clients)),
+    [deals, q, clients],
+  );
 
   const nameByClientId = (id: string) => clients.find((c) => c.id === id)?.name ?? "—";
 

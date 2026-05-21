@@ -27,16 +27,13 @@ export const layout = {
   sidebarExpandedPx: 260,
   sidebarCollapsedPx: 72,
   sidebarItemHeightPx: 44,
-  /** padding 12 + кнопка 48 + padding 12 (без safe-area и border) */
   mobileStickyBarPx: 72,
-  /** Доп. зазор между последней карточкой и фиксированной панелью */
   mobileStickyFooterGapPx: 8,
   mobileScrollPaddingBottomPx: 100,
 
   navItemMutedBg: "#F4F4F4",
 } as const;
 
-/** CSS-выражение высоты фиксированной нижней панели + зазор (для spacer и padding). */
 export const cssMobileStickyFooterClearance = `calc(61px + max(12px, env(safe-area-inset-bottom, 0px)) + ${layout.mobileStickyFooterGapPx}px)`;
 
 export const color = {
