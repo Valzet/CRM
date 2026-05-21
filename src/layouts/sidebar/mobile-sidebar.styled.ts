@@ -9,7 +9,6 @@ export const MobileShell = styled.aside`
   flex-direction: column;
   min-height: 100dvh;
   width: 100%;
-  max-width: ${grid.mobile.designWidthPx}px;
   overflow: hidden;
   background-color: #ffffff;
 

@@ -21,11 +21,16 @@ function MainLayoutInner() {
           open={mobileOpen}
           onClose={closeMobile}
           width="100%"
-          style={{ maxWidth: 375 }}
           styles={{
-            body: { padding: 0, background: "transparent" },
+            wrapper: { width: "100%", maxWidth: "100%" },
+            body: { padding: 0, background: "transparent", height: "100%" },
             header: { display: "none" },
-            content: { background: "transparent", boxShadow: "none" },
+            content: {
+              background: "transparent",
+              boxShadow: "none",
+              width: "100%",
+              maxWidth: "100%",
+            },
             mask: { backgroundColor: "rgba(15, 23, 42, 0.25)" },
           }}
           aria-label="Меню"
