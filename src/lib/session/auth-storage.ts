@@ -12,7 +12,9 @@ export function readStoredUserId(): string | null {
 export function writeStoredUserId(id: string) {
   try {
     sessionStorage.setItem(AUTH_USER_ID_KEY, id);
-  } catch {}
+  } catch {
+    /* empty */
+  }
 }
 
 export function clearStoredUserId() {
