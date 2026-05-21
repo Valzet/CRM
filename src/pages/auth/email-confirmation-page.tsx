@@ -11,6 +11,7 @@ import { AuthSplitLayout } from "./auth-split-layout";
 import {
   CardSubtitle,
   CardTitle,
+  FooterCaption,
   FormCard,
   FormMutedCaption,
   FormStack,
@@ -61,7 +62,8 @@ export function EmailConfirmationPage() {
     <AuthSplitLayout
       leftFooter={
         <LeftFooter>
-          Уже зарегистрированы? <Link to={path.login}>Войти в аккаунт</Link>
+          <FooterCaption>Уже зарегистрированы?</FooterCaption>
+          <Link to={path.login}>Войти в аккаунт</Link>
         </LeftFooter>
       }
     >

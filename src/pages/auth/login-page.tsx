@@ -12,7 +12,7 @@ import { setAuthUser } from "../../store/auth-slice";
 import { UiInput } from "../../components/ui/input";
 import { AuthLandingPage } from "./auth-landing-page";
 import { AuthSplitLayout } from "./auth-split-layout";
-import { CardTitle, ForgotPasswordRow, FormCard, LeftFooter } from "./styled";
+import { CardTitle, FooterCaption, ForgotPasswordRow, FormCard, LeftFooter } from "./styled";
 
 type LoginLocationState = {
   showForm?: boolean;
@@ -58,7 +58,8 @@ export function LoginPage() {
     <AuthSplitLayout
       leftFooter={
         <LeftFooter>
-          У вас ещё нет аккаунта? <Link to={path.register}>Зарегистрироваться</Link>
+          <FooterCaption>Нет аккаунта?</FooterCaption>
+          <Link to={path.register}>Зарегистрироваться</Link>
         </LeftFooter>
       }
     >
@@ -71,7 +72,7 @@ export function LoginPage() {
               control={control}
               render={({ field }) => (
                 <Form.Item
-                  label="email или логин"
+                  label="Email или логин"
                   validateStatus={errors.email ? "error" : ""}
                   help={errors.email?.message}
                 >

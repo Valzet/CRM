@@ -9,6 +9,8 @@ import {
   BrandMark,
   BrandText,
   FormColumn,
+  FormColumnMain,
+  MobileAuthFooter,
 } from "./styled";
 import logo from "../../assets/logo/Logo2.png";
 
@@ -36,7 +38,10 @@ export function AuthSplitLayout(props: AuthSplitLayoutProps) {
           </BrandCopy>
           <BrandFooter>{leftFooter}</BrandFooter>
         </BrandColumn>
-        <FormColumn>{children}</FormColumn>
+        <FormColumn>
+          <FormColumnMain>{children}</FormColumnMain>
+          <MobileAuthFooter>{leftFooter}</MobileAuthFooter>
+        </FormColumn>
       </AuthGrid>
     </AuthRoot>
   );

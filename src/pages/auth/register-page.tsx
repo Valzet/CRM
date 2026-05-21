@@ -9,7 +9,7 @@ import { registerFormSchema, type RegisterFormValues } from "../../schemas";
 import { useRegisterMutation } from "../../store/api";
 import { UiInput } from "../../components/ui/input";
 import { AuthSplitLayout } from "./auth-split-layout";
-import { CardTitle, FormCard, LeftFooter } from "./styled";
+import { CardTitle, FooterCaption, FormCard, LeftFooter } from "./styled";
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -44,7 +44,8 @@ export function RegisterPage() {
     <AuthSplitLayout
       leftFooter={
         <LeftFooter>
-          Уже зарегистрированы? <Link to={path.login}>Войти в аккаунт</Link>
+          <FooterCaption>Уже зарегистрированы?</FooterCaption>
+          <Link to={path.login}>Войти в аккаунт</Link>
         </LeftFooter>
       }
     >

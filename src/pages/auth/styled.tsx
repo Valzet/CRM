@@ -34,9 +34,11 @@ export const AuthGrid = styled.div`
   align-items: center;
 
   @media (max-width: ${grid.breakpoints.mobileMax}) {
-    grid-template-columns: 1fr;
-    align-items: start;
-    padding: 24px ${grid.mobile.marginPx}px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    padding: 24px ${grid.mobile.marginPx}px 28px;
     max-width: ${grid.mobile.designWidthPx}px;
   }
 
@@ -110,7 +112,36 @@ export const FormColumn = styled.div`
   width: 100%;
 
   @media (max-width: ${grid.breakpoints.mobileMax}) {
-    justify-content: stretch;
+    position: relative;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    padding-bottom: 72px;
+  }
+`;
+
+export const FormColumnMain = styled.div`
+  width: 100%;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    flex: 0 1 auto;
+    margin-block: auto;
+    max-height: calc(100% - 72px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+`;
+
+export const MobileAuthFooter = styled.div`
+  display: none;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: block;
+    flex-shrink: 0;
   }
 `;
 
@@ -131,6 +162,62 @@ export const FormCard = styled.div`
     border-radius: 0;
     box-shadow: none;
   }
+
+  .ant-form-item {
+    margin-bottom: 16px;
+  }
+
+  .ant-form-item-label > label {
+    font-size: 14px;
+    color: var(--crm-color-text-secondary);
+    height: auto;
+  }
+
+  .ant-form-item-label {
+    padding-bottom: 4px;
+  }
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    .ant-form-item {
+      margin-bottom: 20px;
+    }
+
+    .ant-form-item-label > label {
+      font-size: 13px;
+    }
+
+    .ant-input,
+    .ant-input-affix-wrapper,
+    .ant-input-password {
+      min-height: 44px;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .ant-input-affix-wrapper .ant-input {
+      min-height: auto;
+    }
+
+    .ant-btn-lg {
+      height: 48px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .ant-btn-primary.ant-btn-lg:not(:disabled) {
+      box-shadow: 0 4px 12px rgb(59 130 246 / 0.35);
+    }
+
+    .ant-btn-default.ant-btn-lg {
+      height: 48px;
+      border-radius: 8px;
+      font-weight: 600;
+      background: #ffffff;
+      border-color: ${color.neutral.border};
+      color: ${color.neutral.textPrimary};
+    }
+  }
 `;
 
 export const CardTitle = styled.h1`
@@ -139,6 +226,11 @@ export const CardTitle = styled.h1`
   font-weight: 700;
   line-height: 1.3;
   color: var(--crm-color-text);
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    margin-bottom: 12px;
+    font-size: 1.375rem;
+  }
 `;
 
 export const CardSubtitle = styled.p`
@@ -146,6 +238,12 @@ export const CardSubtitle = styled.p`
   font-size: 14px;
   line-height: 1.55;
   color: var(--crm-color-text-secondary);
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    margin-bottom: 28px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
 `;
 
 export const BrandLogo = styled.img`
@@ -157,10 +255,42 @@ export const BrandLogo = styled.img`
   flex-shrink: 0;
 `;
 
+export const FooterCaption = styled.span`
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--crm-color-text-secondary);
+`;
+
 export const LeftFooter = styled.div`
   display: flex;
-  align-items: flex-start;
   flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+
+  a {
+    color: var(--crm-color-accent-primary);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  @media (min-width: ${grid.breakpoints.desktopMin}) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35em;
+    color: var(--crm-color-text-secondary);
+
+    a {
+      font-weight: 500;
+    }
+  }
 `;
 
 export const FormStack = styled.div`
@@ -168,6 +298,10 @@ export const FormStack = styled.div`
   flex-direction: column;
   gap: 16px;
   width: 100%;
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    gap: 12px;
+  }
 `;
 
 export const FormMutedCaption = styled.p`
@@ -180,18 +314,19 @@ export const FormMutedCaption = styled.p`
 export const ForgotPasswordRow = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-top: -8px;
-  margin-bottom: 16px;
+  margin-top: -12px;
+  margin-bottom: 20px;
 
   a {
-    font-size: 14px;
-    color: var(--crm-color-accent-primary);
-    font-weight: 500;
+    font-size: 13px;
+    color: var(--crm-color-text-secondary);
+    font-weight: 400;
     text-decoration: none;
   }
 
   a:hover {
-    text-decoration: underline;
+    color: var(--crm-color-accent-primary);
+    text-decoration: none;
   }
 `;
 
