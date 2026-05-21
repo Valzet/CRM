@@ -40,7 +40,6 @@ function AppRoutes() {
           </RequireAuth>
         }
       >
-        <Route index element={<Navigate to="welcome" replace />} />
         <Route path="welcome" element={<WelcomePage />} />
         <Route path="profile" element={<ProfilePage />} />
         <Route path="settings" element={<AccountSettingsPage />} />

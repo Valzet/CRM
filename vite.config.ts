@@ -6,6 +6,7 @@ import svgr from "vite-plugin-svgr";
 export default defineConfig({
   plugins: [react(), svgr()],
   server: {
+    open: true,
     proxy: {
       "/api": {
         // json-server-main defaults to 3000; legacy json-server: use `npm run server` with matching port
