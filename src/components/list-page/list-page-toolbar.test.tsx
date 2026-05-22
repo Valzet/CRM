@@ -40,4 +40,5 @@ describe("ListPageToolbar", () => {
     await user.type(search, "альфа");
 
     expect(search).toHaveValue("альфа");
-  });});
+  });
+});
