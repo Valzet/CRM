@@ -43,9 +43,8 @@ export function EmailConfirmationPage() {
   const onSubmit = async (values: EmailConfirmFormValues) => {
     try {
       await confirmEmail(values).unwrap();
-      console.log("Почта подтверждена (демо).");
     } catch {
-      console.error("Не удалось подтвердить");
+      //* empty catch *//
     }
   };
 

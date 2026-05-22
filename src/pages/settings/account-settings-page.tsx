@@ -106,7 +106,6 @@ export function AccountSettingsPage(props?: { variant?: "settings" | "profile" }
           password: values.newPassword,
         }).unwrap();
       }
-      console.log("Настройки сохранены");
       reset({
         ...values,
         existingPassword: "",
@@ -114,16 +113,15 @@ export function AccountSettingsPage(props?: { variant?: "settings" | "profile" }
         confirmPassword: "",
       });
     } catch {
-      console.error("Не удалось сохранить");
+      //* empty catch *//
     }
   };
 
   const onSendVerify = async () => {
     try {
       await requestVerify().unwrap();
-      console.log("Ссылка отправлена (демо)");
     } catch {
-      console.error("Не удалось отправить");
+      //* empty catch *//
     }
   };
 
@@ -139,10 +137,10 @@ export function AccountSettingsPage(props?: { variant?: "settings" | "profile" }
           if (!user) return;
           await deleteAccount({ userId: user.id }).unwrap();
           dispatch(clearAuth());
-          console.log("Аккаунт удалён");
+
           navigate(path.login, { replace: true });
         } catch {
-          console.error("Не удалось удалить");
+          //* empty catch *//
         }
       },
     });

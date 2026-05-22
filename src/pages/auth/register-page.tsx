@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Form, Input } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { registerFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { registerFormSchema, type RegisterFormValues } from "../../schemas";
@@ -28,15 +27,10 @@ export function RegisterPage() {
   const onSubmit = async (values: RegisterFormValues) => {
     try {
       await registerUser(values).unwrap();
-      console.log("Регистрация прошла успешно. Войдите в аккаунт.");
+
       navigate(path.login, { replace: true });
-    } catch (err) {
-      const e = err as FetchBaseQueryError;
-      const detail =
-        typeof e.data === "string"
-          ? e.data
-          : "Не удалось зарегистрироваться. Запущен ли json-server?";
-      console.error(detail);
+    } catch {
+      //* empty catch *//
     }
   };
 

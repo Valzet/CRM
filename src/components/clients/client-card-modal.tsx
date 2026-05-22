@@ -65,10 +65,9 @@ export function ClientCardModal(props: Props) {
     if (!clientId) return;
     try {
       await updateClient({ id: clientId, data: formValues }).unwrap();
-      console.log("Клиент сохранён");
       setMode("view");
     } catch {
-      console.error("Не удалось сохранить");
+      //* empty catch *//
     }
   };
 
@@ -77,10 +76,8 @@ export function ClientCardModal(props: Props) {
 
     try {
       softDelete(clientId).unwrap();
-      console.log("Клиент удалён");
       handleClose();
     } catch {
-      console.error("Не удалось удалить");
       throw new Error("cancel");
     }
   };
