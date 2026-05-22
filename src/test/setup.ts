@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { MessageChannel } from "node:worker_threads";
 import { TextDecoder, TextEncoder } from "node:util";
 
-globalThis.MessageChannel = MessageChannel as typeof globalThis.MessageChannel;
+globalThis.MessageChannel = MessageChannel as unknown as typeof globalThis.MessageChannel;
 
 Object.assign(globalThis, {
   TextEncoder,
