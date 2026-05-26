@@ -19,10 +19,7 @@ function readDataMessage(data: unknown): string | undefined {
 }
 
 /** Текст ошибки из `.unwrap()` RTK Query mutation. */
-export function getMutationErrorMessage(
-  error: unknown,
-  fallback = DEFAULT_MESSAGE,
-): string {
+export function getMutationErrorMessage(error: unknown, fallback = DEFAULT_MESSAGE): string {
   if (!error || typeof error !== "object") return fallback;
 
   if ("data" in error) {

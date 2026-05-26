@@ -48,9 +48,7 @@ export function DateFilterDropdown(props: FilterDropdownArgs) {
         <FilterDateInput
           type="date"
           value={filters.dateFrom ?? ""}
-          onChange={(e) =>
-            onFiltersChange({ ...filters, dateFrom: e.target.value || undefined })
-          }
+          onChange={(e) => onFiltersChange({ ...filters, dateFrom: e.target.value || undefined })}
         />
       </ColumnFilterField>
       <ColumnFilterField>

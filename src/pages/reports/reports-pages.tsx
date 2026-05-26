@@ -195,11 +195,7 @@ function PaginatedReportTable<T extends { key: string }>(props: {
   if (isMobile && renderMobileCard) {
     return (
       <>
-        <ReportMobileFilters
-          filters={filters}
-          onFiltersChange={onFiltersChange}
-          users={users}
-        />
+        <ReportMobileFilters filters={filters} onFiltersChange={onFiltersChange} users={users} />
         {pageData.length ? (
           <MobileCardList>
             {pageData.map((row) => (
@@ -273,9 +269,7 @@ export function ReportsSalesPage() {
   const completedRows = useMemo(() => {
     return deals
       .filter((d) => dealMatchesReportFilters(d, salesFilters, { defaultStatus: "completed" }))
-      .filter((d) =>
-        isoTimestampInRange(dealCompletionIso(d), salesRange.start, salesRange.end),
-      )
+      .filter((d) => isoTimestampInRange(dealCompletionIso(d), salesRange.start, salesRange.end))
       .map((d) => ({
         key: d.id,
         deal: d,
@@ -373,14 +367,10 @@ export function ReportsClientsPage() {
     return [...clients]
       .filter((c) => !c.deleted)
       .filter((c) => matchesManagerId(c.createdBy, newClientsFilters.managerId))
-      .filter((c) =>
-        isoTimestampInRange(c.createdAt, newClientsRange.start, newClientsRange.end),
-      )
+      .filter((c) => isoTimestampInRange(c.createdAt, newClientsRange.start, newClientsRange.end))
       .filter((c) => {
         if (!newClientsFilters.dealStatus) return true;
-        return deals.some(
-          (d) => d.clientId === c.id && d.status === newClientsFilters.dealStatus,
-        );
+        return deals.some((d) => d.clientId === c.id && d.status === newClientsFilters.dealStatus);
       })
       .map((c) => ({ ...c, key: c.id }))
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));

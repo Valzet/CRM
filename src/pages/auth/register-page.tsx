@@ -36,7 +36,8 @@ export function RegisterPage() {
       navigate(path.login, { replace: true });
     } catch (err) {
       const message = getMutationErrorMessage(err, "Не удалось зарегистрироваться");
-      const status = typeof err === "object" && err !== null && "status" in err ? err.status : undefined;
+      const status =
+        typeof err === "object" && err !== null && "status" in err ? err.status : undefined;
       if (status === 400) {
         setError("email", { type: "server", message });
       } else {

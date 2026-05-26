@@ -140,7 +140,9 @@ export function TaskModalEditFields(props: EditProps) {
                     status={errors.dueDateLocal ? "error" : undefined}
                   />
                   {errors.dueDateLocal?.message ? (
-                    <span className="ant-form-item-explain-error">{errors.dueDateLocal.message}</span>
+                    <span className="ant-form-item-explain-error">
+                      {errors.dueDateLocal.message}
+                    </span>
                   ) : null}
                 </>
               )}

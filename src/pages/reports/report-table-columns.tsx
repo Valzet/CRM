@@ -38,7 +38,9 @@ function isDealStageFilterActive(filters: ReportFilterValues): boolean {
 
 function reportFilterIcon(filtered: boolean) {
   return (
-    <FilterFilled style={{ color: filtered ? color.accent.primary : color.neutral.textSecondary }} />
+    <FilterFilled
+      style={{ color: filtered ? color.accent.primary : color.neutral.textSecondary }}
+    />
   );
 }
 
@@ -387,9 +389,7 @@ export function buildOverdueColumns(
         key: "status",
         sorter: (a, b) => a.status.localeCompare(b.status),
         render: (_, row) => (
-          <TaskStatusCell $status={row.status}>
-            {TASK_STATUS_META[row.status].label}
-          </TaskStatusCell>
+          <TaskStatusCell $status={row.status}>{TASK_STATUS_META[row.status].label}</TaskStatusCell>
         ),
       },
       filters,
