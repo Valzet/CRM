@@ -21,14 +21,14 @@ import {
   resolveReportDateRange,
   type ReportFilterValues,
 } from "./report-filters";
+import { ReportMobileFilters } from "./report-table-column-filters";
 import {
   buildActivityColumns,
   buildNewClientsColumns,
   buildOverdueColumns,
   buildSalesColumns,
   buildStagesColumns,
-  ReportMobileFilters,
-} from "./report-table-column-filters";
+} from "./report-table-columns";
 import {
   ArrowIconLeft,
   ArrowIconRight,
