@@ -2,29 +2,38 @@ import type { TableColumnsType } from "antd";
 import { Alert, Button, Space, Spin, Table } from "antd";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { useIsMobile } from "../../hooks";
 import { dealCompletionIso } from "../../lib/deal/deal-completion-iso";
-import { DEAL_STATUS_META } from "../../lib/deal-status";
 import { isoTimestampInRange } from "../../lib/date/periods";
-import { formatDateRu } from "../../lib/format/date-ru";
-import { path } from "../../lib/constants/navigation";
 import {
   useGetClientsQuery,
   useGetDealsQuery,
   useGetTasksQuery,
   useGetUsersQuery,
 } from "../../store/api";
-import type { Deal, DealStatus } from "../../types";
-import type { Client } from "../../types/client";
-import type { ReportPreset } from "./report-period";
-import { rangeForPreset } from "./report-period";
+import type { DealStatus } from "../../types";
+import type { User } from "../../types/user";
+import {
+  dealMatchesReportFilters,
+  defaultReportFilters,
+  matchesDealStatus,
+  matchesManagerId,
+  resolveReportDateRange,
+  type ReportFilterValues,
+} from "./report-filters";
+import {
+  buildActivityColumns,
+  buildNewClientsColumns,
+  buildOverdueColumns,
+  buildSalesColumns,
+  buildStagesColumns,
+  ReportMobileFilters,
+} from "./report-table-column-filters";
 import {
   ArrowIconLeft,
   ArrowIconRight,
   ExportButton,
   FilterSelect,
-  OverdueStatus,
   OverdueTableWrap,
   PageArrow,
   PageNumber,
@@ -33,7 +42,6 @@ import {
   SectionTitle,
   SectionToolbar,
   StagesTableWrap,
-  StageStatusCell,
   TableWrap,
   ToolbarActions,
   ToolbarFilters,
@@ -48,22 +56,9 @@ import {
 } from "./reports-mobile-cards";
 import { MobileCardList } from "./reports-mobile-cards.styled";
 
-type ClientReportRow = Client & { key: string };
-
 const PAGE_SIZE = 10;
 
-const PRESET_OPTS: { value: ReportPreset; label: string }[] = [
-  { value: "week", label: "За неделю" },
-  { value: "month", label: "За месяц" },
-  { value: "quarter", label: "За квартал" },
-  { value: "all", label: "Всё время" },
-];
-
 const VIEW_OPTS = [{ value: "list", label: "Списком" }] as const;
-
-function formatAmountRub(amount: number) {
-  return `${amount.toLocaleString("ru-RU")} ₽`;
-}
 
 function ReportPagination(props: { page: number; total: number; onPage: (page: number) => void }) {
   const { page, total, onPage } = props;
@@ -106,17 +101,10 @@ function ReportPagination(props: { page: number; total: number; onPage: (page: n
   );
 }
 
-function SectionControls(props: { preset: ReportPreset; onPreset: (v: ReportPreset) => void }) {
-  const { preset, onPreset } = props;
-
+function SectionControls() {
   return (
     <SectionToolbar>
       <ToolbarFilters>
-        <FilterSelect
-          value={preset}
-          onChange={(v) => onPreset(v as ReportPreset)}
-          options={PRESET_OPTS}
-        />
         <FilterSelect value="list" options={[...VIEW_OPTS]} disabled />
       </ToolbarFilters>
       <ToolbarActions>
@@ -127,14 +115,67 @@ function SectionControls(props: { preset: ReportPreset; onPreset: (v: ReportPres
   );
 }
 
-function PaginatedReportTable<T extends { key: string }>(props: {
+function ReportBlock<T extends { key: string }>(props: {
+  title: string;
+  filters: ReportFilterValues;
+  onFiltersChange: (filters: ReportFilterValues) => void;
+  users: User[];
   columns: TableColumnsType<T>;
   dataSource: T[];
   wrap?: "default" | "stages" | "overdue";
   rowClassName?: (record: T) => string;
   renderMobileCard?: (record: T) => ReactNode;
 }) {
-  const { columns, dataSource, wrap = "default", rowClassName, renderMobileCard } = props;
+  const {
+    title,
+    filters,
+    onFiltersChange,
+    users,
+    columns,
+    dataSource,
+    wrap,
+    rowClassName,
+    renderMobileCard,
+  } = props;
+
+  return (
+    <ReportSection>
+      <SectionTitle>{title}</SectionTitle>
+      <SectionControls />
+      <PaginatedReportTable
+        filters={filters}
+        onFiltersChange={onFiltersChange}
+        users={users}
+        columns={columns}
+        dataSource={dataSource}
+        wrap={wrap}
+        rowClassName={rowClassName}
+        renderMobileCard={renderMobileCard}
+      />
+    </ReportSection>
+  );
+}
+
+function PaginatedReportTable<T extends { key: string }>(props: {
+  filters: ReportFilterValues;
+  onFiltersChange: (filters: ReportFilterValues) => void;
+  users: User[];
+  columns: TableColumnsType<T>;
+  dataSource: T[];
+  wrap?: "default" | "stages" | "overdue";
+  rowClassName?: (record: T) => string;
+  renderMobileCard?: (record: T) => ReactNode;
+}) {
+  const {
+    filters,
+    onFiltersChange,
+    users,
+    columns,
+    dataSource,
+    wrap = "default",
+    rowClassName,
+    renderMobileCard,
+  } = props;
   const isMobile = useIsMobile();
   const [page, setPage] = useState(1);
   const [prevDataSource, setPrevDataSource] = useState(dataSource);
@@ -154,6 +195,11 @@ function PaginatedReportTable<T extends { key: string }>(props: {
   if (isMobile && renderMobileCard) {
     return (
       <>
+        <ReportMobileFilters
+          filters={filters}
+          onFiltersChange={onFiltersChange}
+          users={users}
+        />
         {pageData.length ? (
           <MobileCardList>
             {pageData.map((row) => (
@@ -205,216 +251,43 @@ function ReportsError(props: { error: unknown; onRetry: () => void }) {
   );
 }
 
-function ReportBlock<T extends { key: string }>(props: {
-  title: string;
-  preset: ReportPreset;
-  onPreset: (v: ReportPreset) => void;
-  columns: TableColumnsType<T>;
-  dataSource: T[];
-  wrap?: "default" | "stages" | "overdue";
-  rowClassName?: (record: T) => string;
-  renderMobileCard?: (record: T) => ReactNode;
-}) {
-  const { title, preset, onPreset, columns, dataSource, wrap, rowClassName, renderMobileCard } =
-    props;
-
-  return (
-    <ReportSection>
-      <SectionTitle>{title}</SectionTitle>
-      <SectionControls preset={preset} onPreset={onPreset} />
-      <PaginatedReportTable
-        columns={columns}
-        dataSource={dataSource}
-        wrap={wrap}
-        rowClassName={rowClassName}
-        renderMobileCard={renderMobileCard}
-      />
-    </ReportSection>
-  );
-}
-
-const salesColumns: TableColumnsType<{
-  key: string;
-  deal: Deal;
-  clientName: string;
-}> = [
-  {
-    title: "ID сделки",
-    key: "id",
-    sorter: (a, b) => a.deal.id.localeCompare(b.deal.id),
-    render: (_, row) => row.deal.id,
-    ellipsis: true,
-    width: 120,
-  },
-  {
-    title: "Название",
-    key: "title",
-    sorter: (a, b) => a.deal.title.localeCompare(b.deal.title),
-    render: (_, row) => row.deal.title,
-  },
-  {
-    title: "Клиент",
-    dataIndex: "clientName",
-    sorter: (a, b) => a.clientName.localeCompare(b.clientName),
-  },
-  {
-    title: "Сумма",
-    key: "amount",
-    sorter: (a, b) => a.deal.amount - b.deal.amount,
-    render: (_, row) => formatAmountRub(row.deal.amount),
-  },
-  {
-    title: "Дата завершения",
-    key: "completed",
-    sorter: (a, b) => dealCompletionIso(a.deal).localeCompare(dealCompletionIso(b.deal)),
-    render: (_, row) => (row.deal.completedAt ? formatDateRu(row.deal.completedAt) : "—"),
-  },
-];
-
-const stagesColumns: TableColumnsType<{
-  key: string;
-  status: DealStatus;
-  count: number;
-  sum: number;
-}> = [
-  {
-    title: "Этап сделки",
-    dataIndex: "status",
-    sorter: (a, b) => a.status.localeCompare(b.status),
-    render: (s: DealStatus) => (
-      <StageStatusCell $status={s}>{DEAL_STATUS_META[s]?.label ?? s}</StageStatusCell>
-    ),
-  },
-  {
-    title: "Количество сделок на этапе",
-    dataIndex: "count",
-    sorter: (a, b) => a.count - b.count,
-  },
-  {
-    title: "Общая сумма сделок на этапе",
-    dataIndex: "sum",
-    sorter: (a, b) => a.sum - b.sum,
-    render: (v: number) => formatAmountRub(v),
-  },
-];
-
-const newClientsColumns: TableColumnsType<ClientReportRow> = [
-  {
-    title: "ID клиента",
-    dataIndex: "id",
-    sorter: (a, b) => a.id.localeCompare(b.id),
-    ellipsis: true,
-    width: 120,
-  },
-  {
-    title: "Имя клиента",
-    dataIndex: "name",
-    sorter: (a, b) => a.name.localeCompare(b.name),
-    render: (t: string, row) => <Link to={`${path.clients}/${row.id}/edit`}>{t}</Link>,
-  },
-  {
-    title: "Компания",
-    dataIndex: "company",
-    sorter: (a, b) => a.company.localeCompare(b.company),
-  },
-  {
-    title: "Дата добавления",
-    dataIndex: "createdAt",
-    sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
-    render: (v: string) => formatDateRu(v),
-  },
-];
-
-const activityColumns: TableColumnsType<{
-  key: string;
-  id: string;
-  name: string;
-  deals: number;
-  completedTasks: number;
-}> = [
-  {
-    title: "ID клиента",
-    dataIndex: "id",
-    sorter: (a, b) => a.id.localeCompare(b.id),
-  },
-  {
-    title: "Имя клиента",
-    dataIndex: "name",
-    sorter: (a, b) => a.name.localeCompare(b.name),
-  },
-  {
-    title: "Количество сделок",
-    dataIndex: "deals",
-    sorter: (a, b) => a.deals - b.deals,
-  },
-  {
-    title: "Завершённые задачи",
-    dataIndex: "completedTasks",
-    sorter: (a, b) => a.completedTasks - b.completedTasks,
-  },
-];
-
-const overdueColumns: TableColumnsType<{
-  key: string;
-  id: string;
-  title: string;
-  assignee: string;
-  dueDate: string;
-}> = [
-  {
-    title: "ID задачи",
-    dataIndex: "id",
-    sorter: (a, b) => a.id.localeCompare(b.id),
-    ellipsis: true,
-    width: 120,
-  },
-  {
-    title: "Название задачи",
-    dataIndex: "title",
-    sorter: (a, b) => a.title.localeCompare(b.title),
-  },
-  {
-    title: "Ответственный",
-    dataIndex: "assignee",
-    sorter: (a, b) => a.assignee.localeCompare(b.assignee),
-  },
-  {
-    title: "Статус",
-    key: "status",
-    render: () => <OverdueStatus>Просрочена</OverdueStatus>,
-  },
-  {
-    title: "Дата срока выполнения",
-    dataIndex: "dueDate",
-    sorter: (a, b) => a.dueDate.localeCompare(b.dueDate),
-    render: (v: string) => formatDateRu(v),
-  },
-];
-
 export function ReportsSalesPage() {
   const { data: deals = [], isLoading, isError, error, refetch } = useGetDealsQuery();
   const { data: clients = [] } = useGetClientsQuery({ includeDeleted: true });
+  const { data: users = [] } = useGetUsersQuery();
 
-  const [preset, setPreset] = useState<ReportPreset>("week");
-  const [stagesPreset, setStagesPreset] = useState<ReportPreset>("week");
-  const { start, end } = rangeForPreset(preset);
-  const stagesRange = rangeForPreset(stagesPreset);
+  const [salesFilters, setSalesFilters] = useState(defaultReportFilters);
+  const [stagesFilters, setStagesFilters] = useState(defaultReportFilters);
+  const salesRange = resolveReportDateRange(salesFilters);
+  const stagesRange = resolveReportDateRange(stagesFilters);
+
+  const salesColumns = useMemo(
+    () => buildSalesColumns(salesFilters, setSalesFilters, users),
+    [salesFilters, users],
+  );
+  const stagesColumns = useMemo(
+    () => buildStagesColumns(stagesFilters, setStagesFilters, users),
+    [stagesFilters, users],
+  );
 
   const completedRows = useMemo(() => {
     return deals
-      .filter((d) => d.status === "completed")
-      .filter((d) => isoTimestampInRange(dealCompletionIso(d), start, end))
+      .filter((d) => dealMatchesReportFilters(d, salesFilters, { defaultStatus: "completed" }))
+      .filter((d) =>
+        isoTimestampInRange(dealCompletionIso(d), salesRange.start, salesRange.end),
+      )
       .map((d) => ({
         key: d.id,
         deal: d,
         clientName: clients.find((c) => c.id === d.clientId)?.name ?? "—",
       }));
-  }, [deals, clients, start, end]);
+  }, [deals, clients, salesFilters, salesRange.start, salesRange.end]);
 
   const stagesRows = useMemo(() => {
     const map = new Map<string, { count: number; sum: number }>();
     for (const d of deals) {
       if (!isoTimestampInRange(d.createdAt, stagesRange.start, stagesRange.end)) continue;
+      if (!dealMatchesReportFilters(d, stagesFilters)) continue;
       const cur = map.get(d.status) ?? { count: 0, sum: 0 };
       cur.count += 1;
       cur.sum += d.amount;
@@ -426,7 +299,7 @@ export function ReportsSalesPage() {
       count,
       sum,
     }));
-  }, [deals, stagesRange.start, stagesRange.end]);
+  }, [deals, stagesFilters, stagesRange.start, stagesRange.end]);
 
   if (isLoading) return <ReportsSpinner />;
   if (isError) {
@@ -444,8 +317,9 @@ export function ReportsSalesPage() {
     <>
       <ReportBlock
         title="Общий, продажи"
-        preset={preset}
-        onPreset={setPreset}
+        filters={salesFilters}
+        onFiltersChange={setSalesFilters}
+        users={users}
         columns={salesColumns}
         dataSource={completedRows}
         renderMobileCard={(row) => (
@@ -454,8 +328,9 @@ export function ReportsSalesPage() {
       />
       <ReportBlock
         title="Этапы сделок"
-        preset={stagesPreset}
-        onPreset={setStagesPreset}
+        filters={stagesFilters}
+        onFiltersChange={setStagesFilters}
+        users={users}
         columns={stagesColumns}
         dataSource={stagesRows}
         wrap="stages"
@@ -478,28 +353,49 @@ export function ReportsClientsPage() {
   } = useGetClientsQuery({ includeDeleted: true });
   const { data: deals = [] } = useGetDealsQuery();
   const { data: tasks = [] } = useGetTasksQuery();
+  const { data: users = [] } = useGetUsersQuery();
 
-  const [newClientsPreset, setNewClientsPreset] = useState<ReportPreset>("week");
-  const [activityPreset, setActivityPreset] = useState<ReportPreset>("week");
-  const newClientsRange = rangeForPreset(newClientsPreset);
-  const activityRange = rangeForPreset(activityPreset);
+  const [newClientsFilters, setNewClientsFilters] = useState(defaultReportFilters);
+  const [activityFilters, setActivityFilters] = useState(defaultReportFilters);
+  const newClientsRange = resolveReportDateRange(newClientsFilters);
+  const activityRange = resolveReportDateRange(activityFilters);
+
+  const newClientsColumns = useMemo(
+    () => buildNewClientsColumns(newClientsFilters, setNewClientsFilters, users),
+    [newClientsFilters, users],
+  );
+  const activityColumns = useMemo(
+    () => buildActivityColumns(activityFilters, setActivityFilters, users),
+    [activityFilters, users],
+  );
 
   const newClientsRows = useMemo(() => {
     return [...clients]
       .filter((c) => !c.deleted)
-      .filter((c) => isoTimestampInRange(c.createdAt, newClientsRange.start, newClientsRange.end))
+      .filter((c) => matchesManagerId(c.createdBy, newClientsFilters.managerId))
+      .filter((c) =>
+        isoTimestampInRange(c.createdAt, newClientsRange.start, newClientsRange.end),
+      )
+      .filter((c) => {
+        if (!newClientsFilters.dealStatus) return true;
+        return deals.some(
+          (d) => d.clientId === c.id && d.status === newClientsFilters.dealStatus,
+        );
+      })
       .map((c) => ({ ...c, key: c.id }))
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-  }, [clients, newClientsRange.start, newClientsRange.end]);
+  }, [clients, deals, newClientsFilters, newClientsRange.start, newClientsRange.end]);
 
   const activityRows = useMemo(() => {
     return clients
       .filter((c) => !c.deleted)
+      .filter((c) => matchesManagerId(c.createdBy, activityFilters.managerId))
       .map((c) => {
         const ds = deals.filter(
           (d) =>
             d.clientId === c.id &&
-            isoTimestampInRange(d.createdAt, activityRange.start, activityRange.end),
+            isoTimestampInRange(d.createdAt, activityRange.start, activityRange.end) &&
+            matchesDealStatus(d.status, activityFilters.dealStatus),
         );
         const taskDealSet = new Set(ds.map((d) => d.id));
         const doneTasks = tasks.filter(
@@ -515,7 +411,7 @@ export function ReportsClientsPage() {
         };
       })
       .filter((r) => r.deals > 0 || r.completedTasks > 0);
-  }, [clients, deals, tasks, activityRange.start, activityRange.end]);
+  }, [clients, deals, tasks, activityFilters, activityRange.start, activityRange.end]);
 
   if (isLoading) return <ReportsSpinner />;
   if (isError) {
@@ -533,16 +429,18 @@ export function ReportsClientsPage() {
     <>
       <ReportBlock
         title="Новые клиенты"
-        preset={newClientsPreset}
-        onPreset={setNewClientsPreset}
+        filters={newClientsFilters}
+        onFiltersChange={setNewClientsFilters}
+        users={users}
         columns={newClientsColumns}
         dataSource={newClientsRows}
         renderMobileCard={(row) => <NewClientReportMobileCard client={row} />}
       />
       <ReportBlock
         title="Активности клиентов"
-        preset={activityPreset}
-        onPreset={setActivityPreset}
+        filters={activityFilters}
+        onFiltersChange={setActivityFilters}
+        users={users}
         columns={activityColumns}
         dataSource={activityRows}
         renderMobileCard={(row) => <ActivityReportMobileCard {...row} />}
@@ -554,9 +452,16 @@ export function ReportsClientsPage() {
 export function ReportsTasksPage() {
   const { data: tasks = [], isLoading, isError, error, refetch } = useGetTasksQuery();
   const { data: users = [] } = useGetUsersQuery();
+  const { data: deals = [] } = useGetDealsQuery();
 
-  const [preset, setPreset] = useState<ReportPreset>("week");
-  const { start, end } = rangeForPreset(preset);
+  const [filters, setFilters] = useState(defaultReportFilters);
+  const { start, end } = resolveReportDateRange(filters);
+  const dealById = useMemo(() => new Map(deals.map((d) => [d.id, d])), [deals]);
+
+  const overdueColumns = useMemo(
+    () => buildOverdueColumns(filters, setFilters, users),
+    [filters, users],
+  );
 
   const overdue = useMemo(() => {
     return tasks
@@ -564,7 +469,13 @@ export function ReportsTasksPage() {
         if (t.status === "completed") return false;
         return new Date(t.dueDate) < new Date();
       })
+      .filter((t) => matchesManagerId(t.assigneeId, filters.managerId))
       .filter((t) => isoTimestampInRange(t.dueDate, start, end))
+      .filter((t) => {
+        if (!filters.dealStatus) return true;
+        const deal = dealById.get(t.dealId);
+        return deal?.status === filters.dealStatus;
+      })
       .map((t) => ({
         key: t.id,
         id: t.id,
@@ -573,7 +484,7 @@ export function ReportsTasksPage() {
         dueDate: t.dueDate,
       }))
       .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
-  }, [tasks, users, start, end]);
+  }, [tasks, users, filters, dealById, start, end]);
 
   if (isLoading) return <ReportsSpinner />;
   if (isError) {
@@ -590,8 +501,9 @@ export function ReportsTasksPage() {
   return (
     <ReportBlock
       title="Просроченные задачи"
-      preset={preset}
-      onPreset={setPreset}
+      filters={filters}
+      onFiltersChange={setFilters}
+      users={users}
       columns={overdueColumns}
       dataSource={overdue}
       wrap="overdue"

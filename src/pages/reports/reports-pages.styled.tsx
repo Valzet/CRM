@@ -46,7 +46,7 @@ export const ToolbarFilters = styled.div`
 
   @media (max-width: ${grid.breakpoints.mobileMax}) {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     width: 100%;
   }
 `;
@@ -65,6 +65,28 @@ export const FilterSelect = styled(Select)`
     width: 100%;
   }
 ` as typeof Select;
+
+export const FilterDateInput = styled.input`
+  min-width: 140px;
+  height: 32px;
+  padding: 0 11px;
+  border: 1px solid ${color.neutral.border};
+  border-radius: ${typography.controlBorderRadiusPx}px;
+  background: ${color.background.secondary};
+  font-family: ${fontFamilies.body};
+  font-size: ${typography.body.sm.fontSize};
+  color: ${color.neutral.textPrimary};
+
+  &:focus {
+    outline: none;
+    border-color: ${color.accent.primary};
+  }
+
+  @media (max-width: ${grid.breakpoints.mobileMax}) {
+    min-width: 0;
+    width: 100%;
+  }
+`;
 
 export const ToolbarActions = styled.div`
   display: flex;
@@ -90,6 +112,34 @@ export const ExportButton = styled(UiButton)`
     font-size: ${typography.body.sm.fontSize};
     box-shadow: none;
   }
+`;
+
+export const ColumnFilterDropdown = styled.div<{ $inline?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  min-width: ${(p) => (p.$inline ? "auto" : "220px")};
+
+  ${(p) =>
+    p.$inline &&
+    css`
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 0;
+      margin-bottom: 12px;
+    `}
+`;
+
+export const ColumnFilterField = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+export const ColumnFilterLabel = styled.span`
+  font-size: ${typography.body.sm.fontSize};
+  color: ${color.neutral.textSecondary};
 `;
 
 export const TableWrap = styled.div`
