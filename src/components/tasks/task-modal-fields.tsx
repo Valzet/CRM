@@ -42,7 +42,12 @@ export function TaskModalEditFields(props: EditProps) {
             name="title"
             control={control}
             render={({ field }) => (
-              <UiInput {...field} status={errors.title ? "error" : undefined} />
+              <>
+                <UiInput {...field} status={errors.title ? "error" : undefined} />
+                {errors.title?.message ? (
+                  <span className="ant-form-item-explain-error">{errors.title.message}</span>
+                ) : null}
+              </>
             )}
           />
         </FieldControl>
@@ -55,15 +60,20 @@ export function TaskModalEditFields(props: EditProps) {
               name="dealId"
               control={control}
               render={({ field }) => (
-                <Select
-                  {...field}
-                  placeholder="Выберите сделку"
-                  options={deals.map((d) => ({ value: d.id, label: d.title }))}
-                  loading={isLoadingDeals}
-                  showSearch
-                  optionFilterProp="label"
-                  status={errors.dealId ? "error" : undefined}
-                />
+                <>
+                  <Select
+                    {...field}
+                    placeholder="Выберите сделку"
+                    options={deals.map((d) => ({ value: d.id, label: d.title }))}
+                    loading={isLoadingDeals}
+                    showSearch
+                    optionFilterProp="label"
+                    status={errors.dealId ? "error" : undefined}
+                  />
+                  {errors.dealId?.message ? (
+                    <span className="ant-form-item-explain-error">{errors.dealId.message}</span>
+                  ) : null}
+                </>
               )}
             />
           </FieldControl>
@@ -75,15 +85,20 @@ export function TaskModalEditFields(props: EditProps) {
               name="assigneeId"
               control={control}
               render={({ field }) => (
-                <Select
-                  {...field}
-                  placeholder="Выберите исполнителя"
-                  options={users.map((u) => ({ value: u.id, label: u.name }))}
-                  loading={isLoadingUsers}
-                  showSearch
-                  optionFilterProp="label"
-                  status={errors.assigneeId ? "error" : undefined}
-                />
+                <>
+                  <Select
+                    {...field}
+                    placeholder="Выберите исполнителя"
+                    options={users.map((u) => ({ value: u.id, label: u.name }))}
+                    loading={isLoadingUsers}
+                    showSearch
+                    optionFilterProp="label"
+                    status={errors.assigneeId ? "error" : undefined}
+                  />
+                  {errors.assigneeId?.message ? (
+                    <span className="ant-form-item-explain-error">{errors.assigneeId.message}</span>
+                  ) : null}
+                </>
               )}
             />
           </FieldControl>
@@ -97,11 +112,16 @@ export function TaskModalEditFields(props: EditProps) {
               name="status"
               control={control}
               render={({ field }) => (
-                <Select
-                  {...field}
-                  options={statusOptionsFor(currentStatus)}
-                  status={errors.status ? "error" : undefined}
-                />
+                <>
+                  <Select
+                    {...field}
+                    options={statusOptionsFor(currentStatus)}
+                    status={errors.status ? "error" : undefined}
+                  />
+                  {errors.status?.message ? (
+                    <span className="ant-form-item-explain-error">{errors.status.message}</span>
+                  ) : null}
+                </>
               )}
             />
           </FieldControl>
@@ -113,11 +133,16 @@ export function TaskModalEditFields(props: EditProps) {
               name="dueDateLocal"
               control={control}
               render={({ field }) => (
-                <Input
-                  {...field}
-                  type="datetime-local"
-                  status={errors.dueDateLocal ? "error" : undefined}
-                />
+                <>
+                  <Input
+                    {...field}
+                    type="datetime-local"
+                    status={errors.dueDateLocal ? "error" : undefined}
+                  />
+                  {errors.dueDateLocal?.message ? (
+                    <span className="ant-form-item-explain-error">{errors.dueDateLocal.message}</span>
+                  ) : null}
+                </>
               )}
             />
           </FieldControl>

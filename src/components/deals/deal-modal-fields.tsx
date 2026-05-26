@@ -85,7 +85,12 @@ export function DealModalEditFields(props: EditProps) {
               name="title"
               control={control}
               render={({ field }) => (
-                <UiInput {...field} status={errors.title ? "error" : undefined} />
+                <>
+                  <UiInput {...field} status={errors.title ? "error" : undefined} />
+                  {errors.title?.message ? (
+                    <span className="ant-form-item-explain-error">{errors.title.message}</span>
+                  ) : null}
+                </>
               )}
             />
           </FieldControl>
@@ -97,18 +102,23 @@ export function DealModalEditFields(props: EditProps) {
               name="clientId"
               control={control}
               render={({ field }) => (
-                <Select
-                  {...field}
-                  placeholder="Выберите клиента"
-                  options={clients.map((c) => ({
-                    value: c.id,
-                    label: `${c.name}${c.deleted ? " (удалён)" : ""}`,
-                  }))}
-                  loading={isLoadingClients}
-                  showSearch
-                  optionFilterProp="label"
-                  status={errors.clientId ? "error" : undefined}
-                />
+                <>
+                  <Select
+                    {...field}
+                    placeholder="Выберите клиента"
+                    options={clients.map((c) => ({
+                      value: c.id,
+                      label: `${c.name}${c.deleted ? " (удалён)" : ""}`,
+                    }))}
+                    loading={isLoadingClients}
+                    showSearch
+                    optionFilterProp="label"
+                    status={errors.clientId ? "error" : undefined}
+                  />
+                  {errors.clientId?.message ? (
+                    <span className="ant-form-item-explain-error">{errors.clientId.message}</span>
+                  ) : null}
+                </>
               )}
             />
           </FieldControl>
@@ -122,14 +132,19 @@ export function DealModalEditFields(props: EditProps) {
               name="amount"
               control={control}
               render={({ field }) => (
-                <InputNumber
-                  min={1}
-                  value={field.value}
-                  onChange={(v) => field.onChange(v ?? 1)}
-                  status={errors.amount ? "error" : undefined}
-                  formatter={(v) => (v ? `${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ") : "")}
-                  parser={(v) => Number(v?.replace(/\s/g, "") ?? 0)}
-                />
+                <>
+                  <InputNumber
+                    min={1}
+                    value={field.value}
+                    onChange={(v) => field.onChange(v ?? 1)}
+                    status={errors.amount ? "error" : undefined}
+                    formatter={(v) => (v ? `${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ") : "")}
+                    parser={(v) => Number(v?.replace(/\s/g, "") ?? 0)}
+                  />
+                  {errors.amount?.message ? (
+                    <span className="ant-form-item-explain-error">{errors.amount.message}</span>
+                  ) : null}
+                </>
               )}
             />
           </FieldControl>
@@ -141,11 +156,16 @@ export function DealModalEditFields(props: EditProps) {
               name="status"
               control={control}
               render={({ field }) => (
-                <Select
-                  {...field}
-                  options={statusOptions}
-                  status={errors.status ? "error" : undefined}
-                />
+                <>
+                  <Select
+                    {...field}
+                    options={statusOptions}
+                    status={errors.status ? "error" : undefined}
+                  />
+                  {errors.status?.message ? (
+                    <span className="ant-form-item-explain-error">{errors.status.message}</span>
+                  ) : null}
+                </>
               )}
             />
           </FieldControl>

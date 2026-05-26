@@ -132,7 +132,12 @@ export function ClientModalEditFields(props: EditProps) {
               name="email"
               control={control}
               render={({ field }) => (
-                <UiInput {...field} type="email" status={errors.email ? "error" : undefined} />
+                <>
+                  <UiInput {...field} type="email" status={errors.email ? "error" : undefined} />
+                  {errors.email?.message ? (
+                    <span className="ant-form-item-explain-error">{errors.email.message}</span>
+                  ) : null}
+                </>
               )}
             />
           </FieldControl>
