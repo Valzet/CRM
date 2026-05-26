@@ -78,4 +78,24 @@ describe("LoginPage", () => {
       expect(mockNavigate).toHaveBeenCalledWith("/welcome", { replace: true });
     });
   });
+
+  it("показывает ошибку при неверных данных входа", async () => {
+    const user = userEvent.setup();
+    mockLogin.mockReturnValue({
+      unwrap: async () => {
+        throw { status: 401, data: "Неверный email или пароль" };
+      },
+    });
+
+    renderWithProviders(<LoginPage />, {
+      router: { initialEntries: ["/login"], initialIndex: 0 },
+    });
+
+    await user.type(screen.getByPlaceholderText("ivanov@yandex.ru"), "user@test.ru");
+    await user.type(screen.getByPlaceholderText("••••••"), "wrong");
+    await user.click(screen.getByRole("button", { name: "Войти" }));
+
+    expect(await screen.findByText("Неверный email или пароль")).toBeInTheDocument();
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
 });

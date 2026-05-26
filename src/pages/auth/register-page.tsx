@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Form, Input } from "antd";
+import { Alert, Button, Form, Input } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { getMutationErrorMessage } from "../../lib/api/mutation-error-message";
 import { registerFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { registerFormSchema, type RegisterFormValues } from "../../schemas";
@@ -17,6 +18,8 @@ export function RegisterPage() {
   const {
     control,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
@@ -25,12 +28,20 @@ export function RegisterPage() {
   });
 
   const onSubmit = async (values: RegisterFormValues) => {
+    clearErrors("root");
+    clearErrors("email");
     try {
       await registerUser(values).unwrap();
 
       navigate(path.login, { replace: true });
-    } catch {
-      //* empty catch *//
+    } catch (err) {
+      const message = getMutationErrorMessage(err, "Не удалось зарегистрироваться");
+      const status = typeof err === "object" && err !== null && "status" in err ? err.status : undefined;
+      if (status === 400) {
+        setError("email", { type: "server", message });
+      } else {
+        setError("root", { type: "server", message });
+      }
     }
   };
 
@@ -130,6 +141,14 @@ export function RegisterPage() {
                 </Form.Item>
               )}
             />
+            {errors.root?.message ? (
+              <Alert
+                type="error"
+                showIcon
+                message={errors.root.message}
+                style={{ marginBottom: 16 }}
+              />
+            ) : null}
             <Form.Item>
               <Button type="primary" htmlType="submit" block loading={isLoading} size="large">
                 Зарегистрироваться

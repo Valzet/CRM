@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Form, message } from "antd";
+import { Alert, Button, Form, message } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useLocation } from "react-router-dom";
+import { getMutationErrorMessage } from "../../lib/api/mutation-error-message";
 import { emailConfirmFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { emailConfirmFormSchema, type EmailConfirmFormValues } from "../../schemas";
@@ -33,6 +34,8 @@ export function EmailConfirmationPage() {
   const {
     control,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<EmailConfirmFormValues>({
     resolver: zodResolver(emailConfirmFormSchema),
@@ -41,10 +44,14 @@ export function EmailConfirmationPage() {
   });
 
   const onSubmit = async (values: EmailConfirmFormValues) => {
+    clearErrors("root");
     try {
       await confirmEmail(values).unwrap();
-    } catch {
-      //* empty catch *//
+    } catch (err) {
+      setError("root", {
+        type: "server",
+        message: getMutationErrorMessage(err, "Не удалось подтвердить почту"),
+      });
     }
   };
 
@@ -52,8 +59,8 @@ export function EmailConfirmationPage() {
     try {
       await resend().unwrap();
       message.info("Письмо отправлено повторно (демо).");
-    } catch {
-      console.error("Не удалось отправить");
+    } catch (err) {
+      message.error(getMutationErrorMessage(err, "Не удалось отправить письмо"));
     }
   };
 
@@ -88,6 +95,14 @@ export function EmailConfirmationPage() {
                 </Form.Item>
               )}
             />
+            {errors.root?.message ? (
+              <Alert
+                type="error"
+                showIcon
+                message={errors.root.message}
+                style={{ marginBottom: 16 }}
+              />
+            ) : null}
             <Form.Item>
               <FormStack>
                 <Button type="primary" htmlType="submit" block loading={isConfirming} size="large">

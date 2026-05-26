@@ -1,8 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { message } from "antd";
 import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { CrmModal, ModalBodyLoading } from "../crm-modal";
 import { DangerFooterButton, PrimaryFooterButton, SecondaryFooterButton } from "../crm-modal";
+import { getMutationErrorMessage } from "../../lib/api/mutation-error-message";
 import { clientFormDefaultValues } from "../../lib/constants/forms";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { clientFormSchema, type ClientFormValues } from "../../schemas";
@@ -66,8 +68,8 @@ export function ClientCardModal(props: Props) {
     try {
       await updateClient({ id: clientId, data: formValues }).unwrap();
       setMode("view");
-    } catch {
-      //* empty catch *//
+    } catch (err) {
+      message.error(getMutationErrorMessage(err, "Не удалось сохранить клиента"));
     }
   };
 

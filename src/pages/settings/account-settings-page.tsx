@@ -1,10 +1,11 @@
 import { CameraOutlined } from "@ant-design/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Alert, Avatar, Button, Col, Form, Input, Modal, Row, Spin } from "antd";
+import { Alert, Avatar, Button, Col, Form, Input, Modal, Row, Spin, message } from "antd";
 import { useEffect } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { BackLink } from "../../components/ui";
+import { getMutationErrorMessage } from "../../lib/api/mutation-error-message";
 import { accountSettingsFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { useAppDispatch, useAppSelector } from "../../hooks";
@@ -62,6 +63,8 @@ export function AccountSettingsPage(props?: { variant?: "settings" | "profile" }
     control,
     handleSubmit,
     reset,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<AccountSettingsFormValues>({
     resolver: zodResolver(accountSettingsSchema),
@@ -90,6 +93,7 @@ export function AccountSettingsPage(props?: { variant?: "settings" | "profile" }
 
   const onSubmit = async (values: AccountSettingsFormValues) => {
     if (!user) return;
+    clearErrors("root");
     try {
       await saveProfile({
         id: user.id,
@@ -112,16 +116,20 @@ export function AccountSettingsPage(props?: { variant?: "settings" | "profile" }
         newPassword: "",
         confirmPassword: "",
       });
-    } catch {
-      //* empty catch *//
+    } catch (err) {
+      setError("root", {
+        type: "server",
+        message: getMutationErrorMessage(err, "Не удалось сохранить изменения"),
+      });
     }
   };
 
   const onSendVerify = async () => {
     try {
       await requestVerify().unwrap();
-    } catch {
-      //* empty catch *//
+      message.success("Ссылка для подтверждения отправлена (демо).");
+    } catch (err) {
+      message.error(getMutationErrorMessage(err, "Не удалось отправить ссылку"));
     }
   };
 
@@ -139,8 +147,8 @@ export function AccountSettingsPage(props?: { variant?: "settings" | "profile" }
           dispatch(clearAuth());
 
           navigate(path.login, { replace: true });
-        } catch {
-          //* empty catch *//
+        } catch (err) {
+          message.error(getMutationErrorMessage(err, "Не удалось удалить аккаунт"));
         }
       },
     });
@@ -349,6 +357,15 @@ export function AccountSettingsPage(props?: { variant?: "settings" | "profile" }
                   />
                 </Col>
               </Row>
+
+              {errors.root?.message ? (
+                <Alert
+                  type="error"
+                  showIcon
+                  message={errors.root.message}
+                  style={{ marginBottom: 20 }}
+                />
+              ) : null}
 
               <FormFooter>
                 {variant === "settings" ? (

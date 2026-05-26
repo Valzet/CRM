@@ -9,6 +9,7 @@ import {
   SecondaryFooterButton,
   SuccessFooterButton,
 } from "../crm-modal";
+import { getMutationErrorMessage } from "../../lib/api/mutation-error-message";
 import { dealFormDefaultValues } from "../../lib/constants/forms";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { dealFormSchema, type DealFormValues } from "../../schemas";
@@ -87,8 +88,8 @@ export function DealCardModal(props: Props) {
       await updateDeal({ id: dealId, data: formValues }).unwrap();
 
       setMode("view");
-    } catch {
-      //* empty catch *//
+    } catch (err) {
+      message.error(getMutationErrorMessage(err, "Не удалось сохранить сделку"));
     }
   };
 
@@ -108,8 +109,8 @@ export function DealCardModal(props: Props) {
       }).unwrap();
 
       handleClose();
-    } catch {
-      //* empty catch *//
+    } catch (err) {
+      message.error(getMutationErrorMessage(err, "Не удалось завершить сделку"));
     }
   };
 

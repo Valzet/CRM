@@ -1,8 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Form, Input } from "antd";
+import { Alert, Button, Form, Input } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useIsMobile } from "../../hooks";
+import { getMutationErrorMessage } from "../../lib/api/mutation-error-message";
 import { loginFormDefaultValues } from "../../lib/constants/forms";
 import { path } from "../../lib/constants/navigation";
 import { loginFormSchema, type LoginFormValues } from "../../schemas";
@@ -28,6 +29,8 @@ export function LoginPage() {
   const {
     control,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -36,13 +39,17 @@ export function LoginPage() {
   });
 
   const onSubmit = async (values: LoginFormValues) => {
+    clearErrors("root");
     try {
       const result = await login(values).unwrap();
       dispatch(setAuthUser(result.userId));
 
       navigate(path.welcome, { replace: true });
-    } catch {
-      //* empty catch *//
+    } catch (err) {
+      setError("root", {
+        type: "server",
+        message: getMutationErrorMessage(err, "Не удалось войти. Попробуйте ещё раз."),
+      });
     }
   };
 
@@ -97,6 +104,14 @@ export function LoginPage() {
             <ForgotPasswordRow>
               <Link to={path.passwordRecovery}>Забыли пароль?</Link>
             </ForgotPasswordRow>
+            {errors.root?.message ? (
+              <Alert
+                type="error"
+                showIcon
+                message={errors.root.message}
+                style={{ marginBottom: 16 }}
+              />
+            ) : null}
             <Form.Item>
               <Button type="primary" htmlType="submit" block loading={isLoading} size="large">
                 Войти

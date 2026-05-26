@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { message } from "antd";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -7,6 +8,7 @@ import {
   PrimaryFooterButton,
   SecondaryFooterButton,
 } from "../crm-modal";
+import { getMutationErrorMessage } from "../../lib/api/mutation-error-message";
 import { taskFormDefaultValues } from "../../lib/constants/forms";
 import { isoToDatetimeLocalValue } from "../../lib/date/datetime-local";
 import { formatDateRu } from "../../lib/format/date-ru";
@@ -68,8 +70,8 @@ export function TaskEditModal(props: Props) {
       await updateTask({ id: taskId, data: values }).unwrap();
 
       onClose();
-    } catch {
-      //* empty catch *//
+    } catch (err) {
+      message.error(getMutationErrorMessage(err, "Не удалось сохранить задачу"));
     }
   };
 
