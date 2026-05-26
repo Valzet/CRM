@@ -481,6 +481,7 @@ export function ReportsTasksPage() {
         id: t.id,
         title: t.title,
         assignee: users.find((u) => u.id === t.assigneeId)?.name ?? "—",
+        status: t.status,
         dueDate: t.dueDate,
       }))
       .sort((a, b) => a.dueDate.localeCompare(b.dueDate));

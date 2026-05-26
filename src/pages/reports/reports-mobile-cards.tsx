@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
+import { TaskStatusCell } from "../../components/tasks/tasks-table.styled";
 import { DEAL_STATUS_META } from "../../lib/deal-status";
+import { TASK_STATUS_META } from "../../lib/task-status";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { path } from "../../lib/constants/navigation";
-import type { Deal, DealStatus } from "../../types";
+import type { Deal, DealStatus, TaskStatus } from "../../types";
 import type { Client } from "../../types/client";
 import {
   MobileReportCard,
@@ -15,7 +17,6 @@ import {
   MobileReportCardTitle,
   MobileReportCardTop,
   MobileReportId,
-  MobileReportStatus,
   MobileStageCard,
 } from "./reports-mobile-cards.styled";
 
@@ -102,14 +103,17 @@ export function OverdueReportMobileCard(props: {
   id: string;
   title: string;
   assignee: string;
+  status: TaskStatus;
   dueDate: string;
 }) {
-  const { id, title, assignee, dueDate } = props;
+  const { id, title, assignee, status, dueDate } = props;
   return (
     <MobileReportCard $overdue>
       <MobileReportCardTop>
         <MobileReportId>id {shortId(id)}</MobileReportId>
-        <MobileReportStatus>Просрочена</MobileReportStatus>
+        <TaskStatusCell $status={status} style={{ flexShrink: 0 }}>
+          {TASK_STATUS_META[status].label}
+        </TaskStatusCell>
       </MobileReportCardTop>
       <MobileReportCardTitle>{title}</MobileReportCardTitle>
       <MobileReportCardNote>{assignee}</MobileReportCardNote>

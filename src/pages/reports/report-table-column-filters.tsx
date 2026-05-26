@@ -4,10 +4,13 @@ import type { ColumnType } from "antd/es/table";
 import { Link } from "react-router-dom";
 import { dealCompletionIso } from "../../lib/deal/deal-completion-iso";
 import { DEAL_STATUS_META } from "../../lib/deal-status";
+import { TASK_STATUS_META } from "../../lib/task-status";
 import { formatDateRu } from "../../lib/format/date-ru";
 import { path } from "../../lib/constants/navigation";
 import { color } from "../../theme/tokens";
+import { TaskStatusCell } from "../../components/tasks/tasks-table.styled";
 import type { Deal, DealStatus } from "../../types/deal";
+import type { TaskStatus } from "../../types/task";
 import type { Client } from "../../types/client";
 import type { User } from "../../types/user";
 import type { ReportPreset } from "./report-period";
@@ -18,7 +21,6 @@ import {
   ColumnFilterLabel,
   FilterDateInput,
   FilterSelect,
-  OverdueStatus,
   StageStatusCell,
 } from "./reports-pages.styled";
 
@@ -325,6 +327,7 @@ type OverdueRow = {
   id: string;
   title: string;
   assignee: string;
+  status: TaskStatus;
   dueDate: string;
 };
 
@@ -564,7 +567,12 @@ export function buildOverdueColumns(
       column: {
         title: "Статус",
         key: "status",
-        render: () => <OverdueStatus>Просрочена</OverdueStatus>,
+        sorter: (a, b) => a.status.localeCompare(b.status),
+        render: (_, row) => (
+          <TaskStatusCell $status={row.status}>
+            {TASK_STATUS_META[row.status].label}
+          </TaskStatusCell>
+        ),
       },
       filters,
       onFiltersChange,
